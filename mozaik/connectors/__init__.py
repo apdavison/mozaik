@@ -4,21 +4,18 @@ Mozaik connector interface.
 """
 import math
 import numpy
-import pylab
 import mozaik
 import time
-from pylab import griddata
-from mozaik.framework.interfaces import Connector
-from mozaik.framework.sheets import SheetWithMagnificationFactor
+from mozaik.core import BaseComponent
+from mozaik.sheets.vision import SheetWithMagnificationFactor
 from parameters import ParameterSet, ParameterDist
 from mozaik.tools.misc import sample_from_bin_distribution, normal_function
 from collections import Counter
 from pyNN import random, space
 
-logger = mozaik.getMozaikLogger("Mozaik")
+logger = mozaik.getMozaikLogger()
 
-
-class MozaikConnector(Connector):
+class Connector(BaseComponent):
     """
     An abstract interface class for Connectors in mozaik. Each mozaik connector should derive from this class and implement 
     the _connect function. The usage is: create the instance of MozaikConnector and call connect() to realize the connections.
@@ -26,26 +23,42 @@ class MozaikConnector(Connector):
     required_parameters = ParameterSet({
             'target_synapses' : str,
             'short_term_plasticity': ParameterSet({
-                    'u': float, 
+                    'U': float, 
                     'tau_rec': float, 
                     'tau_fac': float,
                     'tau_psc': float
             }),
-    
     })
     
-    def __init__(self, network, name,source, target, parameters):
-      Connector.__init__(self, network, name, source,target,parameters)
+    def __init__(self, model, name, source, target, parameters):
+        logger.info("Creating %s between %s and %s" % (self.__class__.__name__,
+                                                       source.__class__.__name__,
+                                                       target.__class__.__name__))
+        BaseComponent.__init__(self, model, parameters)
+        self.name = name
+        self.model.register_connector(self)
+        self.sim = self.model.sim
+        self.source = source
+        self.target = target
+        self.input = source
+        self.target.input = self
+        
+        self.weight_scaler = 1.0 # This scaler has to be always applied to all weights just before sent to pyNN connect command
+                                 # This is because certain pyNN synaptic models interpret weights with different units and the Connector
+                                 # function here corrects for these - ie. the Connectors in Mozaik will always assume the weights to be in nano-siemens 
+        if self.parameters.short_term_plasticity != None:
+           self.weight_scaler = 1000.0
+
     
-    
-    def init_short_term_plasticity(self,weights=None,delays=None):
+    def init_synaptic_mechanisms(self,weight=None,delay=None):
       if not self.parameters.short_term_plasticity != None:
-        short_term_plasticity = None
+        sm = self.sim.StaticSynapse(weight=weight,delay=delay)                   
       else:
-        #self.short_term_plasticity = self.sim.SynapseDynamics(fast=self.sim.TsodyksMarkramMechanism(**self.parameters.short_term_plasticity_params)) 
-        #short_term_plasticity = self.sim.NativeSynapseType(nest_name="tsodyks_synapse", default_parameters = self.parameters.short_term_plasticity,weights=weights,delay=delays)
-        short_term_plasticity = self.sim.native_synapse_type("tsodyks_synapse")(weight=weights,delay=delays,**self.parameters.short_term_plasticity)                   
-      return short_term_plasticity
+        if weight != None:
+            sm = self.sim.native_synapse_type("tsodyks_synapse")(weight=weight,delay=delay,**self.parameters.short_term_plasticity)                   
+        else:
+            sm = self.sim.native_synapse_type("tsodyks_synapse")(**self.parameters.short_term_plasticity)                   
+      return sm
         
     def connect(self):
           t0 = time.time()
@@ -58,17 +71,16 @@ class MozaikConnector(Connector):
       raise NotImplementedError
 
     def connection_field_plot_continuous(self, index, afferent=True, density=30):
-        weights = self.proj.getWeights(format='list')
-        #print numpy.shape(weights)
+        weights = numpy.array(self.proj.get('weight', format='list', gather=True))
         if afferent:
-            idx = numpy.flatnonzero(weights[:,1]==index)
-            x = self.proj.pre.positions[0][weights[idx,0]]
-            y = self.proj.pre.positions[1][weights[idx,0]]
+            idx = numpy.array(numpy.flatnonzero(weights[:,1].flatten()==index))
+            x = self.proj.pre.positions[0][weights[idx,0].astype(int)]
+            y = self.proj.pre.positions[1][weights[idx,0].astype(int)]
             w = weights[idx,2]
         else:
             idx = numpy.flatnonzero(weights[:,0]==index)
-            x = self.proj.post.positions[0][weights[idx,1]]
-            y = self.proj.post.positions[1][weights[idx,1]]
+            x = self.proj.post.positions[0][weights[idx,1].astype(int)]
+            y = self.proj.post.positions[1][weights[idx,1].astype(int)]
             w = weights[idx,2]
 
         xi = numpy.linspace(min(x), max(x), 100)
@@ -86,25 +98,30 @@ class MozaikConnector(Connector):
         #pylab.colorbar()
 
     def store_connections(self, datastore):
-        from mozaik.analysis.analysis_data_structures import Connections
+        from mozaik.analysis.data_structures import Connections
         
-        weights = numpy.array(self.proj.getWeights(format='list', gather=True))
-        delays = numpy.array(self.proj.getDelays(format='list', gather=True))
+        weights = self.proj.get('weight', format='list', gather=True)
+        delays = self.proj.get('delay', format='list', gather=True)
+        print self.name
         datastore.add_analysis_result(
             Connections(weights,delays,
+                        source_size=(self.source.size_x,self.source.size_y),
+                        target_size=(self.target.size_x,self.target.size_y),
                         proj_name=self.name,
                         source_name=self.source.name,
                         target_name=self.target.name,
                         analysis_algorithm='connection storage'))
 
 
-class SpecificArborization(MozaikConnector):
+class SpecificArborization(Connector):
     """
     Generic connector which gets directly list of connections as the list of
     quadruplets as accepted by the pyNN FromListConnector.
 
     This connector cannot be parametrized directly via the parameter file
     because that does not support list of tuples.
+    
+    This connector also gets rid of very weak synapses (below one-hundreth of the maximum synapse)
     """
 
     required_parameters = ParameterSet({
@@ -112,7 +129,7 @@ class SpecificArborization(MozaikConnector):
     })
 
     def __init__(self, network, source, target, connection_matrix,delay_matrix, parameters, name):
-        MozaikConnector.__init__(self, network, name, source,
+        Connector.__init__(self, network, name, source,
                                              target, parameters)
         self.connection_matrix = connection_matrix
         self.delay_matrix = delay_matrix
@@ -129,6 +146,9 @@ class SpecificArborization(MozaikConnector):
         for i in xrange(0,self.target.pop.size):
             self.connection_matrix[:,i] = self.connection_matrix[:,i] / numpy.sum(self.connection_matrix[:,i])*self.parameters.weight_factor
 
+        # This is due to native synapses models (which we currently use as the short term synaptic plasticity model) 
+        # do not apply the 1000 factor scaler as the pyNN synaptic models
+        self.connection_matrix = self.connection_matrix * self.weight_scaler
         self.connection_list = zip(numpy.array(X).flatten(),numpy.array(Y).flatten(),self.connection_matrix.flatten(),self.delay_matrix.flatten())
         # get rid of very weak synapses
         z = numpy.max(self.connection_matrix.flatten())
@@ -138,13 +158,13 @@ class SpecificArborization(MozaikConnector):
                                 self.source.pop,
                                 self.target.pop,
                                 method,
-                                synapse_type=self.init_short_term_plasticity(),
+                                synapse_type=self.init_synaptic_mechanisms(),
                                 label=self.name,
                                 rng=None,
                                 receptor_type=self.parameters.target_synapses)
 
 
-class SpecificProbabilisticArborization(MozaikConnector):
+class SpecificProbabilisticArborization(Connector):
     """
     Generic connector which gets directly list of connections as the list
     of quadruplets as accepted by the pyNN FromListConnector.
@@ -168,32 +188,28 @@ class SpecificProbabilisticArborization(MozaikConnector):
     })
 
     def __init__(self, network, source, target, connection_matrix,delay_matrix, parameters, name):
-        MozaikConnector.__init__(self, network, name, source,target, parameters)
+        Connector.__init__(self, network, name, source,target, parameters)
         self.connection_matrix = connection_matrix
         self.delay_matrix = delay_matrix
 
     def _connect(self):
+        # This is due to native synapses models (which we currently use as the short term synaptic plasticity model) 
+        # do not apply the 1000 factor scaler as the pyNN synaptic models
+        wf = self.parameters.weight_factor * self.weight_scaler
         weights = self.connection_matrix
         delays = self.delay_matrix
         cl = []
-        
         for i in xrange(0,self.target.pop.size):
             co = Counter(sample_from_bin_distribution(weights[:,i].flatten(), int(self.parameters.num_samples)))
-            cl.extend([(int(k),int(i),self.parameters.weight_factor*co[k]/self.parameters.num_samples,delays[k][i]) for k in co.keys()])
-        
+            cl.extend([(int(k),int(i),wf*co[k]/self.parameters.num_samples,delays[k][i]) for k in co.keys()])
+            
         method = self.sim.FromListConnector(cl)
         
-        print "Source length: ", len(self.source.pop)
-        print "Target length: ", len(self.target.pop)
-        print "Source max index: ",max(numpy.array(cl)[:,0].flatten())
-        print "Target max index: ",max(numpy.array(cl)[:,1].flatten())
-        print "Source min index: ",min(numpy.array(cl)[:,0].flatten())
-        print "Target min index: ",min(numpy.array(cl)[:,1].flatten())
         self.proj = self.sim.Projection(
                                 self.source.pop,
                                 self.target.pop,
                                 method,
-                                synapse_type=self.init_short_term_plasticity(),
+                                synapse_type=self.init_synaptic_mechanisms(),
                                 label=self.name,
                                 receptor_type=self.parameters.target_synapses)
                   

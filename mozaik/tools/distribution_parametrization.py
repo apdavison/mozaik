@@ -1,10 +1,10 @@
 """
-This file contains code trying to make an interface between NeuroTools parameters,
-and pyNN distribution interface. 
+This module contains code interfacing parameters package, and pyNN distribution interface. 
 
-In future pyNN plans to make an comprehensive merge between NeuroTools parametrization system and pyNN,
+In future pyNN plans to make an comprehensive merge between the parameters parametrization system and pyNN,
 in which case this code should become obsolete and mozaik should fully switch to such new system.
 """
+
 from parameters import ParameterSet, ParameterRange, ParameterTable, ParameterReference
 from pyNN.random import RandomDistribution
 import urllib, copy, warnings, numpy, numpy.random  # to be replaced with srblib
@@ -12,6 +12,10 @@ from urlparse import urlparse
 from parameters.random import ParameterDist, GammaDist, UniformDist, NormalDist
 
 def load_parameters(parameter_url,modified_parameters):
+    """
+    A simple function for loading parameters that replaces the values in *modified_parameters* in the loaded parameters
+    and subsequently expands references.
+    """
     parameters = MozaikExtendedParameterSet(parameter_url)
     parameters.replace_values(**modified_parameters)
     parameters.replace_references()
@@ -27,14 +31,29 @@ class PyNNDistribution(RandomDistribution):
       """
       def __init__(self,name,params=(),boundaries=None,constrain='clip'):
           if boundaries != None:
-            print boundaries  
             assert isinstance(boundaries,tuple) , "The boundries parameter of PyNNDistribution has to be tuple, while it is: %s" % type(boundaries)
           assert constrain == 'clip' or constrain == 'redraw', "The parameter constrain has to be either \'clip\' or \'redraw\'"
           assert isinstance(params,tuple) , "The boundries parameter of PyNNDistribution has to be tuple"
           RandomDistribution.__init__(self,parameters=params,boundaries=boundaries,constrain=constrain)  
 
+class LogNormalDistribution(ParameterDist):
+    """
+    We will add another kind of distirbution to the param package.
+    """
+
+    def __init__(self, mean=0.0, std=1.0):
+        ParameterDist.__init__(self, mean=mean, std=std)
+        self.dist_name = 'LogNormalDist'
+
+    def next(self, n=1):
+        return numpy.random.lognormal(mean=self.params['mean'], sigma=self.params['std'], size=n)
+    
           
 class MozaikExtendedParameterSet(ParameterSet):
+    """
+    This is an extension to `ParameterSet` class which adds the PyNNDistribution as a possible type of a parameter.
+    """
+    
     @staticmethod
     def read_from_str(s,update_namespace=None):
         global_dict = dict(ref=ParameterReference,url=MozaikExtendedParameterSet,ParameterSet=ParameterSet)
@@ -44,7 +63,8 @@ class MozaikExtendedParameterSet(ParameterSet):
                                 UniformDist=UniformDist,
                                 NormalDist=NormalDist,
                                 PyNNDistribution = PyNNDistribution,
-                                pi=numpy.pi))
+                                pi=numpy.pi,
+                                LogNormalDistribution=LogNormalDistribution))
         if update_namespace:
             global_dict.update(update_namespace)
         
@@ -53,6 +73,8 @@ class MozaikExtendedParameterSet(ParameterSet):
             D = eval(s, global_dict)
         except SyntaxError as e:
             raise SyntaxError("Invalid string for ParameterSet definition: %s\n%s" % (s,e))
+        except NameError as e:
+            raise NameError("%s\n%s" % (s,e))
             
         return D or {}
     

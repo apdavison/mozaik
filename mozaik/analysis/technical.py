@@ -1,8 +1,9 @@
 """
-docstring goes here
+This module contains special analysis functions that relate to some tehnical mozaik architecture aspects and thus 
+do not represent a standard analysis
 """
 
-from mozaik.analysis.analysis_data_structures import PerNeuronValue
+from mozaik.analysis.data_structures import PerNeuronValue
 from mozaik.analysis.analysis import Analysis
 from mozaik.storage import queries
 from sets import Set
@@ -10,7 +11,7 @@ import quantities as qt
 import numpy
 import mozaik
 
-logger = mozaik.getMozaikLogger("Mozaik")
+logger = mozaik.getMozaikLogger()
 
 
 class NeuronAnnotationsToPerNeuronValues(Analysis):
@@ -18,7 +19,7 @@ class NeuronAnnotationsToPerNeuronValues(Analysis):
     Creates a PerNeuronValues analysis data structure per each neuron
     annotation that is defined for all neurons in a given sheet.
 
-    This method is aware of several specific annotations and adds additional
+    This analysis is aware of several mozaik specific annotations and adds additional
     appropriate information to the PerNeuronValue ADS (i.e. setting period to
     numpy.pi of orientation preference of initial connection fields).
     Users are expected to modify this class to add additional information for

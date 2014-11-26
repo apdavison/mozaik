@@ -1,5 +1,10 @@
 """
-docstring goes here
+This module contains wrapper for the neo Segment, that add extra functionality to the class.
+Within mozaik the data are stored and passed in this format.
+
+Most of the included functionality should in future be provided directly by neo.
+When this happens most of this code should become irrelevant and the rest should be
+merged into the :mod:`.datastore` module.
 """
 from neo.core.segment import Segment
 import numpy
@@ -17,7 +22,7 @@ class MozaikSegment(Segment):
         obsolete and this file should be discarded.
         """
 
-        def __init__(self, segment, identifier):
+        def __init__(self, segment, identifier,null=False):
             """
             """
             self.init = True
@@ -30,10 +35,14 @@ class MozaikSegment(Segment):
 
             self.annotations = segment.annotations
             self.identifier = identifier
+            self.null = null
             # indicates whether the segment has been fully loaded
             self.full = False
 
         def get_spiketrains(self):
+            """
+            Returns the list of SpikeTrain objects stored in this segment.
+            """
             if not self.full:
                 self.load_full()
             return self._spiketrains
@@ -48,8 +57,19 @@ class MozaikSegment(Segment):
 
         def get_spiketrain(self, neuron_id):
             """
-            Returns a spiktrain or a list of spike train corresponding to id(s) in neuron_id
+            Returns a spiktrain or a list of spike train corresponding to id(s) listed in the `neuron_id` argument.
+            
+            Parameters
+            ----------
+            
+            neuron_id : int or list(int)
+                      An int or a list of ints containing the ids for which to return the spiketrains.
+                      
+            Returns
+            -------
+            A SpikeTrain object if neuron_id is int, or list of SpikeTrain objects if neuron_id is list, the order corresponds to the order in neuron_id argument.
             """
+            
             ids = [s.annotations['source_id'] for s in self.spiketrains]
             if isinstance(neuron_id,list) or isinstance(neuron_id,numpy.ndarray):
               return [self.spiketrains[ids.index(i)] for i in neuron_id]
@@ -57,6 +77,20 @@ class MozaikSegment(Segment):
               return self.spiketrains[ids.index(neuron_id)]
 
         def get_vm(self, neuron_id):
+            """
+            Returns the recorded membrane potential corresponding to neurons with id(s) listed in the `neuron_id` argument.
+            
+            Parameters
+            ----------
+            
+            neuron_id : int or list(int)
+                      An int or a list of ints containing the ids for which to return the AnalogSignal objects.
+                      
+            Returns
+            -------
+            A AnalogSignal object if neuron_id is int, or list of AnalogSignal objects if neuron_id is list, the order corresponds to the order in neuron_id argument.
+            """
+
             if not self.full:
                 self.load_full()
 
@@ -65,6 +99,19 @@ class MozaikSegment(Segment):
                     return a[:, a.annotations['source_ids'].tolist().index(neuron_id)]
 
         def get_esyn(self,neuron_id):
+            """
+            Returns the recorded excitatory conductance corresponding to neurons with id(s) listed in the `neuron_id` argument.
+            
+            Parameters
+            ----------
+            
+            neuron_id : int or list(int)
+                      An int or a list of ints containing the ids for which to return the AnalogSignal objects.
+                      
+            Returns
+            -------
+            A AnalogSignal object if neuron_id is int, or list of AnalogSignal objects if neuron_id is list, the order corresponds to the order in neuron_id argument.
+            """
             if not self.full:
                 self.load_full()
             for a in self.analogsignalarrays:
@@ -72,6 +119,20 @@ class MozaikSegment(Segment):
                     return a[:, a.annotations['source_ids'].tolist().index(neuron_id)]
 
         def get_isyn(self,neuron_id):
+            """
+            Returns the recorded inhibitory conductance corresponding to neurons with id(s) listed in the `neuron_id` argument.
+            
+            Parameters
+            ----------
+            
+            neuron_id : int or list(int)
+                      An int or a list of ints containing the ids for which to return the AnalogSignal objects.
+                      
+            Returns
+            -------
+            A AnalogSignal object if neuron_id is int, or list of AnalogSignal objects if neuron_id is list, the order corresponds to the order in neuron_id argument.
+            """
+
             if not self.full:
                 self.load_full()
             for a in self.analogsignalarrays:
@@ -79,18 +140,18 @@ class MozaikSegment(Segment):
                     return a[:, a.annotations['source_ids'].tolist().index(neuron_id)]
 
         def load_full(self):
-            """
-            Load the full version of the Segment and set self.full to True.
-            """
             pass
 
         def neuron_num(self):
             """
-            Return number of STORED neurons in the Segment.
+            Return number of stored neurons in this Segment.
             """
             return len(self.spiketrains)
         
         def get_stored_isyn_ids(self):
+            """
+            Returns ids of neurons for which inhibitory conductance is stored in this segment.
+            """
             if not self.full:
                 self.load_full()
             for a in self.analogsignalarrays:
@@ -98,6 +159,9 @@ class MozaikSegment(Segment):
                    return a.annotations['source_ids']
         
         def get_stored_esyn_ids(self):
+            """
+            Returns ids of neurons for which excitatory conductance is stored in this segment.
+            """
             if not self.full:
                 self.load_full()
             for a in self.analogsignalarrays:
@@ -105,6 +169,9 @@ class MozaikSegment(Segment):
                    return a.annotations['source_ids']
 
         def get_stored_vm_ids(self):
+            """
+            Returns ids of neurons for which membrane potential is stored in this segment.
+            """
             if not self.full:
                 self.load_full()
             for a in self.analogsignalarrays:
@@ -112,24 +179,58 @@ class MozaikSegment(Segment):
                    return a.annotations['source_ids']
 
         def get_stored_spike_train_ids(self):
+            """
+            Returns ids of neurons for which spikes are stored in this segment.
+            """
+            
             if not self.full:
                 self.load_full()
             return [s.annotations['source_id'] for s in self.spiketrains]
 
         def mean_rates(self):
             """
-            Returns the mean rates of the spiketrains in spikes/s
+            Returns the mean rates of the spiketrains in spikes/s.
             """
             return [len(s)/(s.t_stop.rescale(qt.s).magnitude-s.t_start.rescale(qt.s).magnitude) for s in self.spiketrains]
 
+        def isi(self):
+            """
+            Returns an array containing arrays (one per each neurons) with the inter-spike intervals of the SpikeTrain objects.
+            """
+            return [numpy.diff(s) for s in self.spiketrains]
 
-"""
-This is a Mozaik wrapper of neo segment, that enables pickling and lazy loading.
-"""    
+        def cv_isi(self):
+            """
+            Return array with the coefficient of variation of the isis, one per each neuron.
+            
+            cv_isi is the ratio between the standard deviation and the mean of the ISI
+            The irregularity of individual spike trains is measured by the squared
+            coefficient of variation of the corresponding inter-spike interval (ISI)
+            distribution.
+            In point processes, low values reflect more regular spiking, a
+            clock-like pattern yields CV2= 0. On the other hand, CV2 = 1 indicates
+            Poisson-type behavior. As a measure for irregularity in the network one
+            can use the average irregularity across all neurons.
+            
+            http://en.wikipedia.org/wiki/Coefficient_of_variation
+            """
+            isi = self.isi()
+            cv_isi = []
+            for _isi in isi:
+                if len(_isi) > 0:
+                    cv_isi.append(numpy.std(_isi)/numpy.mean(_isi))
+                else:
+                    cv_isi.append(None)
+            return cv_isi
+
 
 class PickledDataStoreNeoWrapper(MozaikSegment):
-        def __init__(self, segment, identifier, datastore_path):
-            MozaikSegment.__init__(self, segment, identifier)
+        """
+        This is a Mozaik wrapper of neo segment, that enables pickling and lazy loading.
+        """    
+
+        def __init__(self, segment, identifier, datastore_path,null=False):
+            MozaikSegment.__init__(self, segment, identifier,null)
             self.datastore_path = datastore_path
 
         def load_full(self):
@@ -141,10 +242,8 @@ class PickledDataStoreNeoWrapper(MozaikSegment):
             self.full = True
 
         def __getstate__(self):
-            flag = self.full
-            self.full = False
             result = self.__dict__.copy()
-            if flag:
+            if self.full:
                 del result['_spiketrains']
                 del result['analogsignalarrays']
             return result
@@ -153,14 +252,3 @@ class PickledDataStoreNeoWrapper(MozaikSegment):
             self.full = False
             del self._spiketrains
             del self.analogsignalarrays
-
-
-def spike_dic_to_list(d):
-    sp = []
-    for k in d.keys():
-        for z in d[k]:
-            sp.append([k, z])
-    if len(sp) == 0:
-        return sp
-    sp = numpy.array(sp)
-    return sp[sp[:, 1].argsort(), :]
