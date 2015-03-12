@@ -115,7 +115,6 @@ class FullfieldDriftingSinusoidalGrating(TopographicaBasedVisualStimulus):
         i = 0
         while True:
             i += 1
-            #print i
             yield (imagen.SineGrating(orientation=self.orientation,
                                       frequency=self.spatial_frequency,
                                       phase=self.current_phase,
@@ -255,12 +254,10 @@ class NaturalImageWithEyeMovement(TopographicaBasedVisualStimulus):
                                     size_normalization='fit_longest',
                                     whole_pattern_output_fns=[imagen.transferfn.MaximumDynamicRange()])
 
-        while True:
-            location = self.eye_path[int(numpy.floor(self.frame_duration * self.time / self.eye_movement_period))]
-            image = imagen.image.FileImage(
+        image = imagen.image.FileImage(         
                                     filename=self.image_location,
-                                    x=location[0],
-                                    y=location[1],
+                                    x=0,
+                                    y=0,
                                     orientation=0,
                                     xdensity=self.density,
                                     ydensity=self.density,
@@ -268,9 +265,13 @@ class NaturalImageWithEyeMovement(TopographicaBasedVisualStimulus):
                                     bounds=BoundingBox(points=((-self.size_x/2, -self.size_y/2),
                                                                (self.size_x/2, self.size_y/2))),
                                     scale=2*self.background_luminance,
-                                    pattern_sampler=self.pattern_sampler
-                                    )()
-            yield (image, [self.time])
+                                    pattern_sampler=self.pattern_sampler)
+
+        while True:
+            location = self.eye_path[int(numpy.floor(self.frame_duration * self.time / self.eye_movement_period))]
+            image.x = location[0]
+            image.y = location[1]
+            yield (image(), [self.time])
             self.time += 1
 
 
@@ -401,25 +402,38 @@ class DriftingSinusoidalGratingCenterSurroundStimulus(TopographicaBasedVisualSti
     def frames(self):
         self.current_phase = 0
         while True:
-            center = imagen.SineGrating(mask_shape=imagen.pattern.Disk(smoothing=0.0, size=self.center_radius*2),
+            center = imagen.SineGrating(mask_shape=imagen.Disk(smoothing=0.0, size=self.center_radius*2.0),
                                         orientation=self.center_orientation,
                                         frequency=self.spatial_frequency,
                                         phase=self.current_phase,
-                                        bounds=BoundingBox(radius=self.size_x/2),
-                                        offset = self.background_luminance*(100.0 - self.contrast)/100.0,
+                                        bounds=BoundingBox(radius=self.size_x/2.0),
+                                        offset = 0,
                                         scale=2*self.background_luminance*self.contrast/100.0,  
                                         xdensity=self.density,
                                         ydensity=self.density)()
-            r = (self.center_radius + self.surround_radius + self.gap)/2
-            t = (self.surround_radius - self.surround_radius - self.gap)/2
-            surround = imagen.SineGrating(mask_shape=imagen.pattern.Ring(thickness=t, smoothing=0, size=r*2),
+            r = (self.center_radius + self.surround_radius + self.gap)/2.0
+            t = (self.surround_radius - self.center_radius - self.gap)/2.0
+            surround = imagen.SineGrating(mask_shape=imagen.Ring(thickness=t*2.0, smoothing=0.0, size=r*2.0),
                                           orientation=self.surround_orientation,
                                           frequency=self.spatial_frequency,
                                           phase=self.current_phase,
-                                          bounds=BoundingBox(radius=self.size_x/2),
-                                          offset = self.background_luminance*(100.0 - self.contrast)/100.0,
+                                          bounds=BoundingBox(radius=self.size_x/2.0),
+                                          offset = 0,
                                           scale=2*self.background_luminance*self.contrast/100.0,   
                                           xdensity=self.density,
                                           ydensity=self.density)()
-            yield (numpy.add.reduce([center, surround]), [self.current_phase])
+            
+            offset = imagen.Constant(mask_shape=imagen.Disk(smoothing=0.0, size=self.surround_radius*2.0),
+                                 bounds=BoundingBox(radius=self.size_x/2.0),
+                                 scale=self.background_luminance*(100.0 - self.contrast)/100.0,
+                                 xdensity=self.density,
+                                 ydensity=self.density)()
+
+            background = (imagen.Disk(smoothing=0.0,
+                                     size=self.surround_radius*2.0, 
+                                     bounds=BoundingBox(radius=self.size_x/2.0),
+                                     xdensity=self.density,
+                                     ydensity=self.density)()-1)*-self.background_luminance
+            
+            yield (numpy.add.reduce([numpy.maximum(center, surround),offset,background]), [self.current_phase])
             self.current_phase += 2*pi * (self.frame_duration/1000.0) * self.temporal_frequency
