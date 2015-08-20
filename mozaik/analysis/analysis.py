@@ -6,6 +6,7 @@ For more documentation refer to `mozaik.analysis`_
 """
 import numpy
 import scipy
+import scipy.signal
 import time
 import quantities as qt
 import mozaik.tools.units as munits
@@ -100,8 +101,6 @@ class TrialAveragedFiringRate(Analysis):
             # transform spike trains due to stimuly to mean_rates
             mean_rates = [numpy.array(s.mean_rates()) for s in segs]
             # collapse against all parameters other then trial
-            print len(mean_rates)
-            print len(st)
             #for s in st:
             #    print st
             
@@ -349,7 +348,11 @@ class TrialToTrialCrossCorrelationOfAnalogSignalList(Analysis):
         cc = 0
         for i in xrange(0,len(ass)):
             for j in xrange(i+1,len(ass)):
-                cc= cc + scipy.signal.fftconvolve(ass[i]-numpy.mean(ass[i]),ass[j][::-1]-numpy.mean(ass[j]),mode='full')/numpy.var(ass[i])/numpy.var(ass[j])/len(ass[i])
+                sta1 = numpy.std(ass[i])
+                sta2 = numpy.std(ass[j])
+                if sta1 != 0 and sta2 != 0:
+                    a = scipy.signal.fftconvolve(ass[i]-numpy.mean(ass[i]),ass[j][::-1]-numpy.mean(ass[j]),mode='full')/sta1/sta2/len(ass[i])
+                    cc= cc + a
                 
         cc = cc / (len(ass)*(len(ass)-1)/2)
         return cc
@@ -701,7 +704,6 @@ class GaussianTuningCurveFit(Analysis):
             for sheet in self.datastore.sheets():
                 dsv = queries.param_filter_query(self.datastore,identifier='PerNeuronValue',sheet_name=sheet)
                 if len(dsv.get_analysis_result()) == 0: continue
-                dsv.print_content(full_ADS=True)
                 assert queries.equal_ads(dsv,except_params=['stimulus_id'])
                 assert queries.ads_with_equal_stimulus_type(dsv)
                 self.pnvs = dsv.get_analysis_result()
@@ -773,7 +775,6 @@ class GaussianTuningCurveFit(Analysis):
           if success:
             return p1
           else :
-            print "Z"
             return [0,0,0,0]
 
 
@@ -880,15 +881,12 @@ class TemporalBinAverage(Analysis):
                 # First let's do recordings
                 for seg,st in zip(dsv.get_segments(),dsv.get_stimuli()):
                     if self.parameters.vm:
-                        print "A"
                         vm = [down_sample_analog_signal_average_method(seg.get_vm(i))  for i in seg.get_stored_vm_ids()]
                         self.datastore.full_datastore.add_analysis_result(AnalogSignalList(vm,seg.get_stored_vm_ids(),vm[0].units,y_axis_name = 'bin averaged vm',x_axis_name="time",sheet_name=sheet,tags=self.tags,analysis_algorithm=self.__class__.__name__,stimulus_id=str(st)))        
                     if self.parameters.cond_exc:                        
-                        print "B"
                         e_syn = [down_sample_analog_signal_average_method(seg.get_esyn(i))  for i in seg.get_stored_esyn_ids()]
                         self.datastore.full_datastore.add_analysis_result(AnalogSignalList(e_syn,seg.get_stored_esyn_ids(),e_syn[0].units,y_axis_name = 'bin averaged exc. cond.',x_axis_name="time",sheet_name=sheet,tags=self.tags,analysis_algorithm=self.__class__.__name__,stimulus_id=str(st)))        
                     if self.parameters.cond_inh:                                    
-                        print "C"
                         i_syn = [down_sample_analog_signal_average_method(seg.get_isyn(i))  for i in seg.get_stored_isyn_ids()]
                         self.datastore.full_datastore.add_analysis_result(AnalogSignalList(i_syn,seg.get_stored_isyn_ids(),i_syn[0].units,y_axis_name = 'bin averaged inh. cond.',x_axis_name="time",sheet_name=sheet,tags=self.tags,analysis_algorithm=self.__class__.__name__,stimulus_id=str(st)))        
                 
@@ -1035,7 +1033,7 @@ class PopulationMean(Analysis):
               self.datastore.full_datastore.add_analysis_result(AnalogSignal(nas,
                                                                 ads.y_axis_units,
                                                                 x_axis_name=ads.x_axis_name,
-                                                                y_axis_name=ads.y_axis_name,
+                                                                y_axis_name='Mean(' + ads.y_axis_name + ')',
                                                                 sheet_name=ads.sheet_name,
                                                                 tags=self.tags,
                                                                 analysis_algorithm=self.__class__.__name__,
