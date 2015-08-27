@@ -11,6 +11,7 @@ import urllib, copy, warnings, numpy, numpy.random  # to be replaced with srblib
 from urlparse import urlparse
 from parameters.random import ParameterDist, GammaDist, UniformDist, NormalDist
 
+
 def load_parameters(parameter_url,modified_parameters):
     """
     A simple function for loading parameters that replaces the values in *modified_parameters* in the loaded parameters
@@ -21,20 +22,18 @@ def load_parameters(parameter_url,modified_parameters):
     parameters.replace_references()
     return parameters
 
+
 class PyNNDistribution(RandomDistribution):
       """
-      This will be the wraper for the PyNN RandomDistribution
-      
+      This will be the wrapper for the PyNN RandomDistribution
+
       The first parameter is the name of the distribution (see pyNN.random.RandomDistribution)
-      The params is a tuple of parameters of the corresponding numpy distribution (see pyNN.random.RandomDistribution)
-      For the rest of the parameters see pyNN.random.RandomDistribution
+      The params is a tuple of parameters of the corresponding distribution (see pyNN.random.RandomDistribution)
       """
-      def __init__(self,name,params=(),boundaries=None,constrain='clip'):
-          if boundaries != None:
-            assert isinstance(boundaries,tuple) , "The boundries parameter of PyNNDistribution has to be tuple, while it is: %s" % type(boundaries)
-          assert constrain == 'clip' or constrain == 'redraw', "The parameter constrain has to be either \'clip\' or \'redraw\'"
-          assert isinstance(params,tuple) , "The boundries parameter of PyNNDistribution has to be tuple"
-          RandomDistribution.__init__(self,parameters=params,boundaries=boundaries,constrain=constrain)  
+      def __init__(self, name, params=()):
+          assert isinstance(params, tuple)
+          RandomDistribution.__init__(self, name, params)
+
 
 class LogNormalDistribution(ParameterDist):
     """

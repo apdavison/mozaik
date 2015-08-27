@@ -4,5 +4,7 @@ build
 *.tmp*
 *.orig
 *.komodoproject
+*.idea
 cover
 .coverage
+*.egg-info
