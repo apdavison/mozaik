@@ -1,6 +1,7 @@
 """
 This module contains API of visual stimuli.
 """
+from __future__ import division
 import numpy
 import mozaik
 from quantities import degrees
@@ -181,3 +182,59 @@ class VisualStimulus(BaseStimulus):
         """For creating movies"""
         self.update()
         return [self.img]
+
+    def export(self, filename, output_fps=60, dpi=100):
+        """
+        Export the stimulus as a movie or a collection of still frames.
+
+        If `output_fps` is None, the fps will be calculated from the frame duration.
+        Otherwise, frames will be dropped or repeated so as to achieve the requested
+        output value.
+
+        Example usage:
+
+        stim = FullfieldDriftingSinusoidalGrating(
+                    frame_duration=7, size_x=5, size_y=5,
+                    location_x=0.0, location_y=0.0,
+                    background_luminance=0.5, contrast=50,
+                    duration=5000, density=100,
+                    trial=0, orientation=pi/4,
+                    spatial_frequency=0.8, temporal_frequency=2)
+        stim.export("drifting_grating.mp4", output_fps=30, dpi=150)
+        """
+        import matplotlib.animation as manimation
+        import matplotlib.pyplot as plt
+
+        n_input_frames = self.duration/self.frame_duration
+        if output_fps is None:
+            n_output_frames = n_input_frames
+            output_fps = 1000.0/self.frame_duration
+        else:
+            n_output_frames = output_fps * self.duration/1000.0
+        if n_input_frames < n_output_frames:
+            raise ValueError("Requested fps is too high given the stimulus frame duration."
+                             "Maximum fps = {}".format(1000.0/self.frame_duration))
+
+        metadata = dict(title=self.__class__.__name__,
+                        artist='Mozaik via Matplotlib')
+        writer_cls = manimation.writers['avconv']
+        writer = writer_cls(fps=int(output_fps), metadata=metadata)
+
+        fig = plt.figure()
+        print("Input frames: {}".format(n_input_frames))
+        print("Output frames: {}".format(n_output_frames))
+        t = 0
+        with writer.saving(fig, filename, dpi):
+            ax = plt.imshow(self.next_frame()[0], cmap='gray', interpolation='none',
+                            vmin=0.0, vmax=1.0)
+            writer.grab_frame()
+            j = 1
+            for i in range(1, int(n_input_frames)):
+                next_frame = self.next_frame()[0]
+                t = i * self.frame_duration
+                #print i, j, t, j * 1000.0/output_fps
+                if t > j * 1000.0/output_fps:
+                    #print "save input frame", i
+                    ax.set_data(next_frame)
+                    writer.grab_frame()
+                    j += 1

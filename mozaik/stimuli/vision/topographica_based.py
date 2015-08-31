@@ -3,6 +3,7 @@ The file contains stimuli that use topographica to generate the stimulus
 
 """
 
+from __future__ import division
 from visual_stimulus import VisualStimulus
 import imagen
 import imagen.random
