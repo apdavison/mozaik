@@ -48,7 +48,7 @@ class LocalSequentialBackend(object):
              modified_parameters.append(k)
              modified_parameters.append(str(parameters[k]))
          
-         subprocess.call(' '.join(["python", run_script, simulator_name, parameters_url]+modified_parameters+['ParameterSearch']),shell=True)
+         subprocess.call(' '.join(["python", run_script, simulator_name, '1', parameters_url]+modified_parameters+['ParameterSearch']),shell=True)
 
 
 class SlurmSequentialBackend(object):
@@ -66,6 +66,7 @@ class SlurmSequentialBackend(object):
     slurm_options : list(string), optional 
                   List of strings that will be passed to slurm sbatch command as options.  
     Note:
+    -----
     -----
     The most common usage of slurm_options is to let slurm know how many mpi processed to spawn per job, and how to allocates resources to them.
     """
@@ -97,7 +98,7 @@ class SlurmSequentialBackend(object):
         
      
          from subprocess import Popen, PIPE, STDOUT
-        
+         #'--exclude=node[01-04]',
          p = Popen(['sbatch'] + self.slurm_options +  ['-o',parameters['results_dir'][2:-2]+"/slurm-%j.out"],stdin=PIPE,stdout=PIPE,stderr=PIPE)
          
          # THIS IS A BIT OF A HACK, have to add customization for other people ...            
@@ -114,8 +115,6 @@ class SlurmSequentialBackend(object):
          print p.communicate(input=data)[0]                  
          print data
          p.stdin.close()
-
-
 
 class ParameterSearch(object):
     """
@@ -278,4 +277,3 @@ def parameter_search_run_script_distributed_slurm(simulation_name,master_results
         print p.communicate(input=data)[0]                  
         print data
         p.stdin.close()
-
