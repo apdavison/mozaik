@@ -30,9 +30,8 @@ class PyNNDistribution(RandomDistribution):
       The first parameter is the name of the distribution (see pyNN.random.RandomDistribution)
       The params is a tuple of parameters of the corresponding distribution (see pyNN.random.RandomDistribution)
       """
-      def __init__(self, name, params=()):
-          assert isinstance(params, tuple)
-          RandomDistribution.__init__(self, name, params)
+      def __init__(self,name,**params):
+          RandomDistribution.__init__(self,name,**params)  
 
 
 class LogNormalDistribution(ParameterDist):
