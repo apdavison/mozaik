@@ -2,7 +2,7 @@
 """
 Retina/LGN model based on that developed by Jens Kremkow (CNRS-INCM/ALUF)
 """
-
+import pylab
 import numpy
 import os.path
 import pickle
@@ -109,12 +109,12 @@ class SpatioTemporalReceptiveField(object):
         #logger.debug("before normalization: min=%g, max=%g" %
         #                 (kernel.min(), kernel.max()))
         kernel = kernel/(nx * ny * nt)  # normalize to make the kernel sum quasi-independent of the quantization
-
         #logger.debug("  after normalization: min=%g, max=%g, sum=%g" %
         #                 (kernel.min(), kernel.max(), kernel.sum()))
         self.kernel = kernel
         self.spatial_resolution = dx
         self.temporal_resolution = dt
+        self.reshaped_kernel = self.kernel.reshape(-1,numpy.shape(self.kernel)[2]).T
 
     @property
     def kernel_duration(self):
@@ -236,24 +236,21 @@ class CellWithReceptiveField(object):
              remainder)
         To avoid loading the entire image sequence into memory, we build up the response array one frame at a time.
         """
-        # window for each RF
-        view_array = self.visual_space.view( self.visual_region, pixel_size=self.receptive_field.spatial_resolution )
-        # convolution
-        product = self.receptive_field.kernel * view_array[:, :, numpy.newaxis]
-        self.std[self.i] = numpy.std(view_array)
-        self.mean[self.i] = numpy.mean(view_array)
-        time_course = product.sum(axis=0).sum(axis=0)  # sum over the space axes, leaving a time signal.
-        for j in range(self.i, self.i+self.update_factor):
-            #if self.response[j:j+self.receptive_field.kernel_duration].shape != time_course.shape:
-            #    logger.error("Shape mismatch: %s != %s (j=%d, len(response)=%d, self.update_factor=%d, time_course=%s)" % \
-            #                  (self.response[j:j+self.receptive_field.kernel_duration].shape,
-            #                   time_course.shape, j, len(self.response),
-            #                   update_factor, time_course))
+        view_array = self.visual_space.view(self.visual_region, pixel_size=self.receptive_field.spatial_resolution )
+        self.std[self.i:self.i+self.update_factor] = numpy.std(view_array)
+        self.mean[self.i:self.i+self.update_factor] = numpy.mean(view_array)
+        time_course = numpy.dot(self.receptive_field.reshaped_kernel,view_array.reshape(-1)[:numpy.newaxis])
 
-            # make sure we do not go beyond response array - this could happen if
-            # visual_space.update_interval/self.receptive_field.temporal_resolution is not integer
-            self.response[j: j+self.receptive_field.kernel_duration] += time_course[:len(self.response[j: j+self.receptive_field.kernel_duration])]
+
+
+        if self.update_factor != 1.0:
+            for j in range(self.i, self.i+self.update_factor):
+                self.response[j: j+self.receptive_field.kernel_duration] += time_course[:len(self.response[j: j+self.receptive_field.kernel_duration])] #/ self.update_factor
+        else:
+            self.response[self.i: self.i+self.receptive_field.kernel_duration] += time_course[:len(self.response[self.i: self.i+self.receptive_field.kernel_duration])]
+
         self.i += self.update_factor  # we assume there is only ever 1 visual space used between initializations
+
 
     def response_current(self):
         """
@@ -262,7 +259,8 @@ class CellWithReceptiveField(object):
         nA. Returns a dictionary containing 'times' and 'amplitudes'.
         """
         k = numpy.squeeze(numpy.mean(numpy.squeeze(numpy.mean(numpy.abs(self.receptive_field.kernel),axis=0)),axis=0))
-        self.std = numpy.convolve(self.std,k[::-1]/numpy.sqrt(numpy.power(k,2).sum()),mode='same')
+        #self.std = numpy.convolve(self.std,k[::-1]/numpy.sqrt(numpy.power(k,2).sum()),mode='same')
+        self.std = numpy.convolve(self.std,k[::-1],mode='same')
         if self.gain_control.non_linear_gain != None:
             c = numpy.sum(self.receptive_field.kernel.flatten())*self.mean
             L = self.receptive_field.kernel_duration
@@ -279,6 +277,7 @@ class CellWithReceptiveField(object):
         else:
             response = self.gain_control.gain * self.response[:-self.receptive_field.kernel_duration]  # remove the extra padding at the end
         time_points = self.receptive_field.temporal_resolution * numpy.arange(0, len(response))
+
         return {'times': time_points, 'amplitudes': response}
 
 
@@ -371,6 +370,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         self.scs = {}
         self.ncs = {}
         self.ncs_rng = {}
+        self.internal_stimulus_cache = {}
         for rf_type in self.rf_types:
             p = RetinalUniformSheet(model,
                                     ParameterSet({'sx': self.parameters.size[0],
@@ -437,7 +437,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         list of frames shown to the retina.
         """
         
-        #If the chache is switched off or the we run multiprocess job switch of the cache.
+        #If the chache is switched off or we run multiprocess job switch off the cache.
         if self.parameters.cached == False or mozaik.mpi_comm.size>1:
             return None
 
@@ -465,7 +465,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 stimulus_id : StimulusID
                         The stimulus id of the stimulus for which we will store the input currents
                 
-                input_currents : list
+                input_currents : list(ndarray)
                                List containing the input currents that will be injected to the LGN neurons due to the neuron's RFs. One per each LGN neuron.
                 
                 retinal_input : list(ndarray)
@@ -513,8 +513,6 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         retinal_input : list(ndarray)
                       List of 2D arrays containing the frames of luminances that were presented to the retina.
         """
-        print stimulus
-        
         logger.debug("Presenting visual stimulus from visual space %s" % visual_space)
         visual_space.set_duration(duration)
         self.input = visual_space
@@ -525,8 +523,14 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
         if cached == None:
             logger.debug("Generating output spikes...")
-            (input_currents, retinal_input) = self._calculate_input_currents(visual_space,
-                                                                            duration)
+            # Even if we didn't find the stimulus in cache, we still check if we haven't already presented it during this simulation run.
+            # This is mainly to avoid regenerating stimuli for multiple trials.
+
+            if self.internal_stimulus_cache.has_key(str(st)):
+               (input_currents, retinal_input) =  self.internal_stimulus_cache[str(st)]
+            else:
+                (input_currents, retinal_input) = self._calculate_input_currents(visual_space,
+                                                                                 duration)
         else:
             logger.debug("Retrieved spikes from cache...")
             (input_currents, retinal_input) = cached
@@ -550,6 +554,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                                    + self.parameters.noise.stdev
                                        * self.ncs_rng[rf_type][i].randn(len(t)))
                     ncs.set_parameters(times=t, amplitudes=amplitudes)
+
+
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
         #input_current_array = numpy.zeros((self.shape[1], self.shape[0], len(visual_space.time_points(duration))))
         #update_factor = int(visual_space.update_interval/self.parameters.receptive_field.temporal_resolution)
@@ -565,6 +571,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # if record() has already been called, setup the recording now
         self._built = True
         self.write_cache(st, input_currents, retinal_input)
+        # also save into internal cache
+        self.internal_stimulus_cache[str(st)] = (input_currents, retinal_input)
+
         return retinal_input
 
     def provide_null_input(self, visual_space, duration=None, offset=0):
@@ -662,11 +671,14 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             for rf_type in self.rf_types:
                 for cell in input_cells[rf_type]:
                     cell.view()
-            visual_region = VisualRegion(location_x=0, location_y=0,
+
+	    if self.model.parameters.store_stimuli == True:
+                visual_region = VisualRegion(location_x=0, location_y=0,
                                          size_x=self.model.visual_field.size_x,
                                          size_y=self.model.visual_field.size_y)
-            im = visual_space.view(visual_region,
-                                   pixel_size=self.rf["X_ON"].spatial_resolution)
+	        im = visual_space.view(visual_region,pixel_size=self.rf["X_ON"].spatial_resolution)
+	    else:
+		im = None
             retinal_input.append(im)
 
         input_currents = {}

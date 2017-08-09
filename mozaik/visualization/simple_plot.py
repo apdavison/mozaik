@@ -680,9 +680,6 @@ class ScatterPlot(StandardStyle):
     identity_line : bool
                   Should identity line be show?  
       
-    colorbar : bool
-             Should there be a colorbar?
-             
     cmp : colormap
              The colormap to use.
     
@@ -697,6 +694,9 @@ class ScatterPlot(StandardStyle):
         
     mark_means : bool
                Whether to mark the means of each axis.
+
+    colorbar : bool
+             Should there be a colorbar?
 
     colorbar_label : label
                The label  that will be put on the colorbar.
@@ -734,7 +734,7 @@ class ScatterPlot(StandardStyle):
                                marker=self.marker,
                                lw=0,
                                cmap=self.cmp,
-                               color='k',
+                               #color='k',
                                vmin=vmin,
                                vmax=vmax)
         if self.equal_aspect_ratio:
@@ -859,7 +859,7 @@ class StandardStyleLinePlot(StandardStyle):
             elif self.colors != None:
                 p['color'] = self.colors
             elif self.colors == None:
-                p['color'] = self.axis._get_lines.color_cycle.next()
+                p['color'] = self.axis._get_lines.prop_cycler.next()['color']
             
             if type(self.linestyles) == list:
                 p['linestyle'] = self.linestyles[i]
@@ -1116,9 +1116,9 @@ class HistogramPlot(StandardStyle):
            colors = None
         
         if self.parameters["log"]:
-            self.axis.hist(numpy.log10(self.values),bins=self.num_bins,range=self.x_lim,edgecolor='none',color=colors)
+            self.axis.hist(numpy.log10(self.values),bins=int(self.num_bins),range=self.x_lim,edgecolor='none',color=colors)
         else:
-            self.axis.hist(self.values,bins=self.num_bins,range=self.x_lim,rwidth=1,edgecolor='none',color=colors)
+            self.axis.hist(self.values,bins=int(self.num_bins),range=self.x_lim,rwidth=1,edgecolor='none',color=colors)
             
         if self.mark_mean:
            for i,a in enumerate(self.values):
@@ -1212,3 +1212,51 @@ class CorticalColumnSpikeRasterPlot(StandardStyle):
         self.y_tick_style = 'Custom'
         self.y_ticks = yticks
         self.y_tick_labels = self.labels
+
+class OrderedAnalogSignalListPlot(StandardStyle):
+    """
+    This plots a set of signals, each associated with a value that can be ordered. 
+    
+    Parameters
+    ----------
+    signals : list
+                        List of vectors to be plotted.
+    values : list
+                        List of values with which the given signal is associated with.
+    Other parameters
+    ----------------
+
+    cmap : str
+           The colormap to use.
+
+    interpolation : str
+           The interpolation to use (see imshow command in matplotlib).
+           
+    colorbar : bool
+             Should there be a colorbar?
+
+    colorbar_label : label
+               The label  that will be put on the colorbar.
+
+
+    """
+
+    def __init__(self, signals, values,**param):
+        StandardStyle.__init__(self,**param)
+        self.signals = signals
+        self.values = values
+        self.parameters["cmap"] = 'jet'
+        self.parameters["interpolation"] = 'bilinear'
+        self.parameters["colorbar"] = False
+        self.parameters["colorbar_label"] = None
+
+        assert len(signals) == len(values)
+        
+    def plot(self):
+        
+        ax = self.axis.imshow(self.signals,cmap=self.cmap,aspect='auto',interpolation=self.interpolation)
+
+        if self.colorbar:
+            cb = pylab.colorbar(ax,  use_gridspec=True)
+            cb.set_label(self.colorbar_label)
+            
