@@ -20,21 +20,11 @@ logger = mozaik.getMozaikLogger()
 
 class Sheet(BaseComponent):
     """
-    Sheet is an abstraction of a 2D continuouse sheet of neurons, roughly
-    corresponding to the PyNN Population class with the added spatial structure.
+    Sheet is an abstraction of a volume of neurons positioned in a physical space.
 
-    The spatial position of all cells is kept within the PyNN Population object.
-    Each sheet is assumed to be centered around (0,0) origin, corresponding to
-    whatever excentricity the model is looking at. The internal representation
-    of space is degrees of visual field. Thus x,y coordinates of a cell in all
-    sheets correspond to the degrees of visual field this cell is away from the
-    origin. However, the sheet and derived classes/methods are supposed to
-    accept parameters in units that are most natural for the given parameter and
-    recalculate these into the internal degrees of visual field representation.
-
-    As a rule of thumb in mozaik:
-       * the units in visual space should be in degrees.
-       * the units for cortical space should be in μm.
+    It roughly corresponding to the PyNN Sheet class with the added spatial structure 
+    and various helper functions specific to the mozaik integration. The spatial position 
+    of all cells is kept within the PyNN Sheet object and are assumed to be in μm.
        
     Other parameters
     ----------------
@@ -101,6 +91,7 @@ class Sheet(BaseComponent):
     def __init__(self, model, size_x,size_y, parameters):
         BaseComponent.__init__(self, model, parameters)
         self.sim = self.model.sim
+        self.dt = self.sim.state.dt
         self.name = parameters.name  # the name of the population
         self.model.register_sheet(self)
         self._pop = None
@@ -186,7 +177,7 @@ class Sheet(BaseComponent):
         if not self._pop:
             logger.error('Population has not been yet set in sheet: ' + self.name + '!')
         if (key in self._neuron_annotations[neuron_number] and self._neuron_annotations[neuron_number][key][0]):
-            logger.warning('The annotation<' + '> for neuron ' + str(neuron_number) + ' is protected. Annotation not updated')
+            logger.warning('The annotation<' + str(key) + '> for neuron ' + str(neuron_number) + ' is protected. Annotation not updated')
         else:
             self._neuron_annotations[neuron_number][key] = (protected, value)
 
@@ -262,8 +253,7 @@ class Sheet(BaseComponent):
         """
 
         try:
-            block = self.pop.get_data(['spikes', 'v', 'gsyn_exc', 'gsyn_inh'],
-                                      clear=True)
+            block = self.pop.get_data(['spikes', 'v', 'gsyn_exc', 'gsyn_inh'],clear=True)
         except NothingToWriteError, errmsg:
             logger.debug(errmsg)
         
@@ -279,10 +269,11 @@ class Sheet(BaseComponent):
 
         s.spiketrains = sorted(s.spiketrains, compare)
         if stimulus_duration != None:        
-           for i in xrange(0, len(s.spiketrains)):
-               s.spiketrains[i] -= s.spiketrains[i].t_start
-               s.spiketrains[i].t_stop -= s.spiketrains[i].t_start
-               s.spiketrains[i].t_start = 0 * pq.ms
+           for st in s.spiketrains:
+               tstart = st.t_start
+               st -= tstart
+               st.t_stop -= tstart
+               st.t_start = 0 * pq.ms
            for i in xrange(0, len(s.analogsignals)):
                s.analogsignals[i].t_start = 0 * pq.ms
        

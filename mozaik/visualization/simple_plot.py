@@ -4,9 +4,11 @@ See :mod:`mozaik.visualization` for more general documentation.
 import mozaik.visualization.helper_functions as phf
 import pylab
 import numpy
+import math
 import mozaik
 import mozaik.tools.units 
 import quantities as pq
+from matplotlib.colors import *
 
 logger = mozaik.getMozaikLogger()
 
@@ -445,7 +447,6 @@ class SpikeRasterPlot(StandardStyle):
             self.y_lim = (0, num_n)
         
         self.x_ticks = [t_start, (t_stop-t_start)/2, t_stop]
-        self.x_tick_style = 'Custom'
         self.x_lim = (t_start, t_stop)
         self.x_label = 'time (s)'
         self.y_label = None
@@ -487,13 +488,14 @@ class SpikeHistogramPlot(SpikeRasterPlot):
     plotted. If neurons are None, the first neuron will be plotted. 
     """
 
-    def __init__(self, spike_lists,**param):
+    def __init__(self, spike_lists,num_trials,**param):
         SpikeRasterPlot.__init__(self, spike_lists,**param)
         self.parameters["bin_width"] = 0.005
         self.parameters["colors"] = ['#000000' for i in xrange(0, len(self.sps))]
+        self.num_trials = num_trials
         
     def plot(self):
-        self.neurons = [i for i in xrange(0, min(10, len(self.sps[0][0])))]
+        self.neurons = [i for i in xrange(0, len(self.sps[0][0]))]
 
         t_stop = float(self.sps[0][0][0].t_stop.rescale(pq.s))
         t_start = float(self.sps[0][0][0].t_start.rescale(pq.s))
@@ -502,20 +504,26 @@ class SpikeHistogramPlot(SpikeRasterPlot):
         for k, sp in enumerate(self.sps):
             tmp = []
             for i, spike_list in enumerate(sp):
-                for j in self.neurons:
-                    spike_train = spike_list[j].rescale(pq.s)
+                for st in spike_list:
+                    spike_train = st.rescale(pq.s)
                     tmp.extend(spike_train.magnitude)
             all_spikes.append(tmp)
-        logger.info(str(t_stop))
-        logger.info(str(self.bin_width))
+
         if all_spikes != []:
-            self.axis.hist(all_spikes,
+            n,_,_ = self.axis.hist(all_spikes,
                            bins=numpy.arange(0, t_stop, self.bin_width),
                            color=self.colors,
                            edgecolor='none')
+        
+        self.y_tick_style = 'Custom'
+        self.y_ticks = [0,numpy.max(n)]
+        self.y_tick_labels = [0,int(math.ceil(numpy.max(n)/len(self.neurons)/self.bin_width/self.num_trials))]
+
+        self.y_tick_style = 'Custom'
+        self.y_ticks = [0,numpy.max(n)]
+        self.y_tick_labels = [0,numpy.max(n)/len(self.neurons)/self.bin_width/self.num_trials]
 
         self.y_label = '(spk/s)'
-        self.x_tick_style = 'Custom'
         self.x_ticks = [t_start, (t_stop-t_start)/2, t_stop]
         self.x_lim = (t_start, t_stop)
         self.x_label = 'time (s)'
@@ -625,21 +633,35 @@ class ScatterPlotMovie(StandardStyleAnimatedPlot):
         self.parameters["marker"] = 'o'
         self.parameters["left_border"] = False
         self.parameters["bottom_border"] = False
+        self.parameters["colors"] = False
 
     def plot_next_frame(self):
-        #vmax = numpy.max(self.z)/2.0
-        #d= numpy.array([[1.0,1.0,1.0,x/vmax] for x in self.z[self.i, :].flatten()])
-        self.scatter.set_array(self.z[self.i, :].flatten())
+        if isinstance(self.parameters['colors'],numpy.ndarray):
+            self.scatter.set_color(self.z[self.i, :])
+        else:
+            self.scatter.set_array(self.z[self.i, :])
         self.i = self.i + 1
         if self.i == self.l:
             self.i = 0
         return self.scatter
 
     def plot(self):
-        vmax = numpy.max(self.z)/4.0
-        #d= numpy.array([[1,1,1,x/vmax] for x in self.z[0, :].flatten()])
-        #print numpy.shape(d)
-        self.scatter = self.axis.scatter(self.x.flatten(), self.y.flatten(),
+        self.z = self.z / numpy.max(self.z)
+        vmax = 1/2.0
+        
+        if isinstance(self.parameters['colors'],numpy.ndarray):
+            HSV = numpy.dstack((numpy.tile(self.parameters['colors'],(len(self.z),1)),numpy.ones_like(self.z)*0.8,self.z))
+            self.z = hsv_to_rgb(HSV)   
+
+            self.scatter = self.axis.scatter(self.x.flatten(), self.y.flatten(),
+                                         c=self.z[0,:],
+                                         s=self.parameters["dot_size"],
+                                         marker=self.parameters["marker"],
+                                         lw=0,
+                                         vmax=vmax,
+                                         alpha=0.4)
+        else:
+            self.scatter = self.axis.scatter(self.x.flatten(), self.y.flatten(),
                                          c=self.z[0, :].flatten(),
                                          s=self.parameters["dot_size"],
                                          marker=self.parameters["marker"],
@@ -851,6 +873,7 @@ class StandardStyleLinePlot(StandardStyle):
             
             if self.labels != None:
                 p['label'] =self.labels[i]
+                
             if type(self.colors) == list:
                 p['color'] = self.colors[i]
             elif type(self.colors) == dict:
@@ -944,10 +967,11 @@ class ConductancesPlot(StandardStyle):
 
         mean_gsyn_i = mean_gsyn_i / len(self.gsyn_is)
         mean_gsyn_e = mean_gsyn_e / len(self.gsyn_es)
-
+        from scipy.signal import savgol_filter
+        #p1, = self.axis.plot(numpy.transpose(time_axis).flatten(), savgol_filter(numpy.transpose(mean_gsyn_e).tolist(),151,2).flatten(), color='r', linewidth=3)
+        #p2, = self.axis.plot(numpy.transpose(time_axis).flatten(), savgol_filter(numpy.transpose(mean_gsyn_i).tolist(),151,2).flatten(), color='b', linewidth=3)
         p1, = self.axis.plot(time_axis, mean_gsyn_e.tolist(), color='r', linewidth=1)
         p2, = self.axis.plot(time_axis, mean_gsyn_i.tolist(), color='b', linewidth=1)
-
         if self.legend:
             self.axis.legend([p1, p2], ['exc', 'inh'])
 
@@ -1036,12 +1060,12 @@ class ConnectionPlot(StandardStyle):
         self.pos_y = self.pos_y[numpy.nonzero(self.weights)[0]]
 
         
-        if self.colors != None:
+        if isinstance(self.colors,numpy.ndarray) or isinstance(self.colors,list):
             self.colors = numpy.array(self.colors)
             self.colors = self.colors[numpy.nonzero(self.weights)[0]] 
         self.weights = self.weights[numpy.nonzero(self.weights)[0]]
 
-        if self.colors == None:
+        if not isinstance(self.colors,numpy.ndarray)  and self.colors==None:
             if numpy.max(self.weights) > 0:
                 s = self.weights / numpy.max(self.weights) * 200
             else:
@@ -1104,6 +1128,7 @@ class HistogramPlot(StandardStyle):
         self.parameters["labels"] = labels
         self.parameters["colors"] = None
         self.parameters["mark_mean"] = False
+        self.parameters["mark_value"] = False
         if labels != None:
             assert len(values) == len(labels)
         
@@ -1130,16 +1155,20 @@ class HistogramPlot(StandardStyle):
                     assert self.labels[i] in self.colors.keys(), "Cannot find curve named %s" % (self.labels[i])
                     c = self.colors[self.labels[i]]
                 
-                #tform = mtrans.blended_transform_factory(self.axis.transData, self.axis.transAxes)      
-                print numpy.mean(a)
-                print (self.y_lim[1]-self.y_lim[0])*0.9
-                print self.y_lim[1]
                 self.axis.annotate("",
-                    xy=(numpy.mean(a), (self.y_lim[1]-self.y_lim[0])*0.9), xycoords='data',
+                    xy=(numpy.mean(a), (self.y_lim[1]-self.y_lim[0])*0.8), xycoords='data',
                     xytext=(numpy.mean(a), self.y_lim[1]), textcoords='data',
                     arrowprops=dict(arrowstyle="->",
                                     connectionstyle="arc3",linewidth=3.0,color=c),
                         )
+        if self.mark_value != False:
+           self.axis.annotate("",
+                    xy=(self.mark_value, (self.y_lim[1]-self.y_lim[0])*0.8), xycoords='data',
+                    xytext=(self.mark_value, self.y_lim[1]), textcoords='data',
+                    arrowprops=dict(arrowstyle="->",
+                                    connectionstyle="arc3",linewidth=3.0,color='r'),
+                        )
+
         self.y_label = '#' 
         
 class CorticalColumnSpikeRasterPlot(StandardStyle):

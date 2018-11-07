@@ -74,7 +74,6 @@ def setup_logging():
         init_logging(Global.root_directory + "log", file_level=logging.INFO,
 	             console_level=logging.INFO)  
 
-
 def run_workflow(simulation_name, model_class, create_experiments):
     """
     This is the main function that executes a workflow. 
@@ -157,7 +156,7 @@ def run_workflow(simulation_name, model_class, create_experiments):
     if mozaik.mpi_comm.rank == 0:
         #let's store some basic info about the simulation run
         f = open(Global.root_directory+"info","w")
-        f.write(str({'model_class' : model_class, 'model_docstring' : model_class.__doc__,'simulation_run_name' : simulation_run_name, 'model_name' : simulation_name, 'creation_data' : datetime.now().strftime('%d/%m/%Y-%H:%M:%S')}))
+        f.write(str({'model_class' : str(model_class), 'model_docstring' : model_class.__doc__,'simulation_run_name' : simulation_run_name, 'model_name' : simulation_name, 'creation_data' : datetime.now().strftime('%d/%m/%Y-%H:%M:%S')}))
         f.close()
 
 
@@ -228,9 +227,9 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
     for i,experiment in enumerate(experiment_list):
         logger.info('Starting experiment: ' + experiment.__class__.__name__)
         stimuli = experiment.return_stimuli()
-        unpresented_stimuli = data_store.identify_unpresented_stimuli(stimuli)
+        unpresented_stimuli_indexes = data_store.identify_unpresented_stimuli(stimuli)
         logger.info('Running model')
-        simulation_run_time += experiment.run(data_store,unpresented_stimuli)
+        simulation_run_time += experiment.run(data_store,unpresented_stimuli_indexes)
         logger.info('Experiment %d/%d finished' % (i+1,len(experiment_list)))
     
     total_run_time = time.time() - t0

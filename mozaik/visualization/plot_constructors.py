@@ -177,6 +177,7 @@ class PerStimulusPlot(PerDSVPlot):
         # lets find parameter indexes that vary if we need 'Clever' title style
         if self.title_style == "Clever":
             self.varied = varying_parameters([MozaikParametrized.idd(s) for s in ss])
+            
             if not self.single_trial:
                 self.varied = [x for x in self.varied if x != 'trial']
             
@@ -213,14 +214,14 @@ class PerStimulusPlot(PerDSVPlot):
         if self.title_style == "Standard":
             title = ''
             title = title + stimulus.name + '\n'
-            for pn, pv in stimulus.get_param_values():
+            for pn, pv in stimulus.getParams().items():
                 title = title + pn + ' : ' + str(pv) + '\n'
             return title
 
         if self.title_style == "Clever":
            title = ''
            for pn in self.varied:
-               title = title + str(pn) + ' : ' + str(getattr(stimulus,pn)) + '\n' 
+               title = title + str(pn) + ' : ' + str(stimulus.getParamValue(pn)) + '\n' 
            return title
 
 

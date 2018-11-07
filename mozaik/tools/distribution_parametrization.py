@@ -46,6 +46,18 @@ class LogNormalDistribution(ParameterDist):
     def next(self, n=1):
         return numpy.random.lognormal(mean=self.params['mean'], sigma=self.params['std'], size=n)
     
+
+class ParameterWithUnitsAndPeriod():
+    """
+    This is a parameter that allows us add Units and Period to a given parameter.
+    """
+    def __init__(self, value,units=None,period=None):
+        self.value = value
+        self.units = units
+        self.period = period
+
+    def __repr__(self):
+        return "ParameterWithUnitsAndPeriod("+str(self.value)+",units=" + str(self.units) + ",period=" + str(self.period) + ")"
           
 class MozaikExtendedParameterSet(ParameterSet):
     """
@@ -63,6 +75,7 @@ class MozaikExtendedParameterSet(ParameterSet):
                                 PyNNDistribution = PyNNDistribution,
                                 RandomDistribution = RandomDistribution,
                                 NumpyRNG=NumpyRNG,
+                                ParameterWithUnitsAndPeriod=ParameterWithUnitsAndPeriod,
                                 pi=numpy.pi,
                                 LogNormalDistribution=LogNormalDistribution))
         if update_namespace:
@@ -94,7 +107,7 @@ class MozaikExtendedParameterSet(ParameterSet):
                     d[k] = walk(v, k)
                 else:
                     d[k] = v
-            return ParameterSet(d, label)
+            return MozaikExtendedParameterSet(d, label)
         
         self._url = None
         if isinstance(initialiser, basestring): # url or str

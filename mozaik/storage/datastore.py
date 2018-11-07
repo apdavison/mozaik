@@ -125,11 +125,12 @@ class DataStoreView(ParametrizedObject):
         Returns the idds of neurons in the sheet given the indexes (this should be primarily used with annotations data such as positions etc.)
         """
         # find first segment from sheet sheet_name
-        if indexes == None:
+        if isinstance(indexes,list) or isinstance(indexes,numpy.ndarray):
+            return self.full_datastore.block.annotations['neuron_ids'][sheet_name][indexes]
+        elif indexes  == None:
             return self.full_datastore.block.annotations['neuron_ids'][sheet_name]
         else:
-            return self.full_datastore.block.annotations['neuron_ids'][sheet_name][indexes]
-
+            raise ValueError("indexes can be aither None or list or ndarray, %s was supplied instead" % (str(type(indexes))))
     def get_sheet_parameters(self,sheet_name):
         """
         Returns the *ParemterSet* instance corresponding to the given sheet.
@@ -366,11 +367,11 @@ class DataStore(DataStoreView):
         This method filters out from a list of stimuli all those which have already been
         presented.
         """
-        unpresented_stimuli = []
-        for s in stimuli:
+        unpresented_stimuli_indexes = []
+        for i,s in enumerate(stimuli):
             if not str(s) in self.stimulus_dict:
-                unpresented_stimuli.append(s)
-        return unpresented_stimuli
+                unpresented_stimuli_indexes.append(i)
+        return unpresented_stimuli_indexes
 
     def load(self):
         """
@@ -440,8 +441,8 @@ class DataStore(DataStoreView):
                logger.info("Warning: ADS with the same parametrization already added in the datastore.: %s" % (str(result))) 
                self.analysis_results[i] = result
                return
-            logger.error("Analysis Data Structure with the same parametrization already added in the datastore. Currently uniqueness is required. The ADS was not added. User should modify analysis specification to avoid this!: %s" % (str(result)))
-            raise ValueError("Analysis Data Structure with the same parametrization already added in the datastore. Currently uniqueness is required. The ADS was not added. User should modify analysis specification to avoid this!: %s" % (str(result)))
+            logger.error("Analysis Data Structure with the same parametrization already added in the datastore. Currently uniqueness is required. The ADS was not added. User should modify analysis specification to avoid this!: \n %s \n %s " % (str(result),str(ads)))
+            raise ValueError("Analysis Data Structure with the same parametrization already added in the datastore. Currently uniqueness is required. The ADS was not added. User should modify analysis specification to avoid this!: %s \n %s" % (str(result),str(ads)))
 
 class Hdf5DataStore(DataStore):
     """
@@ -501,8 +502,8 @@ class Hdf5DataStore(DataStore):
                logger.info("Warning: ADS with the same parametrization already added in the datastore.: %s" % (str(result))) 
                self.analysis_results[i] = result
                return
-            logger.error("Analysis Data Structure with the same parametrization already added in the datastore. Currently uniqueness is required. The ADS was not added. User should modify analysis specification to avoid this!: %s" % (str(result)))
-            raise ValueError("Analysis Data Structure with the same parametrization already added in the datastore. Currently uniqueness is required. The ADS was not added. User should modify analysis specification to avoid this!: %s" % (str(result)))
+            logger.error("Analysis Data Structure with the same parametrization already added in the datastore. Currently uniqueness is required. The ADS was not added. User should modify analysis specification to avoid this!: \n %s \n %s " % (str(result),str(ads)))
+            raise ValueError("Analysis Data Structure with the same parametrization already added in the datastore. Currently uniqueness is required. The ADS was not added. User should modify analysis specification to avoid this!: %s \n %s" % (str(result),str(ads)))
 
 
 

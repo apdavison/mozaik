@@ -7,6 +7,7 @@ import mozaik
 from mozaik.stimuli import InternalStimulus
 from parameters import ParameterSet
 from mozaik.core import ParametrizedObject
+from mozaik.tools.distribution_parametrization import ParameterWithUnitsAndPeriod, MozaikExtendedParameterSet
 
 logger = mozaik.getMozaikLogger()
 
@@ -57,7 +58,7 @@ class Experiment(ParametrizedObject):
         """
         return self.stimuli
         
-    def run(self,data_store,stimuli):
+    def run(self,data_store,stimulus_indexes):
         """
         This function is called to execute the experiment.
         
@@ -82,12 +83,13 @@ class Experiment(ParametrizedObject):
         the list of stimuli which to present to prevent repetitions, and lets this function know via the stimuli argument which stimuli to actually present.
         """
         srtsum = 0
-        for i,s in enumerate(stimuli):
+        for i in stimulus_indexes:
+            s = self.stimuli[i]
             logger.debug('Presenting stimulus: ' + str(s) + '\n')
             if self.direct_stimulation == None:
                ds = {}
             else:
-               ds = self.direct_stimulation[self.stimuli.index(s)]
+               ds = self.direct_stimulation[i]
             (segments,null_segments,input_stimulus,simulator_run_time) = self.model.present_stimulus_and_record(s,ds)
             srtsum += simulator_run_time
             data_store.add_recording(segments,s)
@@ -96,7 +98,7 @@ class Experiment(ParametrizedObject):
             if null_segments != []:
                data_store.add_null_recording(null_segments,s) 
             
-            logger.info('Stimulus %d/%d finished. Memory usage: %iMB' % (i+1,len(stimuli),resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024))
+            logger.info('Stimulus %d/%d finished. Memory usage: %iMB' % (i+1,len(stimulus_indexes),resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024))
         return srtsum
         
     def do_analysis(self):
@@ -150,22 +152,24 @@ class PoissonNetworkKick(Experiment):
     def __init__(self,model,parameters):
             Experiment.__init__(self, model,parameters)
             from mozaik.sheets.direct_stimulator import Kick
-            
+
             d  = {}
             for i,sheet in enumerate(self.parameters.sheet_list):
-                d[sheet] = [Kick(model.sheets[sheet],ParameterSet({'exc_firing_rate' : self.parameters.lambda_list[i],
+                p = MozaikExtendedParameterSet({'exc_firing_rate' : self.parameters.lambda_list[i],
                                                       'exc_weight' : self.parameters.weight_list[i],
                                                       'drive_period' : self.parameters.drive_period,
                                                       'population_selector' : self.parameters.stimulation_configuration})
-                                )]
+
+                d[sheet] = [Kick(model.sheets[sheet],p)]
             
             self.direct_stimulation = [d]
-            self.stimuli.append(
+	    self.stimuli.append(
                         InternalStimulus(   
                                             frame_duration=self.parameters.duration, 
                                             duration=self.parameters.duration,
                                             trial=0,
-                                            direct_stimulation_name='Kick'
+                                            direct_stimulation_name='Kick',
+                                            direct_stimulation_parameters = p
                                          )
                                 )
         
@@ -191,7 +195,6 @@ class NoStimulation(Experiment):
                                             frame_duration=self.parameters.duration, 
                                             duration=self.parameters.duration,
                                             trial=0,
-                                            direct_stimulation_name='None'
                                          )
                                 )
 

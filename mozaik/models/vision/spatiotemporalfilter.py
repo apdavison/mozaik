@@ -17,6 +17,8 @@ from parameters import ParameterSet
 logger = mozaik.getMozaikLogger()
 
 
+
+
 def meshgrid3D(x, y, z):
     """A slimmed-down version of http://www.scipy.org/scipy/numpy/attachment/ticket/966/meshgrid.py"""
     x = numpy.asarray(x)
@@ -222,7 +224,8 @@ class CellWithReceptiveField(object):
         for i in range(L):
             self.response[-(i+1)] += background_luminance * self.receptive_field.kernel[:, :,0:L-i].sum()
         self.i = 0
-        
+    
+
     def view(self):
         """
         Look at the visual space and update t
@@ -236,11 +239,12 @@ class CellWithReceptiveField(object):
              remainder)
         To avoid loading the entire image sequence into memory, we build up the response array one frame at a time.
         """
-        view_array = self.visual_space.view(self.visual_region, pixel_size=self.receptive_field.spatial_resolution )
+        view_array = self.visual_space.view(self.visual_region, pixel_size=self.receptive_field.spatial_resolution)
         self.std[self.i:self.i+self.update_factor] = numpy.std(view_array)
         self.mean[self.i:self.i+self.update_factor] = numpy.mean(view_array)
         time_course = numpy.dot(self.receptive_field.reshaped_kernel,view_array.reshape(-1)[:numpy.newaxis])
 
+        self.va = view_array
 
 
         if self.update_factor != 1.0:
@@ -261,6 +265,7 @@ class CellWithReceptiveField(object):
         k = numpy.squeeze(numpy.mean(numpy.squeeze(numpy.mean(numpy.abs(self.receptive_field.kernel),axis=0)),axis=0))
         #self.std = numpy.convolve(self.std,k[::-1]/numpy.sqrt(numpy.power(k,2).sum()),mode='same')
         self.std = numpy.convolve(self.std,k[::-1],mode='same')
+        
         if self.gain_control.non_linear_gain != None:
             c = numpy.sum(self.receptive_field.kernel.flatten())*self.mean
             L = self.receptive_field.kernel_duration
@@ -277,6 +282,19 @@ class CellWithReceptiveField(object):
         else:
             response = self.gain_control.gain * self.response[:-self.receptive_field.kernel_duration]  # remove the extra padding at the end
         time_points = self.receptive_field.temporal_resolution * numpy.arange(0, len(response))
+
+        #ylab.figure()
+        #ylab.title(str(numpy.shape(self.receptive_field.kernel)))
+        #ylab.subplot(3,1,1)
+        #ylab.imshow(numpy.mean(self.receptive_field.kernel,axis=0))
+        #ylab.title(str(numpy.shape(self.receptive_field.kernel)))
+        #ylab.colorbar()
+        #ylab.subplot(3,1,2)
+        #ylab.imshow(self.va)
+        #ylab.colorbar()
+        #ylab.subplot(3,1,3)
+        #ylab.plot(time_points,response)
+
 
         return {'times': time_points, 'amplitudes': response}
 
@@ -359,6 +377,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         }),
     })
 
+
     def __init__(self, model, parameters):
         SensoryInputComponent.__init__(self, model, parameters)
         self.shape = (self.parameters.density,self.parameters.density)
@@ -383,7 +402,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                                                   'recording_interval'  :  self.parameters.recording_interval,
                                                   'mpi_safe': False}))
             self.sheets[rf_type] = p
-        
+            
         for rf_type in self.rf_types:
             self.scs[rf_type] = []
             self.ncs[rf_type] = []
@@ -396,14 +415,14 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     ncs = sim.NoisyCurrentSource(**self.parameters.noise)
                 else:
                     ncs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
-        
-		if self.sheets[rf_type].pop._mask_local[i]:
-			self.ncs_rng[rf_type].append(numpy.random.RandomState(seed=seeds[i]))
-        	        self.scs[rf_type].append(scs)
-	                self.ncs[rf_type].append(ncs)
+                
+                if self.sheets[rf_type].pop._mask_local[i]:
+                       self.ncs_rng[rf_type].append(numpy.random.RandomState(seed=seeds[i]))
+                       self.scs[rf_type].append(scs)
+                       self.ncs[rf_type].append(ncs)
                 lgn_cell.inject(scs)
                 lgn_cell.inject(ncs)
-                
+                    
         
         P_rf = self.parameters.receptive_field
         rf_function = eval(P_rf.func)
@@ -529,7 +548,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             if self.internal_stimulus_cache.has_key(str(st)):
                (input_currents, retinal_input) =  self.internal_stimulus_cache[str(st)]
             else:
-                (input_currents, retinal_input) = self._calculate_input_currents(visual_space,
+               (input_currents, retinal_input) = self._calculate_input_currents(visual_space,
                                                                                  duration)
         else:
             logger.debug("Retrieved spikes from cache...")
@@ -547,13 +566,13 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 assert isinstance(input_current, dict)
                 t = input_current['times'] + offset
                 a = self.parameters.linear_scaler * input_current['amplitudes']
-                scs.set_parameters(times=t, amplitudes=a)
+                scs.set_parameters(times=t, amplitudes=a,copy=False)
                 if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
                     amplitudes = (self.parameters.noise.mean
                                    + self.parameters.noise.stdev
                                        * self.ncs_rng[rf_type][i].randn(len(t)))
-                    ncs.set_parameters(times=t, amplitudes=amplitudes)
+                    ncs.set_parameters(times=t, amplitudes=amplitudes,copy=False)
 
 
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
@@ -599,41 +618,36 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                       List of 2D arrays containing the frames of luminances that were presented to the retina.
 
         """
-        times = numpy.arange(0, duration, visual_space.update_interval) + offset
+        times = numpy.array([offset,duration-visual_space.update_interval+offset])#numpy.arange(0, duration, visual_space.update_interval) + offset
         zers = times*0
         ts = self.model.sim.get_time_step()
         
         input_cells = {}
         for rf_type in self.rf_types:
-            input_cells[rf_type] = []
-            for i in numpy.nonzero(self.sheets[rf_type].pop._mask_local)[0]:
-                cell = CellWithReceptiveField(self.sheets[rf_type].pop.positions[0][i],
-                                              self.sheets[rf_type].pop.positions[1][i],
+            input_cells[rf_type] = CellWithReceptiveField(self.sheets[rf_type].pop.positions[0][0],
+                                              self.sheets[rf_type].pop.positions[1][0],
                                               self.rf[rf_type],
                                               self.parameters.gain_control,visual_space)
-                cell.initialize(visual_space.background_luminance, duration)
-                input_cells[rf_type].append(cell)
+            input_cells[rf_type].initialize(visual_space.background_luminance, duration)
         
         for rf_type in self.rf_types:
-                for i, (lgn_cell, scs, ncs, rf) in enumerate(
-                                                  zip(self.sheets[rf_type].pop,
-                                                      self.scs[rf_type],
-                                                      self.ncs[rf_type],input_cells[rf_type])):
-                    
-                    if self.parameters.gain_control.non_linear_gain != None:
-                        amplitude = self.parameters.linear_scaler * self.parameters.gain_control.non_linear_gain.luminance_gain * numpy.sum(rf.receptive_field.kernel.flatten())*visual_space.background_luminance / (self.parameters.gain_control.non_linear_gain.luminance_scaler*visual_space.background_luminance+1.0)   
-                    else:
-                        amplitude = self.parameters.linear_scaler * self.parameters.gain_control.gain * numpy.sum(rf.receptive_field.kernel.flatten())*visual_space.background_luminance
-                        
-                    scs.set_parameters(times=times,amplitudes=zers+amplitude)
+
+                if self.parameters.gain_control.non_linear_gain != None:
+                        amplitude = self.parameters.linear_scaler * self.parameters.gain_control.non_linear_gain.luminance_gain * numpy.sum(input_cells[rf_type].receptive_field.kernel.flatten())*visual_space.background_luminance / (self.parameters.gain_control.non_linear_gain.luminance_scaler*visual_space.background_luminance+1.0)   
+                else:
+                        amplitude = self.parameters.linear_scaler * self.parameters.gain_control.gain * numpy.sum(input_cells[rf_type].receptive_field.kernel.flatten())*visual_space.background_luminance
+
+                for i, (scs, ncs) in enumerate(zip(self.scs[rf_type],self.ncs[rf_type])):
+                    scs.set_parameters(times=times,amplitudes=zers+amplitude,copy=False)
                     if self.parameters.mpi_reproducible_noise:
                         t = numpy.arange(0, duration, ts) + offset
 
                         amplitudes = (self.parameters.noise.mean
                                         + self.parameters.noise.stdev
                                            * self.ncs_rng[rf_type][i].randn(len(t)))
-                        ncs.set_parameters(times=t, amplitudes=amplitudes)
+                        ncs.set_parameters(times=t, amplitudes=amplitudes,copy=False)
 
+    
     def _calculate_input_currents(self, visual_space, duration):
         """
         Calculate the input currents for all cells.
@@ -666,11 +680,31 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         t = 0
         retinal_input = []
 
+        #import threading
+        #def view_cell(cell):
+        #    cell.view()
+
+
+        if False:
+            while t < duration:
+                t = visual_space.update()
+                for rf_type in self.rf_types:
+                    threads=[]
+                    for cell in input_cells[rf_type]:
+                        thread = threading.Thread(target=cell.view())
+                        thread.start()
+                        threads.append(thread)
+                        #cell.view()
+                    for t in threads:
+                        t.join()
+
+
         while t < duration:
             t = visual_space.update()
             for rf_type in self.rf_types:
                 for cell in input_cells[rf_type]:
                     cell.view()
+
 
 	    if self.model.parameters.store_stimuli == True:
                 visual_region = VisualRegion(location_x=0, location_y=0,

@@ -8,6 +8,8 @@ from parameters import ParameterSet, ParameterDist
 from mozaik.connectors.modular import ModularSamplingProbabilisticConnector, ModularSamplingProbabilisticConnectorAnnotationSamplesCount
 from mozaik.tools.distribution_parametrization import PyNNDistribution
 
+
+
 """
 This file contains meta-connectors. These are classes that represent some higher-level 
 algorithms for connecting neurons in mozaik.
@@ -44,7 +46,7 @@ class GaborConnector(BaseComponent):
                               (note positions of neurons are always stored in
                               visual field coordinates)
     
-    `delay`                -  (ms/μm) the delay on the projections
+    `delay`                -  (ms) the delay on the projections
 
     `short_term_plasticity` - short term plasticity configuration (see basic connector)
     
@@ -67,6 +69,9 @@ class GaborConnector(BaseComponent):
         'orientation_preference':  ParameterDist,  # the orientation preference of the gabor RFs
         'phase':        ParameterDist,  # the phase of the gabor RFs
         'frequency':    ParameterDist,  # the frequency of the gabor in degrees of visual field
+        'rf_jitter' : ParameterDist, # The jitter to apply to the center of RF (on top of retinotopic position)
+
+	'off_bias' : float, # The bias towards off responses (it will be applied to the weight strength)
 
         'topological': bool,  # should the receptive field centers vary with the position of the given neurons
                               # (note positions of neurons are always stored in visual field coordinates)
@@ -74,6 +79,7 @@ class GaborConnector(BaseComponent):
         'delay_functions' : ParameterSet,  # the delay functions for ModularSamplingProbabilisticConnectorAnnotationSamplesCount (see its documentation for details)
         'delay_expression': str,           # the delay expression for ModularSamplingProbabilisticConnectorAnnotationSamplesCount (see its documentation for details)
         
+
 
         'short_term_plasticity': ParameterSet,
         'base_weight' : float, # the weights of synapses
@@ -166,11 +172,11 @@ class GaborConnector(BaseComponent):
             
             
             if self.parameters.topological:
-                target.add_neuron_annotation(j, 'LGNAfferentX', target.pop.positions[0][j], protected=True)
-                target.add_neuron_annotation(j, 'LGNAfferentY', target.pop.positions[1][j], protected=True)
+                target.add_neuron_annotation(j, 'LGNAfferentX', target.pop.positions[0][j]+parameters.rf_jitter.next()[0], protected=True)
+                target.add_neuron_annotation(j, 'LGNAfferentY', target.pop.positions[1][j]+parameters.rf_jitter.next()[0], protected=True)
             else:
-                target.add_neuron_annotation(j, 'LGNAfferentX', 0, protected=True)
-                target.add_neuron_annotation(j, 'LGNAfferentY', 0, protected=True)
+                target.add_neuron_annotation(j, 'LGNAfferentX', parameters.rf_jitter.next()[0], protected=True)
+                target.add_neuron_annotation(j, 'LGNAfferentY', parameters.rf_jitter.next()[0], protected=True)
         
         
 
@@ -193,6 +199,7 @@ class GaborConnector(BaseComponent):
                           
         ModularSamplingProbabilisticConnectorAnnotationSamplesCount(network,name+'On',lgn_on,target,ps).connect()
         ps['weight_functions.f1.params.ON']=False
+        ps['base_weight']=self.parameters.base_weight * self.parameters.off_bias
         ModularSamplingProbabilisticConnectorAnnotationSamplesCount(network,name+'Off',lgn_off,target,ps).connect()
            
            

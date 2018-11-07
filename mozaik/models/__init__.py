@@ -14,7 +14,6 @@ import numpy
 
 logger = mozaik.getMozaikLogger()
 
-
 class Model(BaseComponent):
     """
     Model encapsulates a mozaik model.
@@ -81,6 +80,7 @@ class Model(BaseComponent):
         self.node = sim.setup(timestep=self.parameters.time_step, min_delay=self.parameters.min_delay, max_delay=self.parameters.max_delay, threads=num_threads)  # should have some parameters here
         self.sheets = {}
         self.connectors = {}
+        self.num_threads = num_threads
 
         # Set-up the input space
         if self.parameters.input_space != None:
@@ -117,6 +117,7 @@ class Model(BaseComponent):
                      The biological time of the simulation up to this point (including blank presentations).
                                           
         """
+        t0 = time.time()
         for sheet in self.sheets.values():
             if self.first_time:
                sheet.record()
@@ -155,6 +156,8 @@ class Model(BaseComponent):
             for ds in artificial_stimulators.get(sheet.name,[]):
                 ds.inactivate(self.simulator_time)
         
+        logger.info("Stimulus presentation took %.0f s, of which %.0f s was simulation time"  % (time.time() - t0,sim_run_time))
+
         return (segments, null_segments,sensory_input,sim_run_time)
         
     def run(self, tstop):
@@ -209,6 +212,7 @@ class Model(BaseComponent):
                        s = sheet.get_data(self.parameters.null_stimulus_period)
                        if (not mozaik.mpi_comm) or (mozaik.mpi_comm.rank == mozaik.MPI_ROOT):
                            segments.append(s)
+
         return segments,time.time()-t0    
     
 
