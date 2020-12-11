@@ -15,7 +15,8 @@ import matplotlib
 matplotlib.use('Agg')
 
 from mpi4py import MPI 
-from pyNN import nest
+# from pyNN import nest
+from pyNN import spiNNaker
 import sys
 import mozaik
 from mozaik.cli import parse_workflow_args

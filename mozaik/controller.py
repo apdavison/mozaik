@@ -128,7 +128,8 @@ def run_workflow(simulation_name, model_class, create_experiments):
     parameters = load_parameters(parameters_url,modified_parameters)
     print "Finished loading parameters";
 
-    exec "import pyNN.nest as sim" in  globals(), locals()
+    # exec "import pyNN.nest as sim" in  globals(), locals()
+    exec "import pyNN.spiNNaker as sim" in globals(), locals()
     
     # Create results directory
     timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
