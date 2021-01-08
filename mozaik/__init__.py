@@ -52,12 +52,14 @@ def setup_mpi(mozaik_seed=513,pynn_seed=1023):
     pynn_rng = NumpyRNG(seed=pynn_seed)
     rng = numpy.random.RandomState(mozaik_seed)
 
-    try:
-        from mpi4py import MPI
-    except ImportError:
-        mpi_comm = None
-    if MPI:
-        mpi_comm = MPI.COMM_WORLD
+    # mpi will not be used with spinnaker
+    mpi_comm = None
+    # try:
+    #    from mpi4py import MPI
+    # except ImportError:
+    #    mpi_comm = None
+    # if MPI:
+    #    mpi_comm = MPI.COMM_WORLD
 
 
 
