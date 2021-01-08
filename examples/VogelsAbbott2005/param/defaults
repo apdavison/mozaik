@@ -1,7 +1,7 @@
 {
     'sheets' : {
-	'exc_layer': url("param/exc_layer"),
-        'inh_layer': url("param/inh_layer"),
+	'exc_layer': url("examples/VogelsAbbott2005/param/exc_layer"),
+        'inh_layer': url("examples/VogelsAbbott2005/param/inh_layer"),
     },
     'results_dir': '',
     'name' : 'Vogels&Abbott',
