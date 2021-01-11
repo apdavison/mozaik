@@ -146,6 +146,7 @@ def run_workflow(simulation_name, model_class, create_experiments):
     os.makedirs(Global.root_directory)
     if mozaik.mpi_comm and mozaik.mpi_comm.rank == 0:
         # mozaik.mpi_comm.barrier()
+        pass
     
     
     if mozaik.mpi_comm.rank == 0:
