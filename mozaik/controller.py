@@ -120,8 +120,8 @@ def run_workflow(simulation_name, model_class, create_experiments):
     if parameters.has_key('pynn_seed') : p['pynn_seed'] = parameters['pynn_seed']
 
     # now initialize mpi with the seeds
-    print "START MPI"
-    mozaik.setup_mpi(**p)
+    # print "START MPI"
+    # mozaik.setup_mpi(**p)
     
     # Now really load parameters
     print "Loading parameters";
