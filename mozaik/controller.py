@@ -122,6 +122,7 @@ def run_workflow(simulation_name, model_class, create_experiments):
     # now initialize mpi with the seeds
     # print "START MPI"
     # mozaik.setup_mpi(**p)
+    mozaik.mpi_comm.rank = 0
     
     # Now really load parameters
     print "Loading parameters";
