@@ -144,7 +144,7 @@ class Sheet(BaseComponent):
             if self._pop:
                 raise Exception("Error population has already been set. It is not allowed to do this twice!")
             self._pop = value
-            l = value.all_cells.astype(int)
+            # l = value.all_cells.astype(int)
 
 	    
 	    self._neuron_annotations = [{} for i in xrange(0, len(value))]
