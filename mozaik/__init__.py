@@ -28,6 +28,11 @@ pynn_rng = None
 mpi_comm = None
 MPI_ROOT = 0
 
+
+class FakeMPIComm:
+    rank = 0
+
+
 def setup_mpi(mozaik_seed=513,pynn_seed=1023):
     """
     Tests the presence of MPI and sets up mozaik wide random number generator.
@@ -52,12 +57,14 @@ def setup_mpi(mozaik_seed=513,pynn_seed=1023):
     pynn_rng = NumpyRNG(seed=pynn_seed)
     rng = numpy.random.RandomState(mozaik_seed)
 
-    try:
-        from mpi4py import MPI
-    except ImportError:
-        mpi_comm = None
-    if MPI:
-        mpi_comm = MPI.COMM_WORLD
+    mpi_comm = FakeMPIComm()
+
+    #try:
+    #    from mpi4py import MPI
+    #except ImportError:
+    #    mpi_comm = None
+    #if MPI:
+    #    mpi_comm = MPI.COMM_WORLD
 
 
 
