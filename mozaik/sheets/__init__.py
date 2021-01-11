@@ -97,7 +97,7 @@ class Sheet(BaseComponent):
         self._pop = None
         self.size_x = size_x
         self.size_y = size_y
-	self.msc=0
+        self.msc=0
         # We want to be able to define in cell.params the cell parameters as also PyNNDistributions so we can get variably parametrized populations
         # The problem is that the pyNN.Population can accept only scalar parameters. There fore we will remove from cell.params all parameters
         # that are PyNNDistributions, and will initialize them later just after the population is initialized (in property pop())
@@ -146,8 +146,7 @@ class Sheet(BaseComponent):
             self._pop = value
             # l = value.all_cells.astype(int)
 
-	    
-	    self._neuron_annotations = [{} for i in xrange(0, len(value))]
+            self._neuron_annotations = [{} for i in xrange(0, len(value))]
             self.setup_artificial_stimulation()
             self.setup_initial_values()
 
