@@ -94,7 +94,7 @@ class RCRandomPercentage(PopulationSelector):
         
     def generate_idd_list_of_neurons(self):
         if isinstance(self.sheet.pop.all_cells, list):
-            z = numpy.array(self.sheet.pop.all_cells, dtype=numpy.intc)
+            z = numpy.array(self.sheet.pop.all_cells, dtype=numpy.int)
         else:
             z = self.sheet.pop.all_cells.astype(int)
         mozaik.rng.shuffle(z)
@@ -168,9 +168,8 @@ class SimilarAnnotationSelector(PopulationSelector):
     num_of_cells : int
     The number of cells to be selected.
 
-    period : float
-	The period of the annotation value (0 if none)
-	"""
+    period : float The period of the annotation value (0 if none)
+    """
       
     required_parameters = ParameterSet({
         'annotation' : str,
