@@ -46,11 +46,11 @@ class PopulationSelector(ParametrizedObject):
         raise NotImplemented 
 
 class RCAll(PopulationSelector):
-      """
-      This PopulationSelector selects all neurons in the sheet.
-      """
-      def generate_idd_list_of_neurons(self):
-          return self.sheet.pop.all_cells.astype(int)
+    """
+    This PopulationSelector selects all neurons in the sheet.
+    """
+    def generate_idd_list_of_neurons(self):
+        return self.sheet.pop.all_cells.astype(int)
 
 class RCRandomN(PopulationSelector):
       """
@@ -73,27 +73,28 @@ class RCRandomN(PopulationSelector):
           mozaik.rng.shuffle(z)
           return z[:self.parameters.num_of_cells]
 
+
 class RCRandomPercentage(PopulationSelector):
-      """
-      Select random neurons.
+    """
+    Select random neurons.
 
-      This PopulationSelector selects *percentage* of randomly chosen neurons from the given population.
+    This PopulationSelector selects *percentage* of randomly chosen neurons from the given population.
 
+    Other parameters
+    ----------------
+    percentage : float
+    The percentage of neurons to select.
 
-      Other parameters
-      ----------------
-      percentage : float
-                   The percentage of neurons to select.
-
-      """
-      required_parameters = ParameterSet({
+    """
+    required_parameters = ParameterSet({
         'percentage': float,  # the cell type of the sheet
-      })  
+    })
         
-      def generate_idd_list_of_neurons(self):
-          z = self.sheet.pop.all_cells.astype(int)
-          mozaik.rng.shuffle(z)
-          return z[:int(len(z)*self.parameters.percentage/100)]
+    def generate_idd_list_of_neurons(self):
+        # z = self.sheet.pop.all_cells.astype(int)
+        z = numpy.array(self.sheet.pop.all_cells, dtype=numpy.int_)
+        mozaik.rng.shuffle(z)
+        return z[:int(len(z)*self.parameters.percentage/100)]
 
           
 class RCGrid(PopulationSelector):
