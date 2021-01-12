@@ -94,7 +94,7 @@ class RCRandomPercentage(PopulationSelector):
         
     def generate_idd_list_of_neurons(self):
         if isinstance(self.sheet.pop.all_cells, list):
-            z = numpy.array(self.sheet.pop.all_cells, dtype=numpy.int)
+            z = numpy.asarray(self.sheet.pop.all_cells, dtype=numpy.int)
         else:
             z = self.sheet.pop.all_cells.astype(int)
         mozaik.rng.shuffle(z)
