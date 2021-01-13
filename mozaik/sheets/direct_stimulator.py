@@ -120,7 +120,6 @@ class BackgroundActivityBombardment(DirectStimulator):
     Currently the mpi_safe version only works in nest!
     """
     
-    
     required_parameters = ParameterSet({
             'exc_firing_rate': float,
             'exc_weight': float,
@@ -176,9 +175,7 @@ class BackgroundActivityBombardment(DirectStimulator):
                     pp = self.stgene[j].poisson_generator(rate=self.parameters.inh_firing_rate,t_start=0,t_stop=duration).spike_times
                     a = offset + numpy.array(pp)
                     self.ssai[i].set_parameters(spike_times=Sequence(a.astype(float)))
-        
 
-        
     def inactivate(self,offset):        
         if not self.sheet.parameters.mpi_safe:
            self.np_exc[0].set_parameters(rate=0)
@@ -237,7 +234,7 @@ class Kick(DirectStimulator):
         DirectStimulator.__init__(self, sheet,parameters)
         population_selector = load_component(self.parameters.population_selector.component)
         self.ids = population_selector(sheet,self.parameters.population_selector.params).generate_idd_list_of_neurons()
-        d = dict((j,i) for i,j in enumerate(self.sheet.pop.all_cells))
+        d = dict((j,i) for i,j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))
         self.to_stimulate_indexes = [d[i] for i in self.ids]
         
         exc_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.exc_weight,delay=self.sheet.model.parameters.min_delay)
@@ -525,40 +522,40 @@ def ChRsystem(y,time,X,sampling_period):
 
 
 class LocalStimulatorArrayChR(LocalStimulatorArray):
-      """
-      Like *LocalStimulatorArray* but the signal calculated to impinge on a neuron is interpreted as light (photons/s/cm^2)
-      impinging on the neuron and the signal is transformed via a model of Channelrhodopsin (courtesy of Quentin Sabatier)
-      to give the final injected current. 
+    """
+    Like *LocalStimulatorArray* but the signal calculated to impinge on a neuron is interpreted as light (photons/s/cm^2)
+    impinging on the neuron and the signal is transformed via a model of Channelrhodopsin (courtesy of Quentin Sabatier)
+    to give the final injected current.
       
-      Note that we approximate the current by ignoring the voltage dependence of the channels, as it is very expensive 
-      to inject conductance in PyNN. The Channelrhodopsin has reverse potential of ~0, and we assume that our neurons 
-      sits on average at -60mV to calculate the current. 
-      """
-      def __init__(self, sheet, parameters,shared_scs=None):
-          LocalStimulatorArray.__init__(self, sheet,parameters,shared_scs)
-          times = numpy.arange(0,self.stimulation_duration,self.parameters.current_update_interval)
-          ax = pylab.subplot(155)
-          ax.set_title('Single neuron current injection profile')
+    Note that we approximate the current by ignoring the voltage dependence of the channels, as it is very expensive
+    to inject conductance in PyNN. The Channelrhodopsin has reverse potential of ~0, and we assume that our neurons
+    sits on average at -60mV to calculate the current.
+    """
+    def __init__(self, sheet, parameters,shared_scs=None):
+        LocalStimulatorArray.__init__(self, sheet,parameters,shared_scs)
+        times = numpy.arange(0,self.stimulation_duration,self.parameters.current_update_interval)
+        ax = pylab.subplot(155)
+        ax.set_title('Single neuron current injection profile')
           
-          ax.plot(times,self.mixed_signals[100,:],'k')
-          ax.set_ylabel('photons/cm2/s', color='k')
+        ax.plot(times,self.mixed_signals[100,:],'k')
+        ax.set_ylabel('photons/cm2/s', color='k')
 
-          for i in xrange(0,len(self.scs)):
-              res = odeint(ChRsystem,[0,0,0.8,0.2,0],times,args=(self.mixed_signals[i,:].flatten(),self.parameters.current_update_interval))
-              self.mixed_signals[i,:] =  60 * (17.2*res[:,0] + 2.9 * res[:,1])  / 2500 ; # the 60 corresponds to the 60mV difference between ChR reverse potential of 0mV and our expected mean Vm of about 60mV. This happens to end up being in nA which is what pyNN expect for current injection.
+        for i in xrange(0,len(self.scs)):
+            res = odeint(ChRsystem,[0,0,0.8,0.2,0],times,args=(self.mixed_signals[i,:].flatten(),self.parameters.current_update_interval))
+            self.mixed_signals[i,:] =  60 * (17.2*res[:,0] + 2.9 * res[:,1])  / 2500 ; # the 60 corresponds to the 60mV difference between ChR reverse potential of 0mV and our expected mean Vm of about 60mV. This happens to end up being in nA which is what pyNN expect for current injection.
           
-          for i in xrange(0,self.sheet.pop.size):
-                  self.sheet.add_neuron_annotation(i, 'Light activation magnitude ChR(' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + ')', numpy.max(self.mixed_signals[i,:]), protected=True)
+        for i in xrange(0,self.sheet.pop.size):
+            self.sheet.add_neuron_annotation(i, 'Light activation magnitude ChR(' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + ')', numpy.max(self.mixed_signals[i,:]), protected=True)
 
-          ax2 = ax.twinx()
-          ax2.plot(times,self.mixed_signals[100,:],'g')
-          ax2.set_ylabel('nA', color='g')
+        ax2 = ax.twinx()
+        ax2.plot(times,self.mixed_signals[100,:],'g')
+        ax2.set_ylabel('nA', color='g')
 
-          f = open(Global.root_directory +'mixed_signals' + self.sheet.name.replace('/','_') + '_' +  str(self.scale) + '_' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + '.pickle','w')
-          pickle.dump(self.mixed_signals  ,f)
-          f.close()
+        f = open(Global.root_directory +'mixed_signals' + self.sheet.name.replace('/','_') + '_' +  str(self.scale) + '_' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + '.pickle','w')
+        pickle.dump(self.mixed_signals  ,f)
+        f.close()
 
-          pylab.savefig(Global.root_directory +'LocalStimulatorArrayTest_' + self.sheet.name.replace('/','_') + '.png')
+        pylab.savefig(Global.root_directory +'LocalStimulatorArrayTest_' + self.sheet.name.replace('/','_') + '.png')
 
 
 def test_stimulating_function(sheet,coor_x,coor_y,current_update_interval,parameters):
@@ -621,8 +618,6 @@ def test_stimulating_function_Naka(sheet,coor_x,coor_y,current_update_interval,p
     scale = numpy.power(rate * parameters.cs_c50  / (parameters.cs_r_max - rate), 1/ parameters.cs_exponent)
 
     for i in xrange(0,numpy.shape(coor_x)[0]):
-
-      
         for j in xrange(0,numpy.shape(coor_x)[0]):
             signals[i,j,int(numpy.floor(parameters.onset_time/current_update_interval)):int(numpy.floor(parameters.offset_time/current_update_interval))] = scale*numpy.exp(-numpy.power(circular_dist(parameters.orientation.value,ors[i][j],numpy.pi),2)/parameters.sharpness)
 
