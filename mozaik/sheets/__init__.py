@@ -124,7 +124,8 @@ class Sheet(BaseComponent):
 
 
         for k in self.to_record.keys():
-            idds = self.pop.all_cells.astype(int)
+            # idds = self.pop.all_cells.astype(int)
+            idds = numpy.asarray(self.pop.all_cells)
             self.to_record[k] = [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]]
             
     def size_in_degrees(self):
