@@ -236,7 +236,7 @@ class Kick(DirectStimulator):
         # print(self.ids[0].id)  # 1901
         # d = dict((j, i) for i, j in enumerate(self.sheet.pop.all_cells))  # nest
         # d = dict((j,i) for i,j in enumerate(self.sheet.pop.all_cells))  # spinnaker
-        d = dict((i, j) for i, j in enumerate(self.sheet.pop.all_cells))  # spinnaker
+        d = dict((i, j) for i, j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))  # spinnaker
         # print(d)
         self.to_stimulate_indexes = [d[i.id] for i in self.ids]
 
