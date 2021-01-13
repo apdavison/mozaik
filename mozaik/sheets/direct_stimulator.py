@@ -234,7 +234,7 @@ class Kick(DirectStimulator):
         DirectStimulator.__init__(self, sheet,parameters)
         population_selector = load_component(self.parameters.population_selector.component)
         self.ids = population_selector(sheet,self.parameters.population_selector.params).generate_idd_list_of_neurons()
-        print(self.ids)
+        print(self.ids[0][0])
         d = dict((j,i) for i,j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))
         self.to_stimulate_indexes = [d[i] for i in self.ids]
         
