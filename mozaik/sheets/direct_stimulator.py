@@ -28,62 +28,63 @@ import pickle
 
 logger = mozaik.getMozaikLogger()
 
+
 class DirectStimulator(ParametrizedObject):
-      """
-      The API for direct stimulation.
-      The DirectStimulator specifies how are cells in the assigned population directly stimulated. 
+    """
+    The API for direct stimulation.
+    The DirectStimulator specifies how are cells in the assigned population directly stimulated.
         
-      Parameters
-      ----------
-      parameters : ParameterSet
+    Parameters
+    ----------
+    parameters : ParameterSet
                    The dictionary of required parameters.
                     
-      sheet : Sheet
+    sheet : Sheet
               The sheet in which to stimulate neurons.
               
-      Notes
-      -----
+    Notes
+    -----
       
-      By defalut the direct stimulation should ensure that it is mpi-safe - this is especially crucial for 
-      stimulators that involve source of randomnes. However, the DirectSimulators also can inspect the mpi_safe
-      value of the population to which they are assigned, and if it is False they can switch to potentially 
-      more efficient implementation that will however not be reproducible across multi-process simulations.
+    By defalut the direct stimulation should ensure that it is mpi-safe - this is especially crucial for
+    stimulators that involve source of randomnes. However, the DirectSimulators also can inspect the mpi_safe
+    value of the population to which they are assigned, and if it is False they can switch to potentially
+    more efficient implementation that will however not be reproducible across multi-process simulations.
       
-      Important: the functiona inactivate should only temporarily inactivate the stimulator, a subsequent call to prepare_stimulation
-      should activate the stimulator back!
-      """
+    Important: the functiona inactivate should only temporarily inactivate the stimulator, a subsequent call to prepare_stimulation
+    should activate the stimulator back!
+    """
 
-      def __init__(self, sheet, parameters):
-          ParametrizedObject.__init__(self, parameters)
-          self.sheet = sheet
+    def __init__(self, sheet, parameters):
+        ParametrizedObject.__init__(self, parameters)
+        self.sheet = sheet
      
-      def prepare_stimulation(self,duration,offset):
-          """
-          Prepares the stimulation during the next period of model simulation lasting `duration` seconds.
+    def prepare_stimulation(self,duration,offset):
+        """
+        Prepares the stimulation during the next period of model simulation lasting `duration` seconds.
           
-          Parameters
-          ----------
-          duration : double (seconds)
+        Parameters
+        ----------
+        duration : double (seconds)
                      The period for which to prepare the stimulation
           
-          offset : double (seconds)
+        offset : double (seconds)
                    The current simulator time.
                      
-          """
-          raise NotImplemented 
+        """
+        raise NotImplemented
           
-      def inactivate(self,offset):
-          """
-          Ensures any influences of the stimulation are inactivated for subsequent simulation of the model.
+    def inactivate(self,offset):
+        """
+        Ensures any influences of the stimulation are inactivated for subsequent simulation of the model.
 
-          Parameters
-          ----------
-          offset : double (seconds)
+        Parameters
+        ----------
+        offset : double (seconds)
                    The current simulator time.
           
-          Note that a subsequent call to prepare_stimulation should 'activate' the stimulator again.
-          """
-          raise NotImplemented 
+        Note that a subsequent call to prepare_stimulation should 'activate' the stimulator again.
+        """
+        raise NotImplemented
 
 
 
@@ -126,9 +127,7 @@ class BackgroundActivityBombardment(DirectStimulator):
             'inh_firing_rate': float,
             'inh_weight': float,
     })
-        
-        
-        
+
     def __init__(self, sheet, parameters):
         DirectStimulator.__init__(self, sheet,parameters)
         
@@ -161,16 +160,16 @@ class BackgroundActivityBombardment(DirectStimulator):
 
     def prepare_stimulation(self,duration,offset):
         if not self.sheet.parameters.mpi_safe:
-           self.np_exc[0].set_parameters(rate=self.parameters.exc_firing_rate)
-           self.np_inh[0].set_parameters(rate=self.parameters.inh_firing_rate)
+            self.np_exc[0].set_parameters(rate=self.parameters.exc_firing_rate)
+            self.np_inh[0].set_parameters(rate=self.parameters.inh_firing_rate)
         else:
-           if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
+            if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
                 for j,i in enumerate(numpy.nonzero(self.sheet.pop._mask_local)[0]):
                     pp = self.stgene[j].poisson_generator(rate=self.parameters.exc_firing_rate,t_start=0,t_stop=duration).spike_times
                     a = offset + numpy.array(pp)
                     self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
                
-           if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
+            if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
                 for j,i in enumerate(numpy.nonzero(self.sheet.pop._mask_local)[0]):
                     pp = self.stgene[j].poisson_generator(rate=self.parameters.inh_firing_rate,t_start=0,t_stop=duration).spike_times
                     a = offset + numpy.array(pp)
@@ -178,8 +177,8 @@ class BackgroundActivityBombardment(DirectStimulator):
 
     def inactivate(self,offset):        
         if not self.sheet.parameters.mpi_safe:
-           self.np_exc[0].set_parameters(rate=0)
-           self.np_inh[0].set_parameters(rate=0)
+            self.np_exc[0].set_parameters(rate=0)
+            self.np_inh[0].set_parameters(rate=0)
             
 
 class Kick(DirectStimulator):
@@ -235,7 +234,9 @@ class Kick(DirectStimulator):
         population_selector = load_component(self.parameters.population_selector.component)
         self.ids = population_selector(sheet,self.parameters.population_selector.params).generate_idd_list_of_neurons()
         # print(self.ids[0].id)  # 1901
-        d = dict((j,i) for i,j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))
+        # d = dict((j, i) for i, j in enumerate(self.sheet.pop.all_cells))  # nest
+        d = dict((j,i) for i,j in enumerate(self.sheet.pop.all_cells))  # spinnaker
+        print(d)
         self.to_stimulate_indexes = [d[i.id] for i in self.ids]
         
         exc_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.exc_weight,delay=self.sheet.model.parameters.min_delay)
@@ -247,17 +248,17 @@ class Kick(DirectStimulator):
 
     def prepare_stimulation(self,duration,offset):
         if (self.parameters.exc_firing_rate != 0 and self.parameters.exc_weight != 0):
-           for j,i in enumerate(self.to_stimulate_indexes):
-               if self.parameters.drive_period < duration:
-                   z = numpy.arange(self.parameters.drive_period+0.001,duration-100,10)
-                   times = [0] + z.tolist() 
-                   rate = [self.parameters.exc_firing_rate] + ((1.0-numpy.linspace(0,1.0,len(z)))*self.parameters.exc_firing_rate).tolist()
-               else:
-                   times = [0]  
-                   rate = [self.parameters.exc_firing_rate] 
-               pp = self.stgene[j].inh_poisson_generator(numpy.array(rate),numpy.array(times),t_stop=duration).spike_times
-               a = offset + numpy.array(pp)
-               self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
+            for j,i in enumerate(self.to_stimulate_indexes):
+                if self.parameters.drive_period < duration:
+                    z = numpy.arange(self.parameters.drive_period+0.001,duration-100,10)
+                    times = [0] + z.tolist()
+                    rate = [self.parameters.exc_firing_rate] + ((1.0-numpy.linspace(0,1.0,len(z)))*self.parameters.exc_firing_rate).tolist()
+                else:
+                    times = [0]
+                    rate = [self.parameters.exc_firing_rate]
+                pp = self.stgene[j].inh_poisson_generator(numpy.array(rate),numpy.array(times),t_stop=duration).spike_times
+                a = offset + numpy.array(pp)
+                self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
 
     def inactivate(self,offset):        
         pass
@@ -290,8 +291,7 @@ class Depolarization(DirectStimulator):
     
     Currently the mpi_safe version only works in nest!
     """
-    
-    
+
     required_parameters = ParameterSet({
             'current': float,
             'population_selector' : ParameterSet({
@@ -374,7 +374,6 @@ class LocalStimulatorArray(DirectStimulator):
     For now this is not mpi optimized.
     """
     
-    
     required_parameters = ParameterSet({
             'size': float,
             'spacing' : float,
@@ -392,7 +391,6 @@ class LocalStimulatorArray(DirectStimulator):
         assert math.fmod(self.parameters.size,self.parameters.spacing) < 0.000000001 , "Error the size has to be multiple of spacing!"
         assert math.fmod(self.parameters.size / self.parameters.spacing /2,2) < 0.000000001 , "Error the size and spacing have to be such that they give odd number of elements!"
 
-        
         axis_coors = numpy.arange(0,self.parameters.size+self.parameters.spacing,self.parameters.spacing) - self.parameters.size/2.0 
 
         n = int(numpy.floor(len(axis_coors)/2.0))
@@ -412,8 +410,8 @@ class LocalStimulatorArray(DirectStimulator):
 
         # now let's calculate mixing weights, this will be a matrix nxm where n is 
         # the number of neurons in the population and m is the number of stimulators
-        x =  stimulator_coordinates[0].flatten()
-        y =  stimulator_coordinates[1].flatten()
+        x = stimulator_coordinates[0].flatten()
+        y = stimulator_coordinates[1].flatten()
         xx,yy = self.sheet.vf_2_cs(self.sheet.pop.positions[0],self.sheet.pop.positions[1])
         zeros = numpy.zeros(len(x))
         f = open(Global.root_directory +'positions' + self.sheet.name.replace('/','_') + '.pickle','w')
@@ -444,7 +442,6 @@ class LocalStimulatorArray(DirectStimulator):
         nearest_ix[nearest_ix>2*n] = 2*n
         nearest_iy[nearest_iy>2*n] = 2*n
 
-
         for i in xrange(0,self.sheet.pop.size):
             temp,cutof = mixing_templates[int(nearest_iz[i])]
 
@@ -453,10 +450,9 @@ class LocalStimulatorArray(DirectStimulator):
                temp = temp[max(int(cutof-nearest_ix[i]),0):max(int(2*n+1+cutof-nearest_ix[i]),0),max(int(cutof-nearest_iy[i]),0):max(int(2*n+1+cutof-nearest_iy[i]),0)]
                self.mixed_signals[i,:] = K*W*numpy.dot(temp.flatten(),numpy.reshape(ss,(len(temp.flatten()),-1)))
 
-
         lam=numpy.squeeze(numpy.max(self.mixed_signals,axis=1))
         for i in xrange(0,self.sheet.pop.size):
-              self.sheet.add_neuron_annotation(i, 'Light activation magnitude(' +self.sheet.name + ',' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value)  + ',' +  str(self.parameters.stimulating_signal_parameters.sharpness) + ',' +  str(self.parameters.spacing) + ')', lam[i], protected=True)
+            self.sheet.add_neuron_annotation(i, 'Light activation magnitude(' +self.sheet.name + ',' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value)  + ',' +  str(self.parameters.stimulating_signal_parameters.sharpness) + ',' +  str(self.parameters.spacing) + ')', lam[i], protected=True)
 
         #ax = pylab.subplot(154, projection='3d')
         ax = pylab.subplot(154)
@@ -472,11 +468,11 @@ class LocalStimulatorArray(DirectStimulator):
         self.stimulation_duration = numpy.shape(self.mixed_signals)[1] * self.parameters.current_update_interval
         
         if shared_scs != None:
-           self.scs = shared_scs
+            self.scs = shared_scs
         else:
-           self.scs = [self.sheet.sim.StepCurrentSource(times=[0.0], amplitudes=[0.0]) for cell in self.sheet.pop.all_cells] 
-           for cell,scs in zip(self.sheet.pop.all_cells,self.scs):
-               cell.inject(scs)
+            self.scs = [self.sheet.sim.StepCurrentSource(times=[0.0], amplitudes=[0.0]) for cell in self.sheet.pop.all_cells]
+            for cell,scs in zip(self.sheet.pop.all_cells,self.scs):
+                cell.inject(scs)
 
     def prepare_stimulation(self,duration,offset):
         assert self.stimulation_duration == duration, "stimulation_duration != duration :"  + str(self.stimulation_duration) + " " + str(duration)
@@ -489,37 +485,38 @@ class LocalStimulatorArray(DirectStimulator):
         for scs in self.scs:
             scs.set_parameters(times=[offset+3*self.sheet.dt], amplitudes=[0.0],copy=False)
 
+
 def ChRsystem(y,time,X,sampling_period):
-          PhoC1toO1 = 1.0993e-19 * 50
-          PhoC2toO2 = 7.1973e-20 * 50
-          PhoC1toC2 = 1.936e-21 * 50
-          PhoC2toC1 = 1.438e-20 * 50
+    PhoC1toO1 = 1.0993e-19 * 50
+    PhoC2toO2 = 7.1973e-20 * 50
+    PhoC1toC2 = 1.936e-21 * 50
+    PhoC2toC1 = 1.438e-20 * 50
 
-          O1toC1 = 0.125
-          O2toC2 = 0.015
-          O2toS  = 0.0001
-          C2toC1 = 1e-7
-          StoC1  = 3e-6
+    O1toC1 = 0.125
+    O2toC2 = 0.015
+    O2toS  = 0.0001
+    C2toC1 = 1e-7
+    StoC1  = 3e-6
 
-          a = int(numpy.floor(time/sampling_period))
-          b = time/sampling_period - a
+    a = int(numpy.floor(time/sampling_period))
+    b = time/sampling_period - a
 
-          if a < len(X)-1:
-            I = X[a]*(1-b) + b * X[a+1];
-          else:
-            I = 0
+    if a < len(X)-1:
+        I = X[a]*(1-b) + b * X[a+1];
+    else:
+        I = 0
 
-          O1,O2,C1,C2,S = y
+    O1,O2,C1,C2,S = y
 
-          _O1 = - O1toC1 * O1                    + PhoC1toO1 * I * C1
-          _O2 = - O2toC2 * O2                    + PhoC2toO2 * I * C2            - O2toS * O2
+    _O1 = - O1toC1 * O1                    + PhoC1toO1 * I * C1
+    _O2 = - O2toC2 * O2                    + PhoC2toO2 * I * C2            - O2toS * O2
 
-          _S  = - StoC1 * S + O2toS * O2
+    _S  = - StoC1 * S + O2toS * O2
 
-          _C1 = O1toC1 * O1    - PhoC1toO1 * I * C1       - PhoC1toC2 * I * C1    + C2toC1 * C2             + PhoC2toC1 * I * C2            + StoC1 * S
-          _C2 = O2toC2 * O2    - C2toC1 * C2              - PhoC2toC1 * I * C2    + PhoC1toC2 * I * C1      - PhoC2toO2 * I * C2
+    _C1 = O1toC1 * O1    - PhoC1toO1 * I * C1       - PhoC1toC2 * I * C1    + C2toC1 * C2             + PhoC2toC1 * I * C2            + StoC1 * S
+    _C2 = O2toC2 * O2    - C2toC1 * C2              - PhoC2toC1 * I * C2    + PhoC1toC2 * I * C1      - PhoC2toO2 * I * C2
 
-          return (_O1,_O2,_C1,_C2,_S)
+    return (_O1,_O2,_C1,_C2,_S)
 
 
 class LocalStimulatorArrayChR(LocalStimulatorArray):
