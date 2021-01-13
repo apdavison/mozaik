@@ -207,7 +207,7 @@ class Model(BaseComponent):
                     self.input_layer.provide_null_input(self.input_space,
                                                         self.parameters.null_stimulus_period,
                                                         self.simulator_time)
-                                                        
+
                 logger.info("Simulating the network for %s ms with blank stimulus" % self.parameters.null_stimulus_period)
         
                 self.sim.run(self.parameters.null_stimulus_period)
@@ -244,6 +244,8 @@ class Model(BaseComponent):
         """
         ids = {}
         for s in self.sheets.values():
+            # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
+            print(s.pop.all()[0])
             ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
         return ids
 
