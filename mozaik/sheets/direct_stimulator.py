@@ -235,10 +235,11 @@ class Kick(DirectStimulator):
         self.ids = population_selector(sheet,self.parameters.population_selector.params).generate_idd_list_of_neurons()
         # print(self.ids[0].id)  # 1901
         # d = dict((j, i) for i, j in enumerate(self.sheet.pop.all_cells))  # nest
-        d = dict((j,i) for i,j in enumerate(self.sheet.pop.all_cells))  # spinnaker
-        print(d)
+        # d = dict((j,i) for i,j in enumerate(self.sheet.pop.all_cells))  # spinnaker
+        d = dict((i, j) for i, j in enumerate(self.sheet.pop.all_cells))  # spinnaker
+        # print(d)
         self.to_stimulate_indexes = [d[i.id] for i in self.ids]
-        
+
         exc_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.exc_weight,delay=self.sheet.model.parameters.min_delay)
         if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
             self.ssae = self.sheet.sim.Population(self.sheet.pop.size,self.sheet.sim.SpikeSourceArray())
