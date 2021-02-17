@@ -8,7 +8,7 @@ from neo.core.block import Block
 #from neo.io.hdf5io import NeoHdf5IO
 import mozaik
 from mozaik.core import ParametrizedObject
-from neo_neurotools_wrapper import MozaikSegment, PickledDataStoreNeoWrapper
+from .neo_neurotools_wrapper import MozaikSegment, PickledDataStoreNeoWrapper
 from mozaik.tools.mozaik_parametrized import  MozaikParametrized,filter_query
 import cPickle
 import collections
