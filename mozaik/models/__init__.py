@@ -151,9 +151,8 @@ class Model(BaseComponent):
 
         self.first_time = False
 
-	for sheet in self.sheets.values():
-	    logger.info("Sheet %s average rate: %f" % (sheet.name,sheet.mean_spike_count()))
-
+        for sheet in self.sheets.values():
+            logger.info("Sheet %s average rate: %f" % (sheet.name,sheet.mean_spike_count()))
         
         #remove any artificial stimulators 
         for sheet in self.sheets.values():
@@ -214,9 +213,9 @@ class Model(BaseComponent):
                 self.simulator_time+=self.parameters.null_stimulus_period
                 for sheet in self.sheets.values():    
                     if sheet.to_record != None:
-                       s = sheet.get_data(self.parameters.null_stimulus_period)
-                       if (not mozaik.mpi_comm) or (mozaik.mpi_comm.rank == mozaik.MPI_ROOT):
-                           segments.append(s)
+                        s = sheet.get_data(self.parameters.null_stimulus_period)
+                        if (not mozaik.mpi_comm) or (mozaik.mpi_comm.rank == mozaik.MPI_ROOT):
+                            segments.append(s)
 
         return segments,time.time()-t0    
     
