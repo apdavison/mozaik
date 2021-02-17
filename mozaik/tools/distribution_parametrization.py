@@ -8,7 +8,7 @@ in which case this code should become obsolete and mozaik should fully switch to
 from parameters import ParameterSet, ParameterRange, ParameterTable, ParameterReference
 from pyNN.random import RandomDistribution, NumpyRNG
 import urllib, copy, warnings, numpy, numpy.random  # to be replaced with srblib
-from urlparse import urlparse
+# from urlparse import urlparse
 
 import mozaik
 
