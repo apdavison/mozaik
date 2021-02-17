@@ -56,10 +56,10 @@ from mozaik.tools.mozaik_parametrized import colapse_to_dictionary, MozaikParame
 from numpy import pi
 from neo.core.analogsignal import AnalogSignal as NeoAnalogSignal
 from neo.core.spiketrain import SpikeTrain as NeoSpikeTrain
-from simple_plot import StandardStyleLinePlot, SpikeRasterPlot, \
+from .simple_plot import StandardStyleLinePlot, SpikeRasterPlot, \
                         SpikeHistogramPlot, ConductancesPlot, PixelMovie, \
                         ScatterPlotMovie, ScatterPlot, ConnectionPlot, SimplePlot, HistogramPlot, CorticalColumnSpikeRasterPlot, OrderedAnalogSignalListPlot
-from plot_constructors import LinePlot, PerStimulusPlot, PerStimulusADSPlot, ADSGridPlot
+from .plot_constructors import LinePlot, PerStimulusPlot, PerStimulusADSPlot, ADSGridPlot
 
 import mozaik
 logger = mozaik.getMozaikLogger()
