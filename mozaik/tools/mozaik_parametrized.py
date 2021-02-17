@@ -11,7 +11,7 @@ allow None value, are instantiated and allow for definition of units and period.
 
 from param.parameterized import Parameterized
 from param import Number, Integer, String, produce_value, ClassSelector
-from sets import Set
+# from sets import Set
 from parameters import ParameterSet
 import logging
 import inspect
