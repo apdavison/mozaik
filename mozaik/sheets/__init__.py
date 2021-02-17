@@ -255,7 +255,7 @@ class Sheet(BaseComponent):
 
         try:
             block = self.pop.get_data(['spikes', 'v', 'gsyn_exc', 'gsyn_inh'],clear=True)
-        except NothingToWriteError, errmsg:
+        except NothingToWriteError as errmsg:
             logger.debug(errmsg)
         
         if (mozaik.mpi_comm) and (mozaik.mpi_comm.rank != mozaik.MPI_ROOT):
