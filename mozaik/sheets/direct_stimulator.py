@@ -261,14 +261,16 @@ class Kick(DirectStimulator):
                 pp = self.stgene[j].inh_poisson_generator(numpy.array(rate),numpy.array(times),t_stop=duration).spike_times
                 a = offset + numpy.array(pp)
                 print(a)
+                print(a[0])
+                print(type(a[0]))
                 print(a.astype(float))
                 print(i)
                 print(self.ssae[i])
                 print(offset)
                 # self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
                 # self.ssae[i].set(spike_times=Sequence(a.astype(float)))
-                self.ssae[i].set_parameters(spike_times=[numpy.array([k]) for k in a.astype(float)])
-                # self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
+                # self.ssae[i].set_parameters(spike_times=[numpy.array([k]) for k in a.astype(float)])
+                self.ssae[i].set(spike_times=Sequence(a.astype(float)))
 
     def inactivate(self,offset):        
         pass
