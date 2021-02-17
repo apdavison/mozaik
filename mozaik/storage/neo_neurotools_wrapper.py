@@ -8,7 +8,8 @@ merged into the :mod:`.datastore` module.
 """
 from neo.core.segment import Segment
 import numpy
-import cPickle
+# import cPickle
+import _pickle as cPickle
 import quantities as qt
 import mozaik
 
