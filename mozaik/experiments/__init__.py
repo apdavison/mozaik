@@ -148,31 +148,27 @@ class PoissonNetworkKick(Experiment):
             'weight_list' : list,
     })
 
-    
     def __init__(self,model,parameters):
-            Experiment.__init__(self, model,parameters)
-            from mozaik.sheets.direct_stimulator import Kick
+        Experiment.__init__(self, model,parameters)
+        from mozaik.sheets.direct_stimulator import Kick
 
-            d  = {}
-            for i,sheet in enumerate(self.parameters.sheet_list):
-                p = MozaikExtendedParameterSet({'exc_firing_rate' : self.parameters.lambda_list[i],
+        d  = {}
+        for i,sheet in enumerate(self.parameters.sheet_list):
+            p = MozaikExtendedParameterSet({'exc_firing_rate' : self.parameters.lambda_list[i],
                                                       'exc_weight' : self.parameters.weight_list[i],
                                                       'drive_period' : self.parameters.drive_period,
                                                       'population_selector' : self.parameters.stimulation_configuration})
 
-                d[sheet] = [Kick(model.sheets[sheet],p)]
+            d[sheet] = [Kick(model.sheets[sheet],p)]
             
-            self.direct_stimulation = [d]
-	    self.stimuli.append(
-                        InternalStimulus(   
-                                            frame_duration=self.parameters.duration, 
-                                            duration=self.parameters.duration,
-                                            trial=0,
-                                            direct_stimulation_name='Kick',
-                                            direct_stimulation_parameters = p
-                                         )
-                                )
-        
+        self.direct_stimulation = [d]
+        self.stimuli.append(InternalStimulus(frame_duration=self.parameters.duration,
+                                             duration=self.parameters.duration,
+                                             trial=0,
+                                             direct_stimulation_name='Kick',
+                                             direct_stimulation_parameters=p))
+
+
 class NoStimulation(Experiment):
     """ 
     This is a special experiment that does not show any stimulus for the duration of the experiment. 
@@ -190,12 +186,6 @@ class NoStimulation(Experiment):
 
     def __init__(self,model,parameters):
         Experiment.__init__(self, model,parameters)
-        self.stimuli.append(
-                        InternalStimulus(   
-                                            frame_duration=self.parameters.duration, 
-                                            duration=self.parameters.duration,
-                                            trial=0,
-                                         )
-                                )
-
-
+        self.stimuli.append(InternalStimulus(frame_duration=self.parameters.duration,
+                                             duration=self.parameters.duration,
+                                             trial=0,))
