@@ -35,7 +35,7 @@ def load_fixed_parameter_set_parameter_search(simulation_name,master_results_dir
     
     datastore = []
     number_of_unloadable_datastores = 0
-    print "Number of combinations: " + str(len(combinations))
+    print("Number of combinations: " + str(len(combinations)))
     for i,combination in enumerate(combinations):
         rdn = result_directory_name('ParameterSearch',simulation_name,combination)
         try:
@@ -45,16 +45,16 @@ def load_fixed_parameter_set_parameter_search(simulation_name,master_results_dir
             datastore.append(([combination[k] for k in parameters],data_store))
         except IOError:
             number_of_unloadable_datastores = number_of_unloadable_datastores + 1
-            print "IOError: loading datastore: " + rdn
+            print("IOError: loading datastore: " + rdn)
         except ValueError:
-	    raise ValueError
+            raise ValueError
             number_of_unloadable_datastores = number_of_unloadable_datastores + 1
-            print "ValueError: loading datastore: " + str(ValueError)+ " : " + rdn
+            print("ValueError: loading datastore: " + str(ValueError)+ " : " + rdn)
         except EOFError:
             number_of_unloadable_datastores = number_of_unloadable_datastores + 1
-            print "EOError: loading datastore: " + rdn            
+            print("EOError: loading datastore: " + rdn)
 
-    print "Finished loading parameter search"
+    print("Finished loading parameter search")
 
     return (parameters,datastore,number_of_unloadable_datastores)
 
@@ -134,7 +134,7 @@ def export_SingleValues_as_matricies(simulation_name,master_results_dir,query):
         for (param_values,datastore) in datastores:
             dsv = query.query(datastore)
             for v in value_names:
-                print param_filter_query(dsv,identifier='SingleValue',value_name=v).get_analysis_result()
+                print(param_filter_query(dsv,identifier='SingleValue',value_name=v).get_analysis_result())
                 #assert len(param_filter_query(dsv,identifier='SingleValue',value_name=v).get_analysis_result()) == 1, "Error, %d ADS with value_name %s found for parameter combination:" % (len(param_filter_query(datastore,identifier='SingleValue',value_name=v).get_analysis_result()), str([str(a) + ':' + str(b) + ', ' for (a,b) in zip(parameters,param_values)]))
         
     params = numpy.array([p for p,ds in datastores])

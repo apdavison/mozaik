@@ -38,7 +38,7 @@ class ModulationRatio(Analysis):
         for sheet in self.datastore.sheets():
             # Load up spike trains for the right sheet and the corresponding
             # stimuli, and transform spike trains into psth
-            print sheet
+            print(sheet)
             self.datastore.print_content()
             dsv = queries.param_filter_query(self.datastore,identifier='AnalogSignalList',sheet_name=sheet,analysis_algorithm='PSTH',st_name='FullfieldDriftingSinusoidalGrating')
             dsv.print_content()
@@ -65,7 +65,7 @@ class ModulationRatio(Analysis):
             for s in st:
                 ps[MozaikParametrized.idd(s).orientation] = True
             ps = ps.keys()
-            print ps
+            print(ps)
             # now find the closest presented orientations
             closest_presented_orientation = []
             for i in xrange(0, len(or_pref.values)):

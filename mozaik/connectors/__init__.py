@@ -102,7 +102,7 @@ class Connector(BaseComponent):
         
         weights = self.proj.get('weight', format='list', gather=True)
         delays = self.proj.get('delay', format='list', gather=True)
-        print self.name
+        print(self.name)
         datastore.add_analysis_result(
             Connections(weights,delays,
                         source_size=(self.source.size_x,self.source.size_y),

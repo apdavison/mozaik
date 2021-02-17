@@ -120,13 +120,13 @@ def run_workflow(simulation_name, model_class, create_experiments):
     if parameters.has_key('pynn_seed') : p['pynn_seed'] = parameters['pynn_seed']
 
     # now initialize mpi with the seeds
-    print "START MPI"
+    print("START MPI")
     mozaik.setup_mpi(**p)
     
     # Now really load parameters
-    print "Loading parameters";
+    print("Loading parameters")
     parameters = load_parameters(parameters_url,modified_parameters)
-    print "Finished loading parameters";
+    print("Finished loading parameters")
 
     # exec "import pyNN.nest as sim" in  globals(), locals()
     exec "import pyNN.spiNNaker as sim" in globals(), locals()
@@ -175,10 +175,10 @@ def run_workflow(simulation_name, model_class, create_experiments):
     data_store = run_experiments(model,create_experiments(model),parameters)
 
     if mozaik.mpi_comm.rank == 0:
-	    data_store.save()
+        data_store.save()
 
     import resource
-    print "Final memory usage: %iMB" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/(1024))
+    print("Final memory usage: %iMB" % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/(1024)))
     return (data_store,model)
 
 def run_experiments(model,experiment_list,parameters,load_from=None):

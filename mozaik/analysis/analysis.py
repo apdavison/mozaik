@@ -418,8 +418,8 @@ class TrialAveragedCorrectedCrossCorrelation(Analysis):
               # print "sheet_params.sx",sheet_params['sx']
               lower_range = [ -(sheet_params['sx']/2), -(sheet_params['sx']/2)+self.parameters.size ]
               higher_range = [ (sheet_params['sx']/2)-self.parameters.size, (sheet_params['sx']/2) ]
-              print "    lower extreme:",lower_range
-              print "    higher extreme:",higher_range
+              print("    lower extreme:",lower_range)
+              print("    higher extreme:",higher_range)
               # Get sheet indexes from ids of recorded neurons
               #print "neuron ids:",self.parameters.neurons
               rec_idd_idx = zip( self.parameters.neurons, dsv.get_sheet_indexes(sheet_name=sheet,neuron_ids=self.parameters.neurons) )
@@ -441,8 +441,8 @@ class TrialAveragedCorrectedCrossCorrelation(Analysis):
                           #print "neuron(",idx,") position:", positions[sheet][0][ idx ], positions[sheet][1][ idx ]
               # extract only ids
               pair_ids = [ x[0] for x in pair_ids_idx ]
-              print "    lowest id (",pair_ids[0],") position:", positions[sheet][0][ pair_ids_idx[0][1] ], positions[sheet][1][ pair_ids_idx[0][1] ]
-              print "    highest id (",pair_ids[1],") position:", positions[sheet][0][ pair_ids_idx[1][1] ], positions[sheet][1][ pair_ids_idx[1][1] ]
+              print("    lowest id (",pair_ids[0],") position:", positions[sheet][0][ pair_ids_idx[0][1] ], positions[sheet][1][ pair_ids_idx[0][1] ])
+              print("    highest id (",pair_ids[1],") position:", positions[sheet][0][ pair_ids_idx[1][1] ], positions[sheet][1][ pair_ids_idx[1][1] ])
               # # for this sheet, get AnalogSignalList
               dsv = queries.param_filter_query(dsv, identifier="AnalogSignalList")
               # tests whether DSV contains only ADS associated with the same stimulus type
@@ -782,7 +782,7 @@ class GaussianTuningCurveFit(Analysis):
                 
                 self.tc_dict = colapse_to_dictionary([z.get_value_by_id(self.pnvs[0].ids) for z in self.pnvs],self.st,self.parameters.parameter_name)
                 for k in self.tc_dict.keys():
-                        print k
+                        print(k)
                         if len(self.tc_dict[k][0]) < 4:
                            logger.info('Failed to fit tuning curve, not enough points supplied: %d' % len(self.tc_dict[k][0]))
                            return
