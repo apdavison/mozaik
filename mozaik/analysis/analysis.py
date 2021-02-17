@@ -356,7 +356,7 @@ class TrialToTrialCrossCorrelationOfAnalogSignalList(Analysis):
                                          stimulus_id=str(st)))           
                 
     def cross_correlation(self,ass):
-	logger.info("TTC: " + str(numpy.shape(ass)))
+        logger.info("TTC: " + str(numpy.shape(ass)))
         cc = 0
         for i in xrange(0,len(ass)):
             for j in xrange(i+1,len(ass)):
@@ -364,15 +364,16 @@ class TrialToTrialCrossCorrelationOfAnalogSignalList(Analysis):
                 sta2 = numpy.std(ass[j])
                 if sta1 != 0 and sta2 != 0:
                     a = scipy.signal.fftconvolve(ass[i]-numpy.mean(ass[i]),ass[j][::-1]-numpy.mean(ass[j]),mode='full')/sta1/sta2/len(ass[i])
-                    cc= cc + a
+                    cc = cc + a
                 
         cc = cc / (len(ass)*(len(ass)-1)/2)
-	logger.info("TTC: " + str(numpy.shape(ass)))
+        logger.info("TTC: " + str(numpy.shape(ass)))
         
         if type(cc) == int:
-           cc = numpy.array([0 for i in xrange(0,len(ass[0])*2-1)]) 
+            cc = numpy.array([0 for i in xrange(0,len(ass[0])*2-1)])
         
         return cc
+
 
 class TrialAveragedCorrectedCrossCorrelation(Analysis):
       """
