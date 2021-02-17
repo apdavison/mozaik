@@ -511,13 +511,13 @@ def varying_parameters(parametrized_objects):
     for n in parametrized_objects[0].getParams().keys():
         for o in parametrized_objects:
             if isinstance(getattr(o,n),numbers.Number):
-                    if not numpy.isclose(o.getParamValue(n),parametrized_objects[0].getParamValue(n)):
-                        varying_params[n] = True
-                        break
+                if not numpy.isclose(o.getParamValue(n),parametrized_objects[0].getParamValue(n)):
+                    varying_params[n] = True
+                    break
             else:
-                    if o.getParamValue(n) != parametrized_objects[0].getParamValue(n):
-	                varying_params[n] = True
-    	                break
+                if o.getParamValue(n) != parametrized_objects[0].getParamValue(n):
+                    varying_params[n] = True
+                    break
 
     return varying_params.keys()
 
