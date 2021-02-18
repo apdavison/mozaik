@@ -112,7 +112,7 @@ class MozaikExtendedParameterSet(ParameterSet):
                 #scheme, netloc, path, \
                 #        parameters, query, fragment = urlparse(initialiser)
                 # f = urllib.urlopen(initialiser)
-                f = urllib.request.urlopen("file://examples" + initialiser)  # python 3
+                f = urllib.request.urlopen("file:///" + initialiser)  # python 3
                 # f = open(initialiser, "r+")
                 print(f)
                 pstr = f.read()
