@@ -115,11 +115,12 @@ class MozaikExtendedParameterSet(ParameterSet):
                 pstr = f.read()
                 self._url = initialiser
 
-                
-            except IOError:
+            except IOError as ioe:
+                print(ioe)
                 pstr = initialiser
                 self._url = None
             else:
+                print("closing file")
                 f.close()
 
 
