@@ -105,12 +105,13 @@ class MozaikExtendedParameterSet(ParameterSet):
                 print("XXXXXXXXXXXXXXXXXXX")
                 import os
                 print(os.getcwd())
+                print(os.listdir())
                 # can't handle cases where authentication is required
                 # should be rewritten using urllib2 
                 #scheme, netloc, path, \
                 #        parameters, query, fragment = urlparse(initialiser)
                 # f = urllib.urlopen(initialiser)
-                f = urllib.request.urlopen("file:///" + initialiser)  # python 3
+                f = urllib.request.urlopen("file://" + initialiser)  # python 3
                 # f = open(initialiser, "r+")
                 print(initialiser)
                 print(f)
