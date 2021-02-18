@@ -107,6 +107,8 @@ class MozaikExtendedParameterSet(ParameterSet):
                 # f = urllib.urlopen(initialiser)
                 f = urllib.request.urlopen("file:///" + initialiser)  # python 3
                 # f = open(initialiser, "r+")
+                print(initialiser)
+                print(f)
                 pstr = f.read()
                 self._url = initialiser
 
