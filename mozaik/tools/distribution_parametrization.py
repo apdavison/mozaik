@@ -103,6 +103,8 @@ class MozaikExtendedParameterSet(ParameterSet):
         if isinstance(initialiser, basestring): # url or str
             try:
                 print("XXXXXXXXXXXXXXXXXXX")
+                import os
+                print(os.getcwd())
                 # can't handle cases where authentication is required
                 # should be rewritten using urllib2 
                 #scheme, netloc, path, \
