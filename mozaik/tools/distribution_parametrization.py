@@ -7,8 +7,9 @@ in which case this code should become obsolete and mozaik should fully switch to
 
 from parameters import ParameterSet, ParameterRange, ParameterTable, ParameterReference
 from pyNN.random import RandomDistribution, NumpyRNG
-import urllib, copy, warnings, numpy, numpy.random  # to be replaced with srblib
+import numpy, numpy.random  # to be replaced with srblib
 # from urlparse import urlparse
+import urllib.request
 
 import mozaik
 
@@ -103,7 +104,8 @@ class MozaikExtendedParameterSet(ParameterSet):
                 # should be rewritten using urllib2 
                 #scheme, netloc, path, \
                 #        parameters, query, fragment = urlparse(initialiser)
-                f = urllib.urlopen(initialiser)
+                # f = urllib.urlopen(initialiser)
+                f = urllib.request.urlopen(initialiser)  # python 3
                 pstr = f.read()
                 self._url = initialiser
 
