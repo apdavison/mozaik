@@ -105,7 +105,8 @@ class MozaikExtendedParameterSet(ParameterSet):
                 #scheme, netloc, path, \
                 #        parameters, query, fragment = urlparse(initialiser)
                 # f = urllib.urlopen(initialiser)
-                f = urllib.request.urlopen(initialiser)  # python 3
+                # f = urllib.request.urlopen(initialiser)  # python 3
+                f = open(initialiser, "r+")
                 pstr = f.read()
                 self._url = initialiser
 
