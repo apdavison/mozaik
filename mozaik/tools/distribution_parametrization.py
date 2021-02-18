@@ -123,7 +123,8 @@ class MozaikExtendedParameterSet(ParameterSet):
                 from urllib.parse import urlparse
                 import os.path
                 # import urlparse, os.path
-                o = urlparse.urlparse(self._url)
+                # o = urlparse.urlparse(self._url)
+                o = urlparse(self._url)
                 base,ext = os.path.splitext(o.path)
                 if ext in ['.yaml','.yml']:
                     import yaml
