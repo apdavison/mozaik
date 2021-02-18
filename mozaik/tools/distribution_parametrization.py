@@ -74,6 +74,11 @@ class MozaikExtendedParameterSet(ParameterSet):
         return D or {}
     
     def __init__(self, initialiser, label=None, update_namespace=None):
+        try:
+            basestring
+        except NameError:
+            basestring = str
+
         if update_namespace == None:
            update_namespace = {}
         update_namespace['PyNNDistribution'] = PyNNDistribution
