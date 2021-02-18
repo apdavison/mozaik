@@ -102,6 +102,7 @@ class MozaikExtendedParameterSet(ParameterSet):
         self._url = None
         if isinstance(initialiser, basestring): # url or str
             try:
+                print("XXXXXXXXXXXXXXXXXXX")
                 # can't handle cases where authentication is required
                 # should be rewritten using urllib2 
                 #scheme, netloc, path, \
@@ -136,6 +137,7 @@ class MozaikExtendedParameterSet(ParameterSet):
                 else:
                     initialiser = MozaikExtendedParameterSet.read_from_str(pstr,update_namespace)
             else:
+                print("no self._url")
                 initialiser = MozaikExtendedParameterSet.read_from_str(pstr,update_namespace)
 
         
