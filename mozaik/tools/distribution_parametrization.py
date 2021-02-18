@@ -120,7 +120,9 @@ class MozaikExtendedParameterSet(ParameterSet):
 
             # is it a yaml url?
             if self._url:
-                import urlparse, os.path
+                from urllib.parse import urlparse
+                import os.path
+                # import urlparse, os.path
                 o = urlparse.urlparse(self._url)
                 base,ext = os.path.splitext(o.path)
                 if ext in ['.yaml','.yml']:
