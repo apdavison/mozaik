@@ -70,8 +70,8 @@ class MozaikExtendedParameterSet(ParameterSet):
         except SyntaxError as e:
             raise SyntaxError("Invalid string for ParameterSet definition: %s\n%s" % (s,e))
         except NameError as e:
-            print(s)
-            print(global_dict)
+            # print(s)
+            # print(global_dict)
             raise NameError("%s\n%s" % (s,e))
             
         return D or {}
@@ -106,14 +106,14 @@ class MozaikExtendedParameterSet(ParameterSet):
                 import os
                 print(os.getcwd())
                 print(os.listdir())
+                print(initialiser)
                 # can't handle cases where authentication is required
                 # should be rewritten using urllib2 
                 #scheme, netloc, path, \
                 #        parameters, query, fragment = urlparse(initialiser)
                 # f = urllib.urlopen(initialiser)
-                f = urllib.request.urlopen("file://" + initialiser)  # python 3
+                f = urllib.request.urlopen("file://examples" + initialiser)  # python 3
                 # f = open(initialiser, "r+")
-                print(initialiser)
                 print(f)
                 pstr = f.read()
                 self._url = initialiser
