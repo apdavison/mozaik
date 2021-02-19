@@ -136,7 +136,10 @@ def run_workflow(simulation_name, model_class, create_experiments):
 
     # exec "import pyNN.nest as sim" in  globals(), locals()
     # exec "import pyNN.spiNNaker as sim" in globals(), locals()
-    exec("import spynnaker8 as sim" in globals(), locals())
+    # exec("import spynnaker8 as sim" in globals(), locals())
+
+    import pyNN.spiNNaker as sim
+    globals()["sim"] = sim
     
     # Create results directory
     timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
