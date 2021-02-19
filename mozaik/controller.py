@@ -115,9 +115,15 @@ def run_workflow(simulation_name, model_class, create_experiments):
 
     # First we load the parameters just to retrieve seeds. We will throw them away, because at this stage the PyNNDistribution values were not yet initialized correctly.
     parameters = load_parameters(parameters_url,modified_parameters)
-    p={}
-    if parameters.has_key('mozaik_seed') : p['mozaik_seed'] = parameters['mozaik_seed']
-    if parameters.has_key('pynn_seed') : p['pynn_seed'] = parameters['pynn_seed']
+    p = {}
+    # if parameters.has_key('mozaik_seed') : p['mozaik_seed'] = parameters['mozaik_seed']
+    # if parameters.has_key('pynn_seed') : p['pynn_seed'] = parameters['pynn_seed']
+
+    if "mozaik_seed" in parameters:
+        p["mozaik_seed"] = parameters["mozaik_seed"]
+    if "pynn_seed" in parameters:
+        p["pynn_seed"] = parameters["pynn_seed"]
+
 
     # now initialize mpi with the seeds
     print("START MPI")
