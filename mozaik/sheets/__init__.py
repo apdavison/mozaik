@@ -163,7 +163,7 @@ class Sheet(BaseComponent):
                     " this twice!"
                 )
             self._pop = value
-            l = value.all_cells.astype(int)
+            # l = value.all_cells.astype(int)
 
             self._neuron_annotations = [{} for i in range(0, len(value))]
             self.setup_artificial_stimulation()
