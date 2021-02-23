@@ -214,9 +214,9 @@ class MozaikParametrized(Parameterized):
         self.expanded_paramset_params_dict = self.params().copy()
 
         # remove SParemeterSet parameters 
-        for key in self.expanded_paramset_params_dict.keys():
+        for key in list(self.expanded_paramset_params_dict.keys()):
             if isinstance(self.expanded_paramset_params_dict[key], SParameterSet):
-               del self.expanded_paramset_params_dict[key]
+                del self.expanded_paramset_params_dict[key]
         
         self.expanded_paramset_params_dict.update(dict(self.expanded_paramset_params))
 
