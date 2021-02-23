@@ -131,7 +131,8 @@ class Sheet(BaseComponent):
                 ]
 
             for var in self.parameters.recorders[k].variables:
-                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))
+                # self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashable type: 'IDMixin'
+                self.to_record[var] = list(self.to_record.get(var, []) | l)
 
         # for k in self.to_record.keys():
         for k in self.to_record:
@@ -332,7 +333,7 @@ class Sheet(BaseComponent):
         logger.info(self.msc)
         return self.msc
 
-    def prepare_artificial_stimulation(self, duration, offset,additional_stimulators):
+    def prepare_artificial_stimulation(self, duration, offset, additional_stimulators):
         """
         Prepares the background noise and artificial stimulation for the population for the stimulus that is 
         about to be presented. 
