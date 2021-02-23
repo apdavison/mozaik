@@ -266,15 +266,16 @@ class MozaikParametrized(Parameterized):
                 # set_in_dict(attribute_name,getattr(self,'direct_stimulation_parameters'),value)
                 # set_in_dict(path[1:,],self.params()[path[0]],value)
                 return
-        Parameterized.__setattr__(self,attribute_name,value)
-        Parameterized.__setattr__(self,'cached_get_param_values', None)
+        Parameterized.__setattr__(self, attribute_name, value)
+        Parameterized.__setattr__(self, 'cached_get_param_values', None)
 
     def get_param_values(self, onlychanged=False):
         if self.cached_get_param_values == None:
             Parameterized.__setattr__(
                 self,
                 "cached_get_param_values",
-                Parameterized.get_param_values(self, onlychanged)
+                # Parameterized.get_param_values(self, onlychanged)
+                Parameterized.get_param_values(onlychanged)  # does this work?
             )
         return self.cached_get_param_values
 
