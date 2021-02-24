@@ -130,8 +130,8 @@ class Sheet(BaseComponent):
                     self.parameters.recorders[k].variables
                 ]
 
-            print(l)
-            print(type(l))
+            print(l[0])
+            print(type(l[0]))
             print(self.to_record.get(self.parameters.recorders[k].variables[0], []))
             print(type(self.to_record.get(self.parameters.recorders[k].variables[0], [])))
             print(self.parameters.recorders[k].variables[0])
