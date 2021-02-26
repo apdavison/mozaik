@@ -130,19 +130,18 @@ class Sheet(BaseComponent):
                     self.parameters.recorders[k].variables
                 ]
 
-            print(l[0])
-            print(type(l[0]))  # IDMixin object
-            print(self.to_record.get(self.parameters.recorders[k].variables[0], []))
-            print(type(self.to_record.get(self.parameters.recorders[k].variables[0], [])))
-            print(self.to_record.get(self.parameters.recorders[k].variables[0]))
-            print(type(self.to_record.get(self.parameters.recorders[k].variables[0])))
-            print(self.parameters.recorders[k].variables[0])
-            print(type(self.parameters.recorders[k].variables[0]))
+            # print(l[0])
+            # print(type(l[0]))  # IDMixin object
+            # print(self.to_record.get(self.parameters.recorders[k].variables[0], []))
+            # print(type(self.to_record.get(self.parameters.recorders[k].variables[0], [])))
+            # print(self.to_record.get(self.parameters.recorders[k].variables[0]))
+            # print(type(self.to_record.get(self.parameters.recorders[k].variables[0])))
+            # print(self.parameters.recorders[k].variables[0])
+            # print(type(self.parameters.recorders[k].variables[0]))
 
             for var in self.parameters.recorders[k].variables:
                 print(var)
-                # self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashable type: 'IDMixin'
-                self.to_record[var] = list(frozenset(self.to_record.get(var, [])) | set(l))
+                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashable type: 'IDMixin'
 
         # for k in self.to_record.keys():
         for k in self.to_record:
