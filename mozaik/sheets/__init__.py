@@ -142,7 +142,7 @@ class Sheet(BaseComponent):
             for var in self.parameters.recorders[k].variables:
                 print(var)
                 # self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashable type: 'IDMixin'
-                self.to_record[var] = list(tuple(self.to_record.get(var, [])) | tuple(l))
+                self.to_record[var] = list(frozenset(self.to_record.get(var, [])) | set(l))
 
         # for k in self.to_record.keys():
         for k in self.to_record:
