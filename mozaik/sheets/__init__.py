@@ -138,10 +138,17 @@ class Sheet(BaseComponent):
             # print(type(self.to_record.get(self.parameters.recorders[k].variables[0])))
             # print(self.parameters.recorders[k].variables[0])
             # print(type(self.parameters.recorders[k].variables[0]))
-
+            print("TEST")
+            print(self.to_record)
+            print(type(self.to_record))
+            print(self.parameters.recorders[k].variables)
+            print("ENDTEST")
             for var in self.parameters.recorders[k].variables:
                 print(var)
-                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashable type: 'IDMixin'
+                print(type(var))
+                print(self.to_record)
+                print(self.to_record[var])
+                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
 
         # for k in self.to_record.keys():
         for k in self.to_record:
