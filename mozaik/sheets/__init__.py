@@ -117,6 +117,7 @@ class Sheet(BaseComponent):
         """
         Set up the recording configuration.
         """
+        """
         self.to_record = {}
         for k in self.parameters.recorders:
             recording_configuration = load_component(
@@ -147,7 +148,6 @@ class Sheet(BaseComponent):
                 print(var)
                 print(type(var))
                 print(self.to_record)
-                print(self.to_record[var])
                 self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
 
         # for k in self.to_record.keys():
@@ -157,6 +157,20 @@ class Sheet(BaseComponent):
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
             ]
+        """
+        self.to_record = {}
+        for k in self.parameters.recorders.keys():
+            recording_configuration = load_component(self.parameters.recorders[k].component)
+            l = recording_configuration(self, self.parameters.recorders[k].params).generate_idd_list_of_neurons()
+            if isinstance(self.parameters.recorders[k].variables, str):
+                self.parameters.recorders[k].variables = [self.parameters.recorders[k].variables]
+
+            for var in self.parameters.recorders[k].variables:
+                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))
+
+        for k in self.to_record.keys():
+            idds = self.pop.all_cells.astype(int)
+            self.to_record[k] = [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]]
             
     def size_in_degrees(self):
         """Returns the x, y size in degrees of visual field of the given area."""
