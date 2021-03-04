@@ -117,7 +117,7 @@ class Sheet(BaseComponent):
         """
         Set up the recording configuration.
         """
-        """
+
         self.to_record = {}
         for k in self.parameters.recorders:
             recording_configuration = load_component(
@@ -131,14 +131,14 @@ class Sheet(BaseComponent):
                     self.parameters.recorders[k].variables
                 ]
 
-            # print(l[0])
-            # print(type(l[0]))  # IDMixin object
-            # print(self.to_record.get(self.parameters.recorders[k].variables[0], []))
-            # print(type(self.to_record.get(self.parameters.recorders[k].variables[0], [])))
-            # print(self.to_record.get(self.parameters.recorders[k].variables[0]))
-            # print(type(self.to_record.get(self.parameters.recorders[k].variables[0])))
-            # print(self.parameters.recorders[k].variables[0])
-            # print(type(self.parameters.recorders[k].variables[0]))
+            print(l[0])
+            print(type(l[0]))  # IDMixin object
+            print(self.to_record.get(self.parameters.recorders[k].variables[0], []))
+            print(type(self.to_record.get(self.parameters.recorders[k].variables[0], [])))
+            print(self.to_record.get(self.parameters.recorders[k].variables[0]))
+            print(type(self.to_record.get(self.parameters.recorders[k].variables[0])))
+            print(self.parameters.recorders[k].variables[0])
+            print(type(self.parameters.recorders[k].variables[0]))
             print("TEST")
             print(self.to_record)
             print(type(self.to_record))
@@ -148,7 +148,7 @@ class Sheet(BaseComponent):
                 print(var)
                 print(type(var))
                 print(self.to_record)
-                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
+                self.to_record[var] = list(self.to_record.get(var, []) | l)  # unhashabse type: 'IDMixin'
 
         # for k in self.to_record.keys():
         for k in self.to_record:
@@ -157,6 +157,7 @@ class Sheet(BaseComponent):
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
             ]
+
         """
         self.to_record = {}
         for k in self.parameters.recorders.keys():
@@ -169,9 +170,10 @@ class Sheet(BaseComponent):
                 self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))
 
         for k in self.to_record.keys():
-            idds = self.pop.all_cells.astype(int)
+            # idds = self.pop.all_cells.astype(int)
+            idds = numpy.asarray(self.pop.all_cells)
             self.to_record[k] = [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]]
-            
+         """
     def size_in_degrees(self):
         """Returns the x, y size in degrees of visual field of the given area."""
         raise NotImplementedError
