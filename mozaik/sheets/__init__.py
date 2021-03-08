@@ -151,8 +151,9 @@ class Sheet(BaseComponent):
                 print("debug")
                 # print(set(l))
                 print(set(self.to_record.get(var, [])))
+                print(set(self.to_record.get(var)))
                 # print(list(set(self.to_record.get(var, [])) | set(l)))
-                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
+                self.to_record[var] = list(set(self.to_record.get(var, [])) | frozenset(l))  # unhashabse type: 'IDMixin'
 
         # for k in self.to_record.keys():
         for k in self.to_record:
