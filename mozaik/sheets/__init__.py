@@ -146,12 +146,12 @@ class Sheet(BaseComponent):
             print("ENDTEST")
             for var in self.parameters.recorders[k].variables:
                 print(var)
-                print(type(var))
-                print(self.to_record)
-                print("debug")
+                # print(type(var))
+                # print(self.to_record)
+                # print("debug")
                 # print(set(l))
-                print(set(self.to_record.get(var, [])))
-                print(set(self.to_record.get(var)))
+                # print(set(self.to_record.get(var, [])))
+                # print(set(self.to_record.get(var)))
                 # print(list(set(self.to_record.get(var, [])) | set(l)))
                 self.to_record[var] = list(set(self.to_record.get(var, [])) | frozenset(l))  # unhashabse type: 'IDMixin'
 
