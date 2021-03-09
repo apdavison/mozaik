@@ -126,7 +126,6 @@ class Sheet(BaseComponent):
             l = recording_configuration(
                 self, self.parameters.recorders[k].params
             ).generate_idd_list_of_neurons()
-            l = [frozenset(i) for i in l]
             if isinstance(self.parameters.recorders[k].variables, str):
                 self.parameters.recorders[k].variables = [
                     self.parameters.recorders[k].variables
