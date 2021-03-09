@@ -126,7 +126,7 @@ class Sheet(BaseComponent):
             l = recording_configuration(
                 self, self.parameters.recorders[k].params
             ).generate_idd_list_of_neurons()
-
+            l = [frozenset(i) for i in l]
             if isinstance(self.parameters.recorders[k].variables, str):
                 self.parameters.recorders[k].variables = [
                     self.parameters.recorders[k].variables
@@ -134,6 +134,7 @@ class Sheet(BaseComponent):
 
             print(l[0])
             print(type(l[0]))  # IDMixin object
+            print(type(l))
             print(self.to_record.get(self.parameters.recorders[k].variables[0], []))
             print(type(self.to_record.get(self.parameters.recorders[k].variables[0], [])))
             print(self.to_record.get(self.parameters.recorders[k].variables[0]))
@@ -154,7 +155,7 @@ class Sheet(BaseComponent):
                 # print(set(self.to_record.get(var, [])))
                 # print(set(self.to_record.get(var)))
                 # print(list(set(self.to_record.get(var, [])) | set(l)))
-                self.to_record[var] = list(self.to_record.get(var, []) | l)  # unhashabse type: 'IDMixin'
+                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
 
         # for k in self.to_record.keys():
         for k in self.to_record:
