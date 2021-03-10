@@ -153,7 +153,7 @@ class Sheet(BaseComponent):
             # print(self.parameters.recorders[k].variables)
             # print("ENDTEST")
 
-            l = numpy.array([i.id for i in l])
+            l = numpy.array([i.id.astype(int) for i in l])
             print("NEW ARRAY")
             print(l)
             print(l[0])
@@ -170,6 +170,7 @@ class Sheet(BaseComponent):
                 # print(set(self.to_record.get(var)))
                 # print(list(set(self.to_record.get(var, [])) | set(l)))
                 self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
+        print(self.to_record)
 
         # for k in self.to_record.keys():
         for k in self.to_record:
