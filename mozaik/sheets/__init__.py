@@ -154,7 +154,6 @@ class Sheet(BaseComponent):
             l = numpy.array([i.id for i in l])
             print("NEW ARRAY")
             print(l[0])
-            print(l[0].id)
             print(type(l[0]))
             print(type(l))
             print(l.shape)
