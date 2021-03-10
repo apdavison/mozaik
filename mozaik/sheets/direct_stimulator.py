@@ -260,7 +260,9 @@ class Kick(DirectStimulator):
                     rate = [self.parameters.exc_firing_rate]
                 pp = self.stgene[j].inh_poisson_generator(numpy.array(rate),numpy.array(times),t_stop=duration).spike_times
                 a = offset + numpy.array(pp)
+                print("direct stimulator")
                 print(a)
+                print(type(a))
                 print(a[0])
                 print(type(a[0]))
                 print(a.astype(float))

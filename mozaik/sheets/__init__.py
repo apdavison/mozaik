@@ -155,12 +155,12 @@ class Sheet(BaseComponent):
 
             # get ids from IDMixin objects
             l = numpy.array([i.id for i in l])
-            print("NEW ARRAY")
-            print(l)
-            print(l[0])
-            print(type(l[0]))
-            print(type(l))
-            print(l.shape)
+            # print("NEW ARRAY")
+            # print(l)
+            # print(l[0])
+            # print(type(l[0]))
+            # print(type(l))
+            # print(l.shape)
             for var in self.parameters.recorders[k].variables:
                 print(var)
                 # print(type(var))
@@ -171,16 +171,16 @@ class Sheet(BaseComponent):
                 # print(set(self.to_record.get(var)))
                 # print(list(set(self.to_record.get(var, [])) | set(l)))
                 self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
-        print(self.to_record)
+        # print(self.to_record)
 
         # for k in self.to_record.keys():
         for k in self.to_record:
-            print(k)
-            print(self.to_record[k])
+            # print(k)
+            # print(self.to_record[k])
             # idds = self.pop.all_cells.astype(int)
             # idds = numpy.asarray(self.pop.all_cells)
             idds = numpy.array([i.id for i in self.pop.all_cells])
-            print(idds)
+            # print(idds)
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
             ]
