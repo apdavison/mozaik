@@ -153,7 +153,7 @@ class Sheet(BaseComponent):
             # print(self.parameters.recorders[k].variables)
             # print("ENDTEST")
 
-            l = numpy.array([i.id.astype(int) for i in l])
+            l = numpy.array([i.id for i in l])
             print("NEW ARRAY")
             print(l)
             print(l[0])
@@ -174,6 +174,8 @@ class Sheet(BaseComponent):
 
         # for k in self.to_record.keys():
         for k in self.to_record:
+            print(k)
+            print(self.to_record[k])
             # idds = self.pop.all_cells.astype(int)
             idds = numpy.asarray(self.pop.all_cells)
             self.to_record[k] = [
