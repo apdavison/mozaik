@@ -178,7 +178,8 @@ class Sheet(BaseComponent):
             print(k)
             print(self.to_record[k])
             # idds = self.pop.all_cells.astype(int)
-            idds = numpy.asarray(self.pop.all_cells)
+            # idds = numpy.asarray(self.pop.all_cells)
+            idds = numpy.array([i.id for i in self.pop.all_cells])
             print(idds)
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
