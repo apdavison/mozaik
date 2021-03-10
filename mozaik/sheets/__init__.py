@@ -153,6 +153,7 @@ class Sheet(BaseComponent):
             # print(self.parameters.recorders[k].variables)
             # print("ENDTEST")
 
+            # get ids from IDMixin objects
             l = numpy.array([i.id for i in l])
             print("NEW ARRAY")
             print(l)
@@ -178,6 +179,7 @@ class Sheet(BaseComponent):
             print(self.to_record[k])
             # idds = self.pop.all_cells.astype(int)
             idds = numpy.asarray(self.pop.all_cells)
+            print(idds)
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
             ]
