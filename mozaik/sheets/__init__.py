@@ -135,6 +135,7 @@ class Sheet(BaseComponent):
             print(l)
             print(k)
             print(l[0])
+            print(l[20])
             print(l[0].id)
             print(l[1])
             print(type(l[0]))  # IDMixin object
@@ -172,8 +173,8 @@ class Sheet(BaseComponent):
 
         # for k in self.to_record.keys():
         for k in self.to_record:
-            idds = self.pop.all_cells.astype(int)
-            # idds = numpy.asarray(self.pop.all_cells)
+            # idds = self.pop.all_cells.astype(int)
+            idds = numpy.asarray(self.pop.all_cells)
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
             ]
