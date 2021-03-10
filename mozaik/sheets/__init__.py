@@ -162,7 +162,7 @@ class Sheet(BaseComponent):
             # print(type(l))
             # print(l.shape)
             for var in self.parameters.recorders[k].variables:
-                print(var)
+                # print(var)
                 # print(type(var))
                 # print(self.to_record)
                 # print("debug")

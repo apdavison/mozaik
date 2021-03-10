@@ -268,6 +268,7 @@ class Kick(DirectStimulator):
                 print(a.astype(float))
                 print(i)
                 print(self.ssae[i])
+                print(type(self.ssae[i]))
                 print(offset)
                 # self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
                 # self.ssae[i].set(spike_times=Sequence(a.astype(float)))
