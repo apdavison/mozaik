@@ -130,10 +130,13 @@ class Sheet(BaseComponent):
                 self.parameters.recorders[k].variables = [
                     self.parameters.recorders[k].variables
                 ]
-
+            print(k)
             print(l[0])
+            print(l[0].id)
+            print(l[1])
             print(type(l[0]))  # IDMixin object
             print(type(l))
+            print(l.shape)
             print(self.to_record.get(self.parameters.recorders[k].variables[0], []))
             print(type(self.to_record.get(self.parameters.recorders[k].variables[0], [])))
             print(self.to_record.get(self.parameters.recorders[k].variables[0]))
@@ -154,7 +157,7 @@ class Sheet(BaseComponent):
                 # print(set(self.to_record.get(var, [])))
                 # print(set(self.to_record.get(var)))
                 # print(list(set(self.to_record.get(var, [])) | set(l)))
-                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
+                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l.id))  # unhashabse type: 'IDMixin'
 
         # for k in self.to_record.keys():
         for k in self.to_record:
