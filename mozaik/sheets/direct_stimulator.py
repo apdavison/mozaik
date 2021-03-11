@@ -266,7 +266,7 @@ class Kick(DirectStimulator):
                 print(a[0])
                 print(type(a[0]))
                 print(a.astype(float))
-                print(type(a.astype(float))
+                print(type(a.astype(float)))
                 print(i)
                 print(self.ssae[i])
                 print(type(self.ssae[i]))
