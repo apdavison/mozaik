@@ -281,7 +281,7 @@ class Kick(DirectStimulator):
                 # self.ssae[i].set_parameters(spike_times=Sequence(x))
                 # self.ssae[i].set_parameters(spike_times=x)
                 # self.ssae[i].set(spike_times=Sequence(x))
-                self.ssae[i].set_parameters(spike_times=a.astype(float))
+                self.ssae[i].set_parameters(spike_times=numpy.array(a.astype(float)))
 
     def inactivate(self, offset):
         pass
