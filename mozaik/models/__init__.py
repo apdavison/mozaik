@@ -260,7 +260,8 @@ class Model(BaseComponent):
         """
         ids = {}
         for s in list(self.sheets.values()):
-            ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
+            # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
+            ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
         return ids
 
     def sheet_parameters(self):
