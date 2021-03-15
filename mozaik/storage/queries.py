@@ -78,7 +78,8 @@ def param_filter_query(dsv, ads_unique=False, rec_unique=False, **kwargs):
         [(k[3:], kwargs[k]) for k in list(kwargs.keys()) if k[0:3] == "st_"]
     )
     kwargs = dict([(k, kwargs[k]) for k in list(kwargs.keys()) if k[0:3] != "st_"])
-
+    print(dsv)
+    print(dsv.block.segments)
     seg_st = [
         MozaikParametrized.idd(seg.annotations["stimulus"])
         for seg in dsv.block.segments
