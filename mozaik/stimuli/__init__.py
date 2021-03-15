@@ -20,7 +20,7 @@ from operator import itemgetter
 import numpy
 import quantities as qt
 
-from param.parameterized import Parameterized
+# from param.parameterized import Parameterized
 
 from ..tools.mozaik_parametrized import (
     MozaikParametrized,
