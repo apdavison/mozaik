@@ -370,8 +370,9 @@ class MozaikParametrized(Parameterized):
         else:
             z = __import__(module_path, globals(), locals(), name)
             MozaikParametrized._module_cache[(module_path, name)] = z
-
-        cls = getattr(z, name)
+        print(z)
+        print(name)
+        cls = getattr(z, name)()
 
         obj = cls.__new__(cls, **params)
         MozaikParametrized.__init__(obj, **params)
