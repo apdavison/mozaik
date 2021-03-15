@@ -372,7 +372,8 @@ class MozaikParametrized(Parameterized):
             MozaikParametrized._module_cache[(module_path, name)] = z
         print(z)
         print(name)
-        cls = getattr(z, name)()
+        print(dir(z))
+        cls = getattr(z, name)
 
         obj = cls.__new__(cls, **params)
         MozaikParametrized.__init__(obj, **params)
