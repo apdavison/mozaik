@@ -355,6 +355,8 @@ class MozaikParametrized(Parameterized):
         
         Furthermore if given an instance of MozaikParametrized instead it will convert it into the 'Shell' object.
         """
+        print(cls)
+        print(obj)
         if isinstance(obj, MozaikParametrized):
             return MozaikParametrized.idd(str(obj))
         assert isinstance(
