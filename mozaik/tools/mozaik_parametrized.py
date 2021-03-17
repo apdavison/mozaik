@@ -146,7 +146,7 @@ class MozaikParametrized(Parameterized):
         self.module_path = inspect.getmodule(self).__name__
         print(self.name)
         print(self.__class__.__name__)
-        # self.name = self.__class__.__name__
+        self.name = self.__class__.__name__
         
         for name in self.params():
             o = self.params()[name]
@@ -276,8 +276,8 @@ class MozaikParametrized(Parameterized):
             Parameterized.__setattr__(
                 self,
                 "cached_get_param_values",
-                # Parameterized.get_param_values(self, onlychanged)
-                Parameterized.get_param_values(onlychanged)  # does this work?
+                Parameterized.get_param_values(self, onlychanged)
+                # Parameterized.get_param_values(onlychanged)  # does this work?
                 # Parameterized.get_param_values()
             )
         return self.cached_get_param_values
