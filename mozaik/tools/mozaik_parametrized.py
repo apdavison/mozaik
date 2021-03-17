@@ -275,8 +275,8 @@ class MozaikParametrized(Parameterized):
                 self,
                 "cached_get_param_values",
                 # Parameterized.get_param_values(self, onlychanged)
-                # Parameterized.get_param_values(onlychanged)  # does this work?
-                Parameterized.get_param_values()
+                Parameterized.get_param_values(onlychanged)  # does this work?
+                # Parameterized.get_param_values()
             )
         return self.cached_get_param_values
 
