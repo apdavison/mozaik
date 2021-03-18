@@ -376,8 +376,10 @@ class MozaikParametrized(Parameterized):
             print(MozaikParametrized._module_cache)
             z = MozaikParametrized._module_cache[(module_path, name)]
         else:
+            print("globals and locals")
             print(globals())
             print(locals())
+            print("globals and locals end")
             z = __import__(module_path, globals(), locals(), name)
             MozaikParametrized._module_cache[(module_path, name)] = z
         print(z)
