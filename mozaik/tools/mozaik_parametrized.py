@@ -372,8 +372,12 @@ class MozaikParametrized(Parameterized):
         module_path = params.pop("module_path")
 
         if (module_path, name) in MozaikParametrized._module_cache:
+            print("in MozaikParametrized._module_cache")
+            print(MozaikParametrized._module_cache)
             z = MozaikParametrized._module_cache[(module_path, name)]
         else:
+            print(globals())
+            print(locals())
             z = __import__(module_path, globals(), locals(), name)
             MozaikParametrized._module_cache[(module_path, name)] = z
         print(z)
