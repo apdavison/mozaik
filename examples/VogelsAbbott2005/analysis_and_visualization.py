@@ -9,7 +9,7 @@ import numpy
 def perform_analysis_and_visualization(data_store):
     print("param_filter_query")
     print(param_filter_query(data_store, sheet_name="Exc_Layer"))
-    print(param_filter_query(data_store, sheet_name="Exc_Layer").get_segments()[0].get_stored_esyn_ids())
+    # print(param_filter_query(data_store, sheet_name="Exc_Layer").get_segments()[0].get_stored_esyn_ids())
     print("param_filter_query stop")
     analog_ids = sorted(
         param_filter_query(data_store, sheet_name="Exc_Layer")
