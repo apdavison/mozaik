@@ -588,6 +588,8 @@ class PickledDataStore(Hdf5DataStore):
         f.close()
 
     def add_recording(self, segments, stimulus):
+        print("add recording stimulus")
+        print(stimulus)
         # we get recordings as seg
         for s in segments:
             s.annotations["stimulus"] = str(stimulus)

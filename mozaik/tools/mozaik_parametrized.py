@@ -277,10 +277,10 @@ class MozaikParametrized(Parameterized):
                 self,
                 "cached_get_param_values",
                 # Parameterized.get_param_values(self, onlychanged)
-                # Parameterized.get_param_values(onlychanged)  # does this work?
+                Parameterized.get_param_values(onlychanged)  # does this work?
                 # Parameterized.get_param_values()
                 # Parameterized.param.get_param_values(onlychanged)
-                MozaikParametrized.get_param_values(Parameterized, onlychanged)
+                # ozaikParametrized.get_param_values(Parameterized, onlychanged)
             )
         return self.cached_get_param_values
 
