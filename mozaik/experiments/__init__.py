@@ -85,6 +85,8 @@ class Experiment(ParametrizedObject):
         srtsum = 0
         print("list of stimulus")
         print(stimulus_indexes)
+        print(self.stimuli)
+        print("end list of stimulus")
         for i in stimulus_indexes:
             s = self.stimuli[i]
             logger.debug('Presenting stimulus: ' + str(s) + '\n')
