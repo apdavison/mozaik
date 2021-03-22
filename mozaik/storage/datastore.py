@@ -390,7 +390,8 @@ class DataStore(DataStoreView):
         """
         Add a recording into the datastore.
         """
-
+        print("add_recording datastore")
+        print(stimulus)
         # we get recordings as seg
         for s in segments:
             s.annotations["stimulus"] = str(stimulus)

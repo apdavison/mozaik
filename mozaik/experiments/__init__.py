@@ -83,6 +83,8 @@ class Experiment(ParametrizedObject):
         the list of stimuli which to present to prevent repetitions, and lets this function know via the stimuli argument which stimuli to actually present.
         """
         srtsum = 0
+        print("list of stimulus")
+        print(stimulus_indexes)
         for i in stimulus_indexes:
             s = self.stimuli[i]
             logger.debug('Presenting stimulus: ' + str(s) + '\n')
