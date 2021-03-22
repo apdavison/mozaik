@@ -608,8 +608,8 @@ class PickledDataStore(Hdf5DataStore):
                 + ".pickle",
                 "wb"
             )
-            pickle.dump(s, f)
-            # cPickle.dump(s, f)
+            # pickle.dump(s, f)
+            cPickle.dump(s, f)
 
         self.stimulus_dict[str(stimulus)] = True
 
@@ -636,5 +636,5 @@ class PickledDataStore(Hdf5DataStore):
                 + ".pickle",
                 "wb"
             )
-            pickle.dump(s, f)
-            # cPickle.dump(s, f)
+            # pickle.dump(s, f)
+            cPickle.dump(s, f)
