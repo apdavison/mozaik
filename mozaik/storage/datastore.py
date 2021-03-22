@@ -583,8 +583,8 @@ class PickledDataStore(Hdf5DataStore):
         f = open(
             self.parameters.root_directory + "/datastore.sensory.stimulus.pickle", "wb"
         )
-        # pickle.dump(self.sensory_stimulus, f)
-        cPickle.dump(self.sensory_stimulus, f)
+        pickle.dump(self.sensory_stimulus, f)
+        # cPickle.dump(self.sensory_stimulus, f)
         f.close()
 
     def add_recording(self, segments, stimulus):
@@ -608,8 +608,8 @@ class PickledDataStore(Hdf5DataStore):
                 + ".pickle",
                 "wb"
             )
-            # pickle.dump(s, f)
-            cPickle.dump(s, f)
+            pickle.dump(s, f)
+            # cPickle.dump(s, f)
 
         self.stimulus_dict[str(stimulus)] = True
 
@@ -617,6 +617,8 @@ class PickledDataStore(Hdf5DataStore):
         """
         Add recordings due to the null stimuli presented between the standard stimuli.
         """
+        print("add null recording stimulus")
+        print(stimulus)
         # we get recordings as seg
         for s in segments:
             s.annotations["stimulus"] = str(stimulus)
@@ -636,5 +638,5 @@ class PickledDataStore(Hdf5DataStore):
                 + ".pickle",
                 "wb"
             )
-            # pickle.dump(s, f)
-            cPickle.dump(s, f)
+            pickle.dump(s, f)
+            # cPickle.dump(s, f)
