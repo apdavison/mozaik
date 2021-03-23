@@ -337,7 +337,7 @@ class MozaikParametrized(Parameterized):
         """
         settings = []
         print("MozaikParametrized XX")
-        print(self.get_param_values())
+        # print(self.get_param_values())
         print(self.get_param_values2())
         print("MozaikParametrized end XX")
         for name, val in self.get_param_values():
