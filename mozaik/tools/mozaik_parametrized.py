@@ -18,6 +18,7 @@ from param import Number, Integer, String, ClassSelector
 from param.parameterized import Parameterized
 import numpy
 import param.parameterized
+from param.parameterized.Parameterized import get_param_values as get_p
 
 from .distribution_parametrization import (
     MozaikExtendedParameterSet,
@@ -278,10 +279,11 @@ class MozaikParametrized(Parameterized):
                 self,
                 "cached_get_param_values",
                 # Parameterized.get_param_values(self, onlychanged)
-                Parameterized.get_param_values(onlychanged)  # does this work?
+                # Parameterized.get_param_values(onlychanged)  # does this work?
                 # Parameterized.get_param_values()
                 # Parameterized.param.get_param_values(onlychanged)
                 # ozaikParametrized.get_param_values(Parameterized, onlychanged)
+                get_p(self, onlychanged)
             )
         return self.cached_get_param_values
 
@@ -337,8 +339,8 @@ class MozaikParametrized(Parameterized):
         """
         settings = []
         print("MozaikParametrized XX")
-        # print(self.get_param_values())
-        print(self.get_param_values2())
+        print(self.get_param_values())
+        # print(self.get_param_values2())
         print("MozaikParametrized end XX")
         for name, val in self.get_param_values():
             if isinstance(val, MozaikExtendedParameterSet):
