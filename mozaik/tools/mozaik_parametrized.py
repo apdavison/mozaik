@@ -18,7 +18,6 @@ from param import Number, Integer, String, ClassSelector
 from param.parameterized import Parameterized
 import numpy
 import param.parameterized
-from param.parameterized.Parameterized import get_param_values as get_p
 
 from .distribution_parametrization import (
     MozaikExtendedParameterSet,
@@ -275,6 +274,7 @@ class MozaikParametrized(Parameterized):
 
     def get_param_values(self, onlychanged=False):
         if self.cached_get_param_values == None:
+            get_p = Parameterized.get_param_values
             Parameterized.__setattr__(
                 self,
                 "cached_get_param_values",
