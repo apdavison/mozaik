@@ -193,3 +193,6 @@ class NoStimulation(Experiment):
         self.stimuli.append(InternalStimulus(frame_duration=self.parameters.duration,
                                              duration=self.parameters.duration,
                                              trial=0,))
+        print("No stimulation")
+        print(self.stimuli)
+        print("no st end")
