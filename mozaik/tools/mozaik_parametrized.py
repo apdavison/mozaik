@@ -285,6 +285,19 @@ class MozaikParametrized(Parameterized):
             )
         return self.cached_get_param_values
 
+    def get_param_values2(self, onlychanged=False):
+        if self.cached_get_param_values == None:
+            Parameterized.__setattr__(
+                self,
+                "cached_get_param_values",
+                Parameterized.get_param_values(self, onlychanged)
+                # Parameterized.get_param_values(onlychanged)  # does this work?
+                # Parameterized.get_param_values()
+                # Parameterized.param.get_param_values(onlychanged)
+                # ozaikParametrized.get_param_values(Parameterized, onlychanged)
+            )
+        return self.cached_get_param_values
+
     def equalParams(self, other):
         """
         Returns True if self and other have the same parameters and all their
@@ -323,7 +336,10 @@ class MozaikParametrized(Parameterized):
         Turn the MozaikParametrized instance into string - this stores ONLY the names and values of each parameter and the module path from which this instance class came from.
         """
         settings = []
-
+        print("MozaikParametrized XX")
+        print(self.get_param_values())
+        print(self.get_param_values2())
+        print("MozaikParametrized end XX")
         for name, val in self.get_param_values():
             if isinstance(val, MozaikExtendedParameterSet):
                 settings.append(
