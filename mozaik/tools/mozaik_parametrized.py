@@ -274,16 +274,13 @@ class MozaikParametrized(Parameterized):
 
     def get_param_values(self, onlychanged=False):
         if self.cached_get_param_values == None:
-            get_p = Parameterized.get_param_values
             Parameterized.__setattr__(
                 self,
                 "cached_get_param_values",
                 # Parameterized.get_param_values(self, onlychanged)
                 # Parameterized.get_param_values(onlychanged)  # does this work?
-                # Parameterized.get_param_values()
+                Parameterized.get_param_values(self)
                 # Parameterized.param.get_param_values(onlychanged)
-                # ozaikParametrized.get_param_values(Parameterized, onlychanged)
-                get_p(self, onlychanged)
             )
         return self.cached_get_param_values
 
