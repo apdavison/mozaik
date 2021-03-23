@@ -190,10 +190,15 @@ class NoStimulation(Experiment):
 
     def __init__(self,model,parameters):
         Experiment.__init__(self, model,parameters)
-        print("No stimulation 0")
+        print("No stimulation 0 XX")
         print(parameters)
         print(self.stimuli)
-        print("No stimulation 0 end")
+        x = InternalStimulus(frame_duration=self.parameters.duration,
+                                             duration=self.parameters.duration,
+                                             trial=0,)
+        print(x)
+        print(x.name)
+        print("No stimulation 0 XX end")
         self.stimuli.append(InternalStimulus(frame_duration=self.parameters.duration,
                                              duration=self.parameters.duration,
                                              trial=0,))

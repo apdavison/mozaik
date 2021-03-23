@@ -147,6 +147,7 @@ class MozaikParametrized(Parameterized):
         print(self.name)
         print(self.__class__.__name__)
         self.name = self.__class__.__name__
+        print(self.name)
         
         for name in self.params():
             o = self.params()[name]
