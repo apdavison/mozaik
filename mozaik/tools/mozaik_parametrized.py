@@ -18,7 +18,7 @@ from param import Number, Integer, String, ClassSelector
 from param.parameterized import Parameterized
 import numpy
 import param.parameterized
-from param import get_param_values as get_p
+from param.parameterized import get_param_values as get_p
 
 from .distribution_parametrization import (
     MozaikExtendedParameterSet,
