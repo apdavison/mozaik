@@ -164,6 +164,8 @@ class MozaikParametrized(Parameterized):
                 )
 
         for (name, value) in self.get_param_values():
+            print("init name: ", name)
+            print("init value: ", value)
             if value == None and self.params()[name].allow_None==False:                
                 logger.error("The parameter %s was not initialized" % name)
                 raise ValueError("The parameter %s was not initialized" % name)
@@ -274,13 +276,15 @@ class MozaikParametrized(Parameterized):
 
     def get_param_values(self, onlychanged=False):
         if self.cached_get_param_values == None:
+            p = Parameterized()
             Parameterized.__setattr__(
                 self,
                 "cached_get_param_values",
                 # Parameterized.get_param_values(self, onlychanged)
                 # Parameterized.get_param_values(onlychanged)  # does this work?
-                Parameterized.get_param_values(self, onlychanged)
+                # Parameterized.get_param_values(self, onlychanged)
                 # Parameterized.param.get_param_values(onlychanged)
+                p.get_param_values(p, onlychanged)
             )
         return self.cached_get_param_values
 
@@ -324,7 +328,7 @@ class MozaikParametrized(Parameterized):
         settings = []
         print("MozaikParametrized XX")
         # print(self.get_param_values())
-        print("MozaikParametrized end XX")
+        # print("MozaikParametrized end XX")
         for name, val in self.get_param_values():
             print("name: ", name)
             print("value: ", val)
