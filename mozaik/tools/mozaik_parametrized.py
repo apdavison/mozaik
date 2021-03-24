@@ -274,27 +274,13 @@ class MozaikParametrized(Parameterized):
 
     def get_param_values(self, onlychanged=False):
         if self.cached_get_param_values == None:
-            p = Parameterized()
             Parameterized.__setattr__(
                 self,
                 "cached_get_param_values",
                 # Parameterized.get_param_values(self, onlychanged)
                 # Parameterized.get_param_values(onlychanged)  # does this work?
-                p.get_param_values(self, onlychanged)
-                # Parameterized.param.get_param_values(onlychanged)
-            )
-        return self.cached_get_param_values
-
-    def get_param_values2(self, onlychanged=False):
-        if self.cached_get_param_values == None:
-            Parameterized.__setattr__(
-                self,
-                "cached_get_param_values",
                 Parameterized.get_param_values(self, onlychanged)
-                # Parameterized.get_param_values(onlychanged)  # does this work?
-                # Parameterized.get_param_values()
                 # Parameterized.param.get_param_values(onlychanged)
-                # ozaikParametrized.get_param_values(Parameterized, onlychanged)
             )
         return self.cached_get_param_values
 
@@ -337,10 +323,11 @@ class MozaikParametrized(Parameterized):
         """
         settings = []
         print("MozaikParametrized XX")
-        print(self.get_param_values())
-        # print(self.get_param_values2())
+        # print(self.get_param_values())
         print("MozaikParametrized end XX")
         for name, val in self.get_param_values():
+            print("name: ", name)
+            print("value: ", val)
             if isinstance(val, MozaikExtendedParameterSet):
                 settings.append(
                     '"%s":MozaikExtendedParameterSet(%s)' % (name, repr(val))
@@ -357,6 +344,8 @@ class MozaikParametrized(Parameterized):
             + ", ".join(settings)
             + "}"
         )
+        print(r)
+        print("MozaikParametrized end XX")
         return r
 
     def __repr__(self):
