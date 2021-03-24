@@ -140,7 +140,8 @@ class MozaikParametrized(Parameterized):
     _module_cache = {}
     
     def __init__(self, **params):
-        
+        print("params in MozaikParametrized")
+        print(params)
         self.cached_get_param_values = None
         Parameterized.__init__(self, **params)
         self.module_path = inspect.getmodule(self).__name__

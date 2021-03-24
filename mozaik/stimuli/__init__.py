@@ -55,6 +55,8 @@ class BaseStimulus(MozaikParametrized):
     )
 
     def __init__(self, **params):
+        print("params in BaseStimulus")
+        print(params)
         MozaikParametrized.__init__(self, **params)
         self.input = None
         self._frames = self.frames()
@@ -119,6 +121,8 @@ class InternalStimulus(BaseStimulus):
     """
 
     def __init__(self, **params):
+        print("params in InternalStimulus")
+        print(params)
         BaseStimulus.__init__(self, **params)
         assert self.frame_duration == self.duration, (
             "Mozaik requires that frame_duration and duration for InternalStimulus are"
