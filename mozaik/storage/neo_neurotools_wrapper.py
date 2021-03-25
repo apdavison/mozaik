@@ -114,7 +114,12 @@ class MozaikSegment(Segment):
             self.load_full()
         for a in self.analogsignals:
             if a.name == "gsyn_exc":
-                return a[:, a.annotations["source_ids"].tolist().index(neuron_id)]
+                print("tolist error")
+                print(a.annotations["source_ids"])
+                print(type(a.annotations["source_ids"]))
+                print("tolist error end")
+                # return a[:, a.annotations["source_ids"].tolist().index(neuron_id)]
+                return a[:, a.annotations["source_ids"].index(neuron_id)]
 
     def get_isyn(self, neuron_id):
         """
