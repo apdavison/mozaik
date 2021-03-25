@@ -97,7 +97,8 @@ class MozaikSegment(Segment):
         for a in self.analogsignals:
             if a.name == "v":
 
-                return a[:, a.annotations["source_ids"].tolist().index(neuron_id)]
+                # return a[:, a.annotations["source_ids"].tolist().index(neuron_id)]
+                return a[:, a.annotations["source_ids"].index(neuron_id)]
 
     def get_esyn(self, neuron_id):
         """
@@ -117,6 +118,7 @@ class MozaikSegment(Segment):
                 print("tolist error")
                 print(a.annotations["source_ids"])
                 print(type(a.annotations["source_ids"]))
+                print(a[:, a.annotations["source_ids"].index(neuron_id)])
                 print("tolist error end")
                 # return a[:, a.annotations["source_ids"].tolist().index(neuron_id)]
                 return a[:, a.annotations["source_ids"].index(neuron_id)]
@@ -137,7 +139,8 @@ class MozaikSegment(Segment):
             self.load_full()
         for a in self.analogsignals:
             if a.name == "gsyn_inh":
-                return a[:, a.annotations["source_ids"].tolist().index(neuron_id)]
+                # return a[:, a.annotations["source_ids"].tolist().index(neuron_id)]
+                return a[:, a.annotations["source_ids"].index(neuron_id)]
 
     def load_full(self):
         pass
