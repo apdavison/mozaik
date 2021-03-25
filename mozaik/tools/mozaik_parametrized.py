@@ -277,7 +277,7 @@ class MozaikParametrized(Parameterized):
                 return
         Parameterized.__setattr__(self, attribute_name, value)
         Parameterized.__setattr__(self, 'cached_get_param_values', None)
-
+    """
     def get_param_values(self, onlychanged=False):
         if self.cached_get_param_values == None:
             Parameterized.__setattr__(
@@ -288,7 +288,7 @@ class MozaikParametrized(Parameterized):
                 Parameterized.get_param_values(self, onlychanged)
             )
         return self.cached_get_param_values
-
+    """
     def equalParams(self, other):
         """
         Returns True if self and other have the same parameters and all their
