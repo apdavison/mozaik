@@ -142,13 +142,16 @@ class MozaikParametrized(Parameterized):
     def __init__(self, **params):
         print("params in MozaikParametrized")
         print(params)
+        print(self.params())
         self.cached_get_param_values = None
         Parameterized.__init__(self, **params)
+        print(Parameterized.__init__(self, **params))
         self.module_path = inspect.getmodule(self).__name__
-        print(self.name)
-        print(self.__class__.__name__)
+        # print(self.name)
+        # print(self.__class__.__name__)
         self.name = self.__class__.__name__
-        print(self.name)
+        # print(self.name)
+        print("params in MozaikParametrized end")
         
         for name in self.params():
             o = self.params()[name]
