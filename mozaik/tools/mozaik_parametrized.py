@@ -277,6 +277,8 @@ class MozaikParametrized(Parameterized):
                 return
         Parameterized.__setattr__(self, attribute_name, value)
         Parameterized.__setattr__(self, 'cached_get_param_values', None)
+    # temporarily disabled because of
+    # TypeError: get_param_values() takes from 1 to 2 positional arguments but 3 were given
     """
     def get_param_values(self, onlychanged=False):
         if self.cached_get_param_values == None:
