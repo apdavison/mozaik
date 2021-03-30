@@ -42,7 +42,7 @@ class SelfSustainedPushPull(Model):
         self.visual_field = VisualRegion(location_x=self.parameters.visual_field.centre[0], location_y=self.parameters.visual_field.centre[
                                          1], size_x=self.parameters.visual_field.size[0], size_y=self.parameters.visual_field.size[1])
         self.input_layer = RetinaLGN(
-            self, self.parameters.sheets.retina_lgn.params)
+            self, self.parameters.sheets.retina_lgn.params)  # 'pyNN.spiNNaker' has no attribute 'StepCurrentSource'
         cortex_exc_l4 = CortexExcL4(
             self, self.parameters.sheets.l4_cortex_exc.params)
         cortex_inh_l4 = CortexInhL4(
