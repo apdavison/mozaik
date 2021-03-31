@@ -480,7 +480,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 print("lgn_cell type ", type(lgn_cell))
                 print("lgn_cell i offset ", lgn_cell.i_offset)
                 print("not self.parameters.mpi_reproducible_noise", not self.parameters.mpi_reproducible_noise)
-                scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])  # update i_offset between calls to run()
+                lgn_cell.i_offset = lgn_cell.i_offset + 1  # test
+                # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])  # update i_offset between calls to run()
 
                 if not self.parameters.mpi_reproducible_noise:
                     ncs = sim.NoisyCurrentSource(**self.parameters.noise)
@@ -493,8 +494,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     )
                     self.scs[rf_type].append(scs)
                     self.ncs[rf_type].append(ncs)
-                lgn_cell.inject(scs)
-                lgn_cell.inject(ncs)
+                # lgn_cell.inject(scs)
+                # lgn_cell.inject(ncs)
 
         P_rf = self.parameters.receptive_field
         rf_function = eval(P_rf.func)
