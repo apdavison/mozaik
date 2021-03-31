@@ -466,17 +466,20 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 )
             )
             self.sheets[rf_type] = p
-
+        print("self.rf_types", self.rf_types)
         for rf_type in self.rf_types:
             print("rf_type ", rf_type)
             self.scs[rf_type] = []
             self.ncs[rf_type] = []
             self.ncs_rng[rf_type] = []
             seeds = get_seeds((self.sheets[rf_type].pop.size,))
+            print("seeds ", seeds)
+            print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
                 print("lgn_cell ", lgn_cell)
                 print("lgn_cell type ", type(lgn_cell))
                 print("lgn_cell i offset ", lgn_cell.i_offset)
+                print("not self.parameters.mpi_reproducible_noise", not self.parameters.mpi_reproducible_noise)
                 scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])  # update i_offset between calls to run()
 
                 if not self.parameters.mpi_reproducible_noise:
