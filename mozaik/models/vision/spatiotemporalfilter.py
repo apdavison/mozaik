@@ -474,7 +474,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs_rng[rf_type] = []
             seeds = get_seeds((self.sheets[rf_type].pop.size,))
             print("seeds ", seeds)
-            print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
+            # print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
                 print("lgn_cell ", lgn_cell)
                 print("lgn_cell type ", type(lgn_cell))
