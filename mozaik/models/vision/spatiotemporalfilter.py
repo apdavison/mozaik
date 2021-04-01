@@ -466,7 +466,6 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 )
             )
             self.sheets[rf_type] = p
-        print("sim.i_offset", sim.i_offset)
         for rf_type in self.rf_types:
             print("rf_type ", rf_type)
             self.scs[rf_type] = []
