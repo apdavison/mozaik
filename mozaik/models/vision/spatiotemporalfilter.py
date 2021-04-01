@@ -472,7 +472,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs[rf_type] = []
             self.ncs_rng[rf_type] = []
             seeds = get_seeds((self.sheets[rf_type].pop.size,))
-            print("seeds ", seeds)
+            # print("seeds ", seeds)
             # print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
                 print("lgn_cell ", lgn_cell)
@@ -482,19 +482,20 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 lgn_cell.i_offset = lgn_cell.i_offset + 1  # test
                 # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])  # update i_offset between calls to run()
 
-                #if not self.parameters.mpi_reproducible_noise:
+                # if not self.parameters.mpi_reproducible_noise:
                 #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
-                #else:
+                # else:
                 #    ncs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
-                if self.sheets[rf_type].pop._mask_local[i]:
-                    self.ncs_rng[rf_type].append(
-                        numpy.random.RandomState(seed=seeds[i])
-                    )
-                    self.scs[rf_type].append(scs)
-                    self.ncs[rf_type].append(ncs)
+                # if self.sheets[rf_type].pop._mask_local[i]:  # 'Population' object has no attribute '_mask_local'
+                #    self.ncs_rng[rf_type].append(
+                #        numpy.random.RandomState(seed=seeds[i])
+                #    )
+                #    self.scs[rf_type].append(scs)
+                #    self.ncs[rf_type].append(ncs)
                 # lgn_cell.inject(scs)
                 # lgn_cell.inject(ncs)
+                print("lgn_cell i offset 2", lgn_cell.i_offset)
 
         P_rf = self.parameters.receptive_field
         rf_function = eval(P_rf.func)
