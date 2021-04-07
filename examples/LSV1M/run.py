@@ -19,7 +19,8 @@ from mozaik.controller import run_workflow, setup_logging
 import mozaik.controller
 import sys
 # from pyNN import nest
-from pyNN import spiNNaker
+# from pyNN import spiNNaker
+import spynnaker8
 
 # from mpi4py import MPI
 
