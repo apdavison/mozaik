@@ -496,7 +496,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #    self.ncs[rf_type].append(ncs)
                 # lgn_cell.inject(scs)
                 # lgn_cell.inject(ncs)
-                print("lgn_cell i offset 2", lgn_cell.i_offset)
+                # print("lgn_cell i offset 2", lgn_cell.i_offset)
 
         P_rf = self.parameters.receptive_field
         rf_function = eval(P_rf.func)

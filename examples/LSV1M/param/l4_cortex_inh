@@ -8,29 +8,44 @@
                 'density': ref('sheets.l4_cortex_exc.params.density')/4.0,
                 'mpi_safe' : False,
                 'magnification_factor': ref('sheets.l4_cortex_exc.params.magnification_factor'),
+                #'cell': {
+                #        'model': 'EIF_cond_exp_isfa_ista',  # Izhikevich / Izhikevich_cond
+                #        'params': {
+                #            'v_thresh': ref('sheets.l4_cortex_exc.params.cell.params.v_thresh'),
+                #            'v_rest': -70,
+                #            'v_reset': -55.0,
+                #            'tau_refrac': 0.5,
+                #            'tau_m': 10.0,
+                #            'cm': 0.04,
+            	#            'e_rev_E': ref('sheets.l4_cortex_exc.params.cell.params.e_rev_E'),
+                #            'e_rev_I': ref('sheets.l4_cortex_exc.params.cell.params.e_rev_I'),
+                #    	     'tau_syn_E': ref('sheets.l4_cortex_exc.params.cell.params.tau_syn_E'),
+                #            'tau_syn_I': ref('sheets.l4_cortex_exc.params.cell.params.tau_syn_I'),
+                #            'a' : ref('sheets.l4_cortex_exc.params.cell.params.a'),
+                #            'b' : ref('sheets.l4_cortex_exc.params.cell.params.b'),
+                #            'delta_T' : ref('sheets.l4_cortex_exc.params.cell.params.delta_T'),
+                #            'tau_w' : ref('sheets.l4_cortex_exc.params.cell.params.tau_w'),
+                #        },
+                #        'initial_values': {
+                #                    'v': PyNNDistribution(name='uniform',low=-70,high=-51),
+                #                },
+                #    },
+
                 'cell': {
-                        'model': 'EIF_cond_exp_isfa_ista',
+                        'model': 'Izhikevich_cond',
                         'params': {
-                            'v_thresh': ref('sheets.l4_cortex_exc.params.cell.params.v_thresh'),
-                            'v_rest': -70,
-                            'v_reset': -55.0,
-                            'tau_refrac': 0.5,
-                            'tau_m': 10.0,
-                            'cm': 0.04,
-            	            'e_rev_E': ref('sheets.l4_cortex_exc.params.cell.params.e_rev_E'),
-                            'e_rev_I': ref('sheets.l4_cortex_exc.params.cell.params.e_rev_I'),
-                    	    'tau_syn_E': ref('sheets.l4_cortex_exc.params.cell.params.tau_syn_E'),
-                            'tau_syn_I': ref('sheets.l4_cortex_exc.params.cell.params.tau_syn_I'),
-                            'a' : ref('sheets.l4_cortex_exc.params.cell.params.a'),
-                            'b' : ref('sheets.l4_cortex_exc.params.cell.params.b'),
-                            'delta_T' : ref('sheets.l4_cortex_exc.params.cell.params.delta_T'),
-                            'tau_w' : ref('sheets.l4_cortex_exc.params.cell.params.tau_w'),
-                        }, 
-                        'initial_values': {
+                            'a': 0.02,
+                            'b': 0.2,
+                            'c': -65.0,
+                            'd': 2.0,
+                            'i_offset': 0.0
+                        },
+                       'initial_values': {
                                     'v': PyNNDistribution(name='uniform',low=-70,high=-51),
                                 },
-
                     },
+
+
                 'artificial_stimulators' : ref('sheets.l4_cortex_exc.params.artificial_stimulators'),
                 'recording_interval'  :  ref('sheets.l4_cortex_exc.params.recording_interval'),                                            
                 'recorders' : url("examples/LSV1M/param/l4_inh_rec"),
