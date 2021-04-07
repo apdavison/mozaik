@@ -130,6 +130,10 @@ class GaborConnector(BaseComponent):
         print(min(target.pop.positions[1]), max(target.pop.positions[1]))
         for (j, neuron2) in enumerate(target.pop.all()):
             if or_map:
+                print("target.pop", target.pop)
+                print("target.pop.positions", target.pop.positions)
+                print("target.pop.positions[0][j] ", target.pop.positions[0][j])
+                print("target.pop.positions[1][j] ", target.pop.positions[1][j])
                 orientation = or_map(
                     target.pop.positions[0][j], target.pop.positions[1][j]
                 )
