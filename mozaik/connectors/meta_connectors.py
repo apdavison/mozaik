@@ -131,6 +131,8 @@ class GaborConnector(BaseComponent):
         print("target.pop.positions.shape ", target.pop.positions.shape)
         print("target ", target)
         print("target.pop ", target.pop)
+        print("target.pop.all ", target.pop.all())
+        print("target.pop.all shape ", target.pop.all().shape)
         print("target.pop type ", type(target.pop))
         print("target.pop.positions ", target.pop.positions)
         for (j, neuron2) in enumerate(target.pop.all()):
@@ -139,14 +141,14 @@ class GaborConnector(BaseComponent):
                 print("j ", j)
                 # print("target.pop.positions[0][j] ", target.pop.positions[0][j])
                 # print("target.pop.positions[1][j] ", target.pop.positions[1][j])
-                print("target.pop.positions[0][j] ", target.pop.positions[j][0])
-                print("target.pop.positions[1][j] ", target.pop.positions[j][1])
-                # orientation = or_map(
-                #    target.pop.positions[0][j], target.pop.positions[1][j]
-                # )
+                # print("target.pop.positions[j][0] ", target.pop.positions[j][0])
+                # print("target.pop.positions[j][1] ", target.pop.positions[j][1])
                 orientation = or_map(
-                    target.pop.positions[j][0], target.pop.positions[j][1]
-                )
+                    target.pop.positions[0][j], target.pop.positions[1][j]
+                 )
+                # orientation = or_map(
+                #    target.pop.positions[j][0], target.pop.positions[j][1]
+                # )
                 print("orientation ", orientation)
 
                 # orientation = (numpy.angle(or_map(target.pop.positions[0][j],
