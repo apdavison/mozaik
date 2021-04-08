@@ -186,13 +186,15 @@ class GaborConnector(BaseComponent):
                 target.add_neuron_annotation(
                     j,
                     "LGNAfferentX",
-                    target.pop.positions[0][j]+parameters.rf_jitter.next(),
+                    # target.pop.positions[0][j]+parameters.rf_jitter.next(),
+                    target.pop.positions[j][0] + parameters.rf_jitter.next(),
                     protected=True
                 )
                 target.add_neuron_annotation(
                     j,
                     "LGNAfferentY",
-                    target.pop.positions[1][j]+parameters.rf_jitter.next(),
+                    # target.pop.positions[1][j]+parameters.rf_jitter.next(),
+                    target.pop.positions[j][1] + parameters.rf_jitter.next(),
                     protected=True
                 )
             else:
