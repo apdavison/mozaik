@@ -128,15 +128,21 @@ class GaborConnector(BaseComponent):
 
         print(min(target.pop.positions[0]), max(target.pop.positions[0]))
         print(min(target.pop.positions[1]), max(target.pop.positions[1]))
+        print("target.pop.positions.shape ", target.pop.positions.shape)
+        print("target ", target)
+        print("target.pop ", target.pop)
+        print("target.pop ", type(target.pop))
+        print("target.pop.positions ", target.pop.positions)
         for (j, neuron2) in enumerate(target.pop.all()):
             if or_map:
-                print("target.pop", target.pop)
-                print("target.pop.positions", target.pop.positions)
+                print("neuron2 ", neuron2)
+                print("j ", j)
                 print("target.pop.positions[0][j] ", target.pop.positions[0][j])
                 print("target.pop.positions[1][j] ", target.pop.positions[1][j])
                 orientation = or_map(
                     target.pop.positions[0][j], target.pop.positions[1][j]
                 )
+                print("orientation ", orientation)
 
                 # orientation = (numpy.angle(or_map(target.pop.positions[0][j],
                 #                     target.pop.positions[1][j]))+numpy.pi)/2.0
