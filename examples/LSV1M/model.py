@@ -46,7 +46,7 @@ class SelfSustainedPushPull(Model):
             self, self.parameters.sheets.retina_lgn.params)  # 'pyNN.spiNNaker' has no attribute 'StepCurrentSource'
 
         cortex_exc_l4 = CortexExcL4(
-            self, self.parameters.sheets.l4_cortex_exc.params)
+            self, self.parameters.sheets.l4_cortex_exc.params)  # spiNNaker has no attribute EIF_cond_exp_isfa_ista ->Iz
 
         cortex_inh_l4 = CortexInhL4(
             self, self.parameters.sheets.l4_cortex_inh.params)

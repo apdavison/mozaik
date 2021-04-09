@@ -172,9 +172,11 @@ class VisualCorticalUniformSheet(SheetWithMagnificationFactor):
         rs = space.RandomStructure(boundary=space.Cuboid(dx, dy, 0),
                                    origin=(0.0, 0.0, 0.0),
                                    rng=mozaik.pynn_rng)
-
+        # l4_cortex_inh, l4_cortex_exc: model: EIF_cond_exp_isfa_ista
+        # Exponential integrate and fire neuron with spike triggered and sub-threshold adaptation currents
+        # must change to Izhikevich model
         self.pop = self.sim.Population(int(parameters.sx*parameters.sy/1000000*parameters.density),
-                                       getattr(self.model.sim, self.parameters.cell.model),
+                                       getattr(self.model.sim, self.parameters.cell.model),  # no attribute 'EIF_cond_exp_isfa_ista'
                                        self.parameters.cell.params,
                                        structure=rs,
                                        initial_values=self.parameters.cell.initial_values,
