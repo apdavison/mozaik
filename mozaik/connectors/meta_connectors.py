@@ -135,6 +135,8 @@ class GaborConnector(BaseComponent):
         print("target.pop type ", type(target.pop))
         print("target.pop.positions ", target.pop.positions)
         for (j, neuron2) in enumerate(target.pop.all()):
+            if j == 100:
+                break
             if or_map:
                 print("neuron2 ", neuron2)
                 print("j ", j)
@@ -183,7 +185,6 @@ class GaborConnector(BaseComponent):
                 j, "aff_samples", self.parameters.num_samples.next(), protected=True
             )
             print("self.parameters.topological", self.parameters.topological)
-            """
             if self.parameters.topological:
                 target.add_neuron_annotation(
                     j,
@@ -212,7 +213,7 @@ class GaborConnector(BaseComponent):
                     parameters.rf_jitter.next(),
                     protected=True
                 )
-            """
+
         ps = ParameterSet(
             {
                 "target_synapses": "excitatory",
