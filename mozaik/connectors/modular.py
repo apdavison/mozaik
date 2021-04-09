@@ -117,7 +117,12 @@ class ModularConnector(Connector):
     def _connect(self):
         connection_list = []
         z = numpy.zeros((self.target.pop.size,))
-        for i in numpy.nonzero(self.target.pop._mask_local)[0]:
+        # for i in numpy.nonzero(self.target.pop._mask_local)[0]:
+        if hasattr(self.target.pop, "_mask_local"):
+            indices = numpy.nonzero(self.target.pop._mask_local)[0]
+        else:
+            indices = numpy.arange(self.target.pop.size)
+        for i in indices:
             connection_list.extend(
                 list(
                     zip(
@@ -159,7 +164,12 @@ class ModularSamplingProbabilisticConnector(ModularConnector):
     def _connect(self):
         cl = []
         v = 0
-        for i in numpy.nonzero(self.target.pop._mask_local)[0]:
+        # for i in numpy.nonzero(self.target.pop._mask_local)[0]:
+        if hasattr(self.target.pop, "_mask_local"):
+            indices = numpy.nonzero(self.target.pop._mask_local)[0]
+        else:
+            indices = numpy.arange(self.target.pop.size)
+        for i in indices:
             weights = self._obtain_weights(i)
             delays = self._obtain_delays(i)
             co = Counter(
@@ -191,8 +201,10 @@ class ModularSamplingProbabilisticConnector(ModularConnector):
                 self.name,
                 self.__class__.__name__,
                 len(cl),
-                len(cl) / len(numpy.nonzero(self.target.pop._mask_local)[0]),
-                v / len(numpy.nonzero(self.target.pop._mask_local)[0])
+                # len(cl) / len(numpy.nonzero(self.target.pop._mask_local)[0]),
+                # v / len(numpy.nonzero(self.target.pop._mask_local)[0])
+                len(cl) / len(numpy.arange(self.target.pop.size)),
+                v / len(numpy.arange(self.target.pop.size))
             )
         )
 
@@ -227,7 +239,12 @@ class ModularSingleWeightProbabilisticConnector(ModularConnector):
 
     def _connect(self):
         cl = []
-        for i in numpy.nonzero(self.target.pop._mask_local)[0]:
+        # for i in numpy.nonzero(self.target.pop._mask_local)[0]:
+        if hasattr(self.target.pop, "_mask_local"):
+            indices = numpy.nonzero(self.target.pop._mask_local)[0]
+        else:
+            indices = numpy.arange(self.target.pop.size)
+        for i in indices:
             weights = self._obtain_weights(i)
             delays = self._obtain_delays(i)
             conections_probabilities = (
@@ -393,8 +410,10 @@ class ModularSamplingProbabilisticConnectorAnnotationSamplesCount(ModularConnect
                 self.name,
                 self.__class__.__name__,
                 len(cl),
-                len(cl) / len(numpy.nonzero(self.target.pop._mask_local)[0]),
-                v / len(numpy.nonzero(self.target.pop._mask_local)[0])
+                # len(cl) / len(numpy.nonzero(self.target.pop._mask_local)[0]),
+                # v / len(numpy.nonzero(self.target.pop._mask_local)[0])
+                len(cl) / len(numpy.arange(self.target.pop.size)),
+                v / len(numpy.arange(self.target.pop.size))
             )
         )
 
