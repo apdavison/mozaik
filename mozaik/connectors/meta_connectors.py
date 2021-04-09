@@ -135,7 +135,7 @@ class GaborConnector(BaseComponent):
         print("target.pop type ", type(target.pop))
         print("target.pop.positions ", target.pop.positions)
         for (j, neuron2) in enumerate(target.pop.all()):
-            if j == 1000:
+            if j == 10000:
                 break
             if or_map:
                 print("neuron2 ", neuron2)

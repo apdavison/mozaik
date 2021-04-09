@@ -343,7 +343,14 @@ class ModularSamplingProbabilisticConnectorAnnotationSamplesCount(ModularConnect
     def _connect(self):
         cl = []
         v = 0
-        for i in numpy.nonzero(self.target.pop._mask_local)[0]:
+        if hasattr(self.target.pop, "_mask_local"):
+            indices = numpy.nonzero(self.target.pop._mask_local)[0]
+        else:
+            indices = numpy.arange(self.target.pop.size)
+        print("self.target.pop.size ", self.target.pop.size)
+        print("indices ", indices)
+        for i in indices:
+            # for i in numpy.nonzero(self.target.pop._mask_local)[0]:
             samples = self.target.get_neuron_annotation(
                 i, self.parameters.annotation_reference_name
             )
