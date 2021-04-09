@@ -135,7 +135,7 @@ class GaborConnector(BaseComponent):
         print("target.pop type ", type(target.pop))
         print("target.pop.positions ", target.pop.positions)
         for (j, neuron2) in enumerate(target.pop.all()):
-            if j == 100:
+            if j == 1000:
                 break
             if or_map:
                 print("neuron2 ", neuron2)
@@ -159,8 +159,10 @@ class GaborConnector(BaseComponent):
                 orientation = parameters.orientation_preference.next()
 
             if phase_map:
-                phase = phase_map(target.pop.positions[0][j],
-                                  target.pop.positions[1][j])
+                # phase = phase_map(target.pop.positions[0][j],
+                #                  target.pop.positions[1][j])
+                phase = phase_map(target.pop.positions[j][0],
+                                  target.pop.positions[j][1])
             else:
                 phase = parameters.phase.next()
 
@@ -185,6 +187,10 @@ class GaborConnector(BaseComponent):
                 j, "aff_samples", self.parameters.num_samples.next(), protected=True
             )
             print("self.parameters.topological", self.parameters.topological)
+            print("target.pop.positions[j][0] + parameters.rf_jitter.next() ",
+                  target.pop.positions[j][0] + parameters.rf_jitter.next())
+            print("target.pop.positions[j][1] + parameters.rf_jitter.next() ",
+                  target.pop.positions[j][1] + parameters.rf_jitter.next())
             if self.parameters.topological:
                 target.add_neuron_annotation(
                     j,
