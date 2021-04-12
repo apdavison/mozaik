@@ -92,14 +92,17 @@ class ModularConnector(Connector):
         """
         # evaled = {}
         evaled = OrderedDict()
-        print('i ', i)
+        # print('i ', i)
         print("self.weight_function_names ", self.weight_function_names)
         for k in self.weight_function_names:
             evaled[k] = self.weight_functions[k].evaluate(i)
         print("evaled ", evaled)
         print("self.parameters.weight_expression ", self.parameters.weight_expression)
         print("self.source.pop.size ", self.source.pop.size)
-        print("globals ", globals())
+        # print("globals ", globals())
+        print("numpy.zeros((self.source.pop.size,)) ", numpy.zeros((self.source.pop.size,)))
+        print("eval(self.parameters.weight_expression, globals(), evaled) ",
+              eval(self.parameters.weight_expression, globals(), evaled))
         print("end")
         return numpy.zeros((self.source.pop.size,)) + eval(
             self.parameters.weight_expression, globals(), evaled
