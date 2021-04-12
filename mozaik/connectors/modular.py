@@ -3,6 +3,7 @@ from collections import Counter
 import ast
 import logging
 import numpy
+from collections import OrderedDict
 
 from parameters import ParameterSet, ParameterDist
 
@@ -89,7 +90,8 @@ class ModularConnector(Connector):
         """
         This function calculates the combined weights from the ModularConnectorFunction in weight_functions
         """
-        evaled = {}
+        # evaled = {}
+        evaled = OrderedDict()
         print('i ', i)
         print("self.weight_function_names ", self.weight_function_names)
         for k in self.weight_function_names:
@@ -97,6 +99,8 @@ class ModularConnector(Connector):
         print("evaled ", evaled)
         print("self.parameters.weight_expression ", self.parameters.weight_expression)
         print("self.source.pop.size ", self.source.pop.size)
+        print("globals ", globals())
+        print("end")
         return numpy.zeros((self.source.pop.size,)) + eval(
             self.parameters.weight_expression, globals(), evaled
         )
