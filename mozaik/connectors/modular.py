@@ -96,6 +96,7 @@ class ModularConnector(Connector):
             evaled[k] = self.weight_functions[k].evaluate(i)
         print("evaled ", evaled)
         print("self.parameters.weight_expression ", self.parameters.weight_expression)
+        print("self.source.pop.size ", self.source.pop.size)
         return numpy.zeros((self.source.pop.size,)) + eval(
             self.parameters.weight_expression, globals(), evaled
         )
