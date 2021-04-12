@@ -186,11 +186,11 @@ class GaborConnector(BaseComponent):
             target.add_neuron_annotation(
                 j, "aff_samples", self.parameters.num_samples.next(), protected=True
             )
-            print("self.parameters.topological", self.parameters.topological)
-            print("target.pop.positions[j][0] + parameters.rf_jitter.next() ",
-                  target.pop.positions[j][0] + parameters.rf_jitter.next())
-            print("target.pop.positions[j][1] + parameters.rf_jitter.next() ",
-                  target.pop.positions[j][1] + parameters.rf_jitter.next())
+            # print("self.parameters.topological", self.parameters.topological)
+            # print("target.pop.positions[j][0] + parameters.rf_jitter.next() ",
+            #      target.pop.positions[j][0] + parameters.rf_jitter.next())
+            # print("target.pop.positions[j][1] + parameters.rf_jitter.next() ",
+            #      target.pop.positions[j][1] + parameters.rf_jitter.next())
             if self.parameters.topological:
                 target.add_neuron_annotation(
                     j,
@@ -219,7 +219,7 @@ class GaborConnector(BaseComponent):
                     parameters.rf_jitter.next(),
                     protected=True
                 )
-
+        print("out of loop")
         ps = ParameterSet(
             {
                 "target_synapses": "excitatory",
