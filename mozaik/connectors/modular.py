@@ -90,9 +90,12 @@ class ModularConnector(Connector):
         This function calculates the combined weights from the ModularConnectorFunction in weight_functions
         """
         evaled = {}
-
+        print('i ', i)
+        print("self.weight_function_names ", self.weight_function_names)
         for k in self.weight_function_names:
             evaled[k] = self.weight_functions[k].evaluate(i)
+        print("evaled ", evaled)
+        print("self.parameters.weight_expression ", self.parameters.weight_expression)
         return numpy.zeros((self.source.pop.size,)) + eval(
             self.parameters.weight_expression, globals(), evaled
         )
