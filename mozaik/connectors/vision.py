@@ -193,6 +193,7 @@ class GaborArborization(ModularConnectorFunction):
     )
 
     def evaluate(self, index):
+        print("GaborArborization index ", index)
         target_or = self.target.get_neuron_annotation(index, "LGNAfferentOrientation")
         target_phase = self.target.get_neuron_annotation(index, "LGNAfferentPhase")
         target_ar = self.target.get_neuron_annotation(index, "LGNAfferentAspectRatio")
@@ -201,9 +202,20 @@ class GaborArborization(ModularConnectorFunction):
         target_posx = self.target.get_neuron_annotation(index, "LGNAfferentX")
         target_posy = self.target.get_neuron_annotation(index, "LGNAfferentY")
 
+        print("self.source.pop.positions[0] ", self.source.pop.positions[0])
+        print("self.source.pop.positions[1] ", self.source.pop.positions[1])
+
+        x = []
+        y = []
+        for (i, neuron2) in enumerate(self.source.pop.all()):
+            x.append(self.source.pop.positions[i][0])
+            y.append(self.source.pop.positions[i][1])
+
         w = gabor(
-            self.source.pop.positions[0],
-            self.source.pop.positions[1],
+            # self.source.pop.positions[0],
+            x,
+            # self.source.pop.positions[1],
+            y,
             target_posx,
             target_posy,
             target_or + np.pi / 2,
@@ -212,10 +224,24 @@ class GaborArborization(ModularConnectorFunction):
             target_size,
             target_ar
         )
-
+        """
+        g = gauss(
+            self.source.pop.positions[0], 
+            self.source.pop.positions[1], 
+            target_posx, 
+            target_posy,
+            target_or + pi / 2, 
+            target_size, 
+            target_ar
+        )
+        """
         if self.parameters.ON:
+            print("w ", w)
+            print("np.maximum(0, w) ", np.maximum(0, w))
             return np.maximum(0, w)  # + 0.03 * g
         else:
+            print("w ", w)
+            print("-np.minimum(0, w) ", -np.minimum(0, w))
             return -np.minimum(0, w)  # + 0.03 * g
 
 
