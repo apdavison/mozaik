@@ -193,7 +193,7 @@ class GaborArborization(ModularConnectorFunction):
     )
 
     def evaluate(self, index):
-        print("GaborArborization index ", index)
+        # print("GaborArborization index ", index)
         target_or = self.target.get_neuron_annotation(index, "LGNAfferentOrientation")
         target_phase = self.target.get_neuron_annotation(index, "LGNAfferentPhase")
         target_ar = self.target.get_neuron_annotation(index, "LGNAfferentAspectRatio")
@@ -202,8 +202,8 @@ class GaborArborization(ModularConnectorFunction):
         target_posx = self.target.get_neuron_annotation(index, "LGNAfferentX")
         target_posy = self.target.get_neuron_annotation(index, "LGNAfferentY")
 
-        print("self.source.pop.positions[0] ", self.source.pop.positions[0])
-        print("self.source.pop.positions[1] ", self.source.pop.positions[1])
+        # print("self.source.pop.positions[0] ", self.source.pop.positions[0])
+        # print("self.source.pop.positions[1] ", self.source.pop.positions[1])
 
         x = []
         y = []
@@ -236,12 +236,12 @@ class GaborArborization(ModularConnectorFunction):
         )
         """
         if self.parameters.ON:
-            print("w ", w)
-            print("np.maximum(0, w) ", np.maximum(0, w))
+            # print("w ", w)
+            # print("np.maximum(0, w) ", np.maximum(0, w))
             return np.maximum(0, w)  # + 0.03 * g
         else:
-            print("w ", w)
-            print("-np.minimum(0, w) ", -np.minimum(0, w))
+            # print("w ", w)
+            # print("-np.minimum(0, w) ", -np.minimum(0, w))
             return -np.minimum(0, w)  # + 0.03 * g
 
 

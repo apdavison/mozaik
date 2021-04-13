@@ -74,9 +74,9 @@ class ModularConnector(Connector):
         v = ExpVisitor()
         v.visit(ast.parse(self.parameters.delay_expression))
         self.delay_function_names = v.names
-        print("self.source ", self.source)
-        print("self.target ", self.target)
-        print("self.parameters.weight_functions ", self.parameters.weight_functions)
+        # print("self.source ", self.source)
+        # print("self.target ", self.target)
+        # print("self.parameters.weight_functions ", self.parameters.weight_functions)
         for k in self.weight_function_names:
             self.weight_functions[k] = load_component(
                 self.parameters.weight_functions[k].component
