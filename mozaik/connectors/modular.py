@@ -95,19 +95,19 @@ class ModularConnector(Connector):
         # evaled = {}
         evaled = OrderedDict()
         # print('i ', i)
-        print("self.weight_function_names ", self.weight_function_names)
-        print("self.weight_functions ", self.weight_functions)
-        print("self.weight_functions[f1].evaluate(1)", self.weight_functions["f1"].evaluate(1))
+        # print("self.weight_function_names ", self.weight_function_names)
+        # print("self.weight_functions ", self.weight_functions)
+        # print("self.weight_functions[f1].evaluate(1)", self.weight_functions["f1"].evaluate(1))
         for k in self.weight_function_names:
             evaled[k] = self.weight_functions[k].evaluate(i)
-        print("evaled ", evaled)
-        print("self.parameters.weight_expression ", self.parameters.weight_expression)
-        print("self.source.pop.size ", self.source.pop.size)
+        # print("evaled ", evaled)
+        # print("self.parameters.weight_expression ", self.parameters.weight_expression)
+        # print("self.source.pop.size ", self.source.pop.size)
         # print("globals ", globals())
-        print("numpy.zeros((self.source.pop.size,)) ", numpy.zeros((self.source.pop.size,)))
-        print("eval(self.parameters.weight_expression, globals(), evaled) ",
-              eval(self.parameters.weight_expression, globals(), evaled))
-        print("end")
+        # print("numpy.zeros((self.source.pop.size,)) ", numpy.zeros((self.source.pop.size,)))
+        # print("eval(self.parameters.weight_expression, globals(), evaled) ",
+        #       eval(self.parameters.weight_expression, globals(), evaled))
+        # print("end")
         return numpy.zeros((self.source.pop.size,)) + eval(
             self.parameters.weight_expression, globals(), evaled
         )
