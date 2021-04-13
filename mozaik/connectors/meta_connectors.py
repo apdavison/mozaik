@@ -219,7 +219,7 @@ class GaborConnector(BaseComponent):
                     parameters.rf_jitter.next(),
                     protected=True
                 )
-        print("out of loop")
+        # print("out of loop")
         ps = ParameterSet(
             {
                 "target_synapses": "excitatory",
