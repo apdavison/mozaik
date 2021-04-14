@@ -62,7 +62,11 @@ class Connector(BaseComponent):
     def init_synaptic_mechanisms(self, weight=None, delay=None):
         print("self.sim ", dir(self.sim))
         print("weight ", weight)
-        if not self.parameters.short_term_plasticity != None:
+        print("delay ", delay)
+        print("self.parameters.short_term_plasticity ", self.parameters.short_term_plasticity)
+        # tsodyks_synapse/short term plasticity is not supported by SpiNNaker
+        # if not self.parameters.short_term_plasticity != None:
+        if self.parameters.short_term_plasticity != None:
             sm = self.sim.StaticSynapse(weight=weight, delay=delay)
         else:
             if weight != None:

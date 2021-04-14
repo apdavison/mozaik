@@ -42,11 +42,19 @@ class MapDependentModularConnectorFunction(ModularConnectorFunction):
         self.mmap = NearestNDInterpolator(
             list(zip(X.flatten(), Y.flatten())), mmap.flatten()
         )
+
+        xp = []
+        yp = []
+        for (i, neuron2) in enumerate(self.source.pop.all()):
+            xp.append(self.source.pop.positions[i][0])
+            yp.append(self.source.pop.positions[i][1])
+
         self.val_source = (
             self.mmap(
                 np.transpose(
                     np.array(
-                        [self.source.pop.positions[0], self.source.pop.positions[1]]
+                        # [self.source.pop.positions[0], self.source.pop.positions[1]]
+                        [xp, yp]
                     )
                 )
             )
@@ -55,7 +63,8 @@ class MapDependentModularConnectorFunction(ModularConnectorFunction):
 
         for (index, neuron2) in enumerate(target.pop.all()):
             val_target = self.mmap(
-                self.target.pop.positions[0][index], self.target.pop.positions[1][index]
+                # self.target.pop.positions[0][index], self.target.pop.positions[1][index]
+                self.target.pop.positions[index][0], self.target.pop.positions[index][1]
             )
             self.target.add_neuron_annotation(
                 index, "LGNAfferentOrientation", val_target * np.pi, protected=False
@@ -205,6 +214,7 @@ class GaborArborization(ModularConnectorFunction):
         # print("self.source.pop.positions[0] ", self.source.pop.positions[0])
         # print("self.source.pop.positions[1] ", self.source.pop.positions[1])
 
+        # create lists for x, y positions compatible with SpiNNaker
         x = []
         y = []
         for (i, neuron2) in enumerate(self.source.pop.all()):
@@ -224,6 +234,8 @@ class GaborArborization(ModularConnectorFunction):
             target_size,
             target_ar
         )
+
+        # why is this removed ?
         """
         g = gauss(
             self.source.pop.positions[0], 
@@ -712,11 +724,19 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
         self.mmap = NearestNDInterpolator(
             list(zip(X.flatten(), Y.flatten())), mmap.flatten()
         )
+
+        xp = []
+        yp = []
+        for (i, neuron2) in enumerate(self.source.pop.all()):
+            xp.append(self.source.pop.positions[i][0])
+            yp.append(self.source.pop.positions[i][1])
+
         self.or_source = (
             self.mmap(
                 np.transpose(
                     np.array(
-                        [self.source.pop.positions[0], self.source.pop.positions[1]]
+                        # [self.source.pop.positions[0], self.source.pop.positions[1]]
+                        [xp, yp]
                     )
                 )
             )
@@ -725,7 +745,8 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
 
         for (index, neuron2) in enumerate(target.pop.all()):
             val_target = self.mmap(
-                self.target.pop.positions[0][index], self.target.pop.positions[1][index]
+                # self.target.pop.positions[0][index], self.target.pop.positions[1][index]
+                self.target.pop.positions[index][0], self.target.pop.positions[index][1]
             )
             self.target.add_neuron_annotation(
                 index, "ORMapOrientation", val_target * np.pi, protected=False
@@ -734,12 +755,23 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
     def evaluate(self, index):
         logger.error("EVALUATE *********************************************")
         or_target = self.target.get_neuron_annotation(index, "ORMapOrientation")
-        x_target = self.target.pop.positions[0][index]
-        y_target = self.target.pop.positions[1][index]
+        # x_target = self.target.pop.positions[0][index]
+        x_target = self.target.pop.positions[index][0]
+        # y_target = self.target.pop.positions[1][index]
+        y_target = self.target.pop.positions[index][1]
 
+        xp = []
+        yp = []
+        for (i, neuron2) in enumerate(self.source.pop.all()):
+            xp.append(self.source.pop.positions[i][0])
+            yp.append(self.source.pop.positions[i][1])
+
+        # does this work with lists?
         phi = np.arctan2(
-            self.source.pop.positions[1] - y_target,
-            self.source.pop.positions[0] - x_target
+            # self.source.pop.positions[1] - y_target,
+            yp - y_target,
+            # self.source.pop.positions[0] - x_target
+            xp - x_target
         )
         distance = circular_dist(self.or_source, 2 * phi - or_target, np.pi)
         prob = np.exp(-0.5 * (distance / self.parameters.sigma) ** 2) / (
@@ -763,8 +795,10 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
             idx = np.random.choice(np.arange(len(phi)), size=500)
             for i in idx:
                 plot_or(
-                    self.source.pop.positions[0][i],
-                    self.source.pop.positions[1][i],
+                    # self.source.pop.positions[0][i],
+                    self.source.pop.positions[i][0],
+                    # self.source.pop.positions[1][i],
+                    self.source.pop.positions[i][1],
                     2 * phi[i] - or_target,
                     "k"
                 )
@@ -773,12 +807,15 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
 
             plt.subplot(132)
             plt.gca().set_aspect("equal", "box")
-            logger.error(str(np.shape(self.source.pop.positions[1][idx])))
+            # logger.error(str(np.shape(self.source.pop.positions[1][idx])))
+            logger.error(str(np.shape(self.source.pop.positions[idx][1])))
             logger.error(str(np.max(distance)))
             logger.error(str(np.max(prob)))
             plt.scatter(
-                self.source.pop.positions[0],
-                self.source.pop.positions[1],
+                # self.source.pop.positions[0],
+                xp,
+                # self.source.pop.positions[1],
+                yp,
                 c=self.or_source,
                 alpha=0.5,
                 edgecolors="none",
@@ -790,8 +827,10 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
             plt.subplot(133)
             plt.gca().set_aspect("equal", "box")
             plt.scatter(
-                self.source.pop.positions[0],
-                self.source.pop.positions[1],
+                # self.source.pop.positions[0],
+                xp,
+                # self.source.pop.positions[1],
+                yp,
                 c=self.or_source,
                 alpha=0.5,
                 edgecolors="none",
