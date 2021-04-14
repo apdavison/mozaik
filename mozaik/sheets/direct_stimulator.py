@@ -133,6 +133,11 @@ class BackgroundActivityBombardment(DirectStimulator):
         
         exc_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.exc_weight,delay=self.sheet.model.parameters.min_delay)
         inh_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.inh_weight,delay=self.sheet.model.parameters.min_delay)
+
+        if hasattr(self.sheet.pop, "_mask_local"):
+            indices = numpy.nonzero(self.sheet.pop._mask_local)[0]
+        else:
+            indices = numpy.arange(self.sheet.pop.size)
         
         if not self.sheet.parameters.mpi_safe:
             pass
@@ -149,33 +154,38 @@ class BackgroundActivityBombardment(DirectStimulator):
             if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
                         self.ssae = self.sheet.sim.Population(self.sheet.pop.size,self.sheet.sim.SpikeSourceArray())
                         seeds=mozaik.get_seeds((self.sheet.pop.size,))
-                        self.stgene = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in numpy.nonzero(self.sheet.pop._mask_local)[0]]
+                        self.stgene = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in indices]
                         self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory')
 
             if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
                         self.ssai = self.sheet.sim.Population(self.sheet.pop.size,self.sheet.sim.SpikeSourceArray())
                         seeds=mozaik.get_seeds((self.sheet.pop.size,))
-                        self.stgeni = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in numpy.nonzero(self.sheet.pop._mask_local)[0]]
+                        self.stgeni = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in indices]
                         self.sheet.sim.Projection(self.ssai, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=inh_syn,receptor_type='inhibitory')
 
-    def prepare_stimulation(self,duration,offset):
+    def prepare_stimulation(self, duration, offset):
+        if hasattr(self.sheet.pop, "_mask_local"):
+            indices = numpy.nonzero(self.sheet.pop._mask_local)[0]
+        else:
+            indices = numpy.arange(self.sheet.pop.size)
+
         if not self.sheet.parameters.mpi_safe:
             self.np_exc[0].set_parameters(rate=self.parameters.exc_firing_rate)
             self.np_inh[0].set_parameters(rate=self.parameters.inh_firing_rate)
         else:
             if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
-                for j,i in enumerate(numpy.nonzero(self.sheet.pop._mask_local)[0]):
+                for j, i in enumerate(indices):
                     pp = self.stgene[j].poisson_generator(rate=self.parameters.exc_firing_rate,t_start=0,t_stop=duration).spike_times
                     a = offset + numpy.array(pp)
                     self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
                
             if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
-                for j,i in enumerate(numpy.nonzero(self.sheet.pop._mask_local)[0]):
+                for j, i in enumerate(indices):
                     pp = self.stgene[j].poisson_generator(rate=self.parameters.inh_firing_rate,t_start=0,t_stop=duration).spike_times
                     a = offset + numpy.array(pp)
                     self.ssai[i].set_parameters(spike_times=Sequence(a.astype(float)))
 
-    def inactivate(self,offset):        
+    def inactivate(self, offset):
         if not self.sheet.parameters.mpi_safe:
             self.np_exc[0].set_parameters(rate=0)
             self.np_inh[0].set_parameters(rate=0)
@@ -435,7 +445,14 @@ class LocalStimulatorArray(DirectStimulator):
         # the number of neurons in the population and m is the number of stimulators
         x = stimulator_coordinates[0].flatten()
         y = stimulator_coordinates[1].flatten()
-        xx,yy = self.sheet.vf_2_cs(self.sheet.pop.positions[0],self.sheet.pop.positions[1])
+        xp = []
+        yp = []
+        for (i, neuron2) in enumerate(self.sheet.pop.all()):
+            xp.append(self.sheet.pop.positions[i][0])
+            yp.append(self.sheet.pop.positions[i][1])
+
+        # xx, yy = self.sheet.vf_2_cs(self.sheet.pop.positions[0], self.sheet.pop.positions[1])
+        xx, yy = self.sheet.vf_2_cs(xp, yp)
         zeros = numpy.zeros(len(x))
         f = open(Global.root_directory +'positions' + self.sheet.name.replace('/','_') + '.pickle','w')
         pickle.dump((xx,yy),f)
@@ -458,14 +475,19 @@ class LocalStimulatorArray(DirectStimulator):
         # find coordinates given spacing and shift by half the array size
         nearest_ix = numpy.rint(yy/self.parameters.spacing)+n
         nearest_iy = numpy.rint(xx/self.parameters.spacing)+n
-        nearest_iz = numpy.rint((numpy.array(self.sheet.pop.positions[2])-sheet.parameters.min_depth)/self.parameters.depth_sampling_step)
 
+        zp = []
+        for (i, neuron2) in enumerate(self.sheet.pop.all()):
+            zp.append(self.sheet.pop.positions[i][2])
+
+        # nearest_iz = numpy.rint((numpy.array(self.sheet.pop.positions[2])-sheet.parameters.min_depth)/self.parameters.depth_sampling_step)
+        nearest_iz = numpy.rint((numpy.array(zp) - sheet.parameters.min_depth) / self.parameters.depth_sampling_step)
         nearest_ix[nearest_ix<0] = 0
         nearest_iy[nearest_iy<0] = 0
         nearest_ix[nearest_ix>2*n] = 2*n
         nearest_iy[nearest_iy>2*n] = 2*n
 
-        for i in xrange(0,self.sheet.pop.size):
+        for i in range(0,self.sheet.pop.size):
             temp,cutof = mixing_templates[int(nearest_iz[i])]
 
             ss = stimulator_signals[max(int(nearest_ix[i]-cutof),0):int(nearest_ix[i]+cutof+1),max(int(nearest_iy[i]-cutof),0):int(nearest_iy[i]+cutof+1),:]
@@ -474,7 +496,7 @@ class LocalStimulatorArray(DirectStimulator):
                self.mixed_signals[i,:] = K*W*numpy.dot(temp.flatten(),numpy.reshape(ss,(len(temp.flatten()),-1)))
 
         lam=numpy.squeeze(numpy.max(self.mixed_signals,axis=1))
-        for i in xrange(0,self.sheet.pop.size):
+        for i in range(0,self.sheet.pop.size):
             self.sheet.add_neuron_annotation(i, 'Light activation magnitude(' +self.sheet.name + ',' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value)  + ',' +  str(self.parameters.stimulating_signal_parameters.sharpness) + ',' +  str(self.parameters.spacing) + ')', lam[i], protected=True)
 
         #ax = pylab.subplot(154, projection='3d')
@@ -482,7 +504,12 @@ class LocalStimulatorArray(DirectStimulator):
         pylab.gca().set_aspect('equal')
         pylab.title('Activation magnitude (neurons)')
         #ax.scatter(self.sheet.pop.positions[0],self.sheet.pop.positions[1],self.sheet.pop.positions[2],s=10,c=lam,cmap='gray',vmin=0)
-        ax.scatter(self.sheet.pop.positions[0],self.sheet.pop.positions[1],s=10,c=lam,cmap='gray',vmin=0)
+        for (i, neuron2) in enumerate(self.sheet.pop.all()):
+            xp.append(self.sheet.pop.positions[i][0])
+            yp.append(self.sheet.pop.positions[i][1])
+
+        # ax.scatter(self.sheet.pop.positions[0], self.sheet.pop.positions[1], s=10, c=lam, cmap='gray', vmin=0)
+        ax.scatter(xp, yp, s=10, c=lam, cmap='gray', vmin=0)
         ax = pylab.gca()
         #ax.set_zlim(ax.get_zlim()[::-1])
         
@@ -501,7 +528,7 @@ class LocalStimulatorArray(DirectStimulator):
         assert self.stimulation_duration == duration, "stimulation_duration != duration :"  + str(self.stimulation_duration) + " " + str(duration)
         times = numpy.arange(0,self.stimulation_duration,self.parameters.current_update_interval) + offset
         times[0] = times[0] + 3*self.sheet.dt
-        for i in xrange(0,len(self.scs)):
+        for i in range(0,len(self.scs)):
             self.scs[i].set_parameters(times=Sequence(times), amplitudes=Sequence(self.mixed_signals[i,:].flatten()),copy=False)
 
     def inactivate(self,offset):
@@ -561,11 +588,11 @@ class LocalStimulatorArrayChR(LocalStimulatorArray):
         ax.plot(times,self.mixed_signals[100,:],'k')
         ax.set_ylabel('photons/cm2/s', color='k')
 
-        for i in xrange(0,len(self.scs)):
+        for i in range(0,len(self.scs)):
             res = odeint(ChRsystem,[0,0,0.8,0.2,0],times,args=(self.mixed_signals[i,:].flatten(),self.parameters.current_update_interval))
             self.mixed_signals[i,:] =  60 * (17.2*res[:,0] + 2.9 * res[:,1])  / 2500 ; # the 60 corresponds to the 60mV difference between ChR reverse potential of 0mV and our expected mean Vm of about 60mV. This happens to end up being in nA which is what pyNN expect for current injection.
           
-        for i in xrange(0,self.sheet.pop.size):
+        for i in range(0,self.sheet.pop.size):
             self.sheet.add_neuron_annotation(i, 'Light activation magnitude ChR(' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + ')', numpy.max(self.mixed_signals[i,:]), protected=True)
 
         ax2 = ax.twinx()
@@ -579,12 +606,19 @@ class LocalStimulatorArrayChR(LocalStimulatorArray):
         pylab.savefig(Global.root_directory +'LocalStimulatorArrayTest_' + self.sheet.name.replace('/','_') + '.png')
 
 
-def test_stimulating_function(sheet,coor_x,coor_y,current_update_interval,parameters):
+def test_stimulating_function(sheet, coor_x, coor_y, current_update_interval, parameters):
     z = sheet.pop.all_cells.astype(int)
-    vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in xrange(0,len(z))])
+    vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in range(0, len(z))])
     mean_orientations = []
 
-    px,py = sheet.vf_2_cs(sheet.pop.positions[0],sheet.pop.positions[1])
+    x = []
+    y = []
+    for (i, neuron2) in enumerate(sheet.pop.all()):
+        x.append(sheet.pop.positions[i][0])
+        y.append(sheet.pop.positions[i][1])
+
+    # px, py = sheet.vf_2_cs(sheet.pop.positions[0], sheet.pop.positions[1])
+    px, py = sheet.vf_2_cs(x, y)
 
     pylab.subplot(151)
     pylab.gca().set_aspect('equal')
@@ -601,8 +635,8 @@ def test_stimulating_function(sheet,coor_x,coor_y,current_update_interval,parame
     pylab.scatter(coor_x.flatten(),coor_y.flatten(),c=ors.flatten(),cmap='hsv')
     signals = numpy.zeros((numpy.shape(coor_x)[0],numpy.shape(coor_x)[1],int(parameters.duration/current_update_interval)))
         
-    for i in xrange(0,numpy.shape(coor_x)[0]):
-        for j in xrange(0,numpy.shape(coor_x)[0]):
+    for i in range(0,numpy.shape(coor_x)[0]):
+        for j in range(0,numpy.shape(coor_x)[0]):
             signals[i,j,int(numpy.floor(parameters.onset_time/current_update_interval)):int(numpy.floor(parameters.offset_time/current_update_interval))] = parameters.scale.value*numpy.exp(-numpy.power(circular_dist(parameters.orientation.value,ors[i][j],numpy.pi),2)/parameters.sharpness)
 
     pylab.subplot(153)
@@ -615,11 +649,17 @@ def test_stimulating_function(sheet,coor_x,coor_y,current_update_interval,parame
 
 def test_stimulating_function_Naka(sheet,coor_x,coor_y,current_update_interval,parameters):
     z = sheet.pop.all_cells.astype(int)
-    vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in xrange(0,len(z))])
+    vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in range(0,len(z))])
     mean_orientations = []
 
-    px,py = sheet.vf_2_cs(sheet.pop.positions[0],sheet.pop.positions[1])
+    x = []
+    y = []
+    for (i, neuron2) in enumerate(sheet.pop.all()):
+        x.append(sheet.pop.positions[i][0])
+        y.append(sheet.pop.positions[i][1])
 
+    # px, py = sheet.vf_2_cs(sheet.pop.positions[0], sheet.pop.positions[1])
+    px, py = sheet.vf_2_cs(x, y)
     pylab.subplot(151)
     pylab.gca().set_aspect('equal')
     pylab.title('Orientatin preference (neurons)')
@@ -638,8 +678,8 @@ def test_stimulating_function_Naka(sheet,coor_x,coor_y,current_update_interval,p
     rate = parameters.nv_r_max * numpy.power(parameters.contrast.value,parameters.nv_exponent) / (numpy.power(parameters.contrast.value,parameters.nv_exponent) + parameters.nv_c50)
     scale = numpy.power(rate * parameters.cs_c50  / (parameters.cs_r_max - rate), 1/ parameters.cs_exponent)
 
-    for i in xrange(0,numpy.shape(coor_x)[0]):
-        for j in xrange(0,numpy.shape(coor_x)[0]):
+    for i in range(0,numpy.shape(coor_x)[0]):
+        for j in range(0,numpy.shape(coor_x)[0]):
             signals[i,j,int(numpy.floor(parameters.onset_time/current_update_interval)):int(numpy.floor(parameters.offset_time/current_update_interval))] = scale*numpy.exp(-numpy.power(circular_dist(parameters.orientation.value,ors[i][j],numpy.pi),2)/parameters.sharpness)
 
     pylab.subplot(153)

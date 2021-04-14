@@ -699,8 +699,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         input_cells = {}
         for rf_type in self.rf_types:
             input_cells[rf_type] = CellWithReceptiveField(
+                # self.sheets[rf_type].pop.positions[0][0],
                 self.sheets[rf_type].pop.positions[0][0],
-                self.sheets[rf_type].pop.positions[1][0],
+                # self.sheets[rf_type].pop.positions[1][0],
+                self.sheets[rf_type].pop.positions[0][1],
                 self.rf[rf_type],
                 self.parameters.gain_control,
                 visual_space
@@ -760,11 +762,17 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # y_values = numpy.linspace(-effective_visual_field_height/2.0, effective_visual_field_height/2.0, self.shape[1])
         for rf_type in self.rf_types:
             input_cells[rf_type] = []
-            for i in numpy.nonzero(self.sheets[rf_type].pop._mask_local)[0]:
+            if hasattr(self.sheets[rf_type].pop, "_mask_local"):
+                indices = numpy.nonzero(self.sheets[rf_type].pop._mask_local)[0]
+            else:
+                indices = numpy.arange(self.sheets[rf_type].pop.size)
+            for i in indices:
                 # for i in range(0,len(self.sheets[rf_type].pop.positions[0])):
                 cell = CellWithReceptiveField(
-                    self.sheets[rf_type].pop.positions[0][i],
-                    self.sheets[rf_type].pop.positions[1][i],
+                    # self.sheets[rf_type].pop.positions[0][i],
+                    self.sheets[rf_type].pop.positions[i][0],
+                    # self.sheets[rf_type].pop.positions[1][i],
+                    self.sheets[rf_type].pop.positions[i][1],
                     self.rf[rf_type],
                     self.parameters.gain_control,
                     visual_space
