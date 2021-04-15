@@ -62,18 +62,16 @@ class DistanceDependentModularConnectorFunction(ModularConnectorFunction):
 
     def evaluate(self, index):
         print("DistanceDependentModularConnectorFunction evaluate ")
-        print(type(self.source.pop.positions))
-        print(type(self.target.pop.positions))
         xs = []
         ys = []
         for (i, neuron2) in enumerate(self.source.pop.all()):
-            xs.append(self.source.pop.positions[i][0])
-            ys.append(self.source.pop.positions[i][1])
+            xs = numpy.append(xs, self.source.pop.positions[i][0])
+            ys = numpy.append(ys, self.source.pop.positions[i][1])
         xt = []
         yt = []
         for (j, neuron2) in enumerate(self.target.pop.all()):
-            xt.append(self.target.pop.positions[j][0])
-            yt.append(self.target.pop.positions[j][1])
+            xt = numpy.append(xt, self.target.pop.positions[j][0])
+            yt = numpy.append(yt, self.target.pop.positions[j][1])
         return self.distance_dependent_function(
             self.source.dvf_2_dcs(
                 numpy.sqrt(
