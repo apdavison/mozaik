@@ -61,7 +61,7 @@ class DistanceDependentModularConnectorFunction(ModularConnectorFunction):
         raise NotImplemented
 
     def evaluate(self, index):
-        print("DistanceDependentModularConnectorFunction evaluate ")
+        # print("DistanceDependentModularConnectorFunction evaluate ")
         # print("self.source.pop.positions.shape ", self.source.pop.positions.shape)
         # print("self.source.pop.positions", self.source.pop.positions)
         # print("self.target.pop.positions.shape ", self.target.pop.positions.shape)
