@@ -62,35 +62,43 @@ class DistanceDependentModularConnectorFunction(ModularConnectorFunction):
 
     def evaluate(self, index):
         print("DistanceDependentModularConnectorFunction evaluate ")
-        print("self.source.pop.positions.shape ", self.source.pop.positions.shape)
-        print("self.source.pop.positions", self.source.pop.positions)
-        print("self.target.pop.positions.shape ", self.target.pop.shape)
-        print("self.target.pop.positions ", self.target.pop)
+        # print("self.source.pop.positions.shape ", self.source.pop.positions.shape)
+        # print("self.source.pop.positions", self.source.pop.positions)
+        # print("self.target.pop.positions.shape ", self.target.pop.positions.shape)
+        # print("self.target.pop.positions ", self.target.pop)
         xs = []
         ys = []
         for (i, neuron2) in enumerate(self.source.pop.all()):
             xs = numpy.append(xs, self.source.pop.positions[i][0])
             ys = numpy.append(ys, self.source.pop.positions[i][1])
+        sp = numpy.vstack((xs, ys))
+
         xt = []
         yt = []
         for (j, neuron2) in enumerate(self.target.pop.all()):
             xt = numpy.append(xt, self.target.pop.positions[j][0])
             yt = numpy.append(yt, self.target.pop.positions[j][1])
+        tp = numpy.vstack((xt, yt))
+
         return self.distance_dependent_function(
             self.source.dvf_2_dcs(
                 numpy.sqrt(
                     numpy.power(
                         # self.source.pop.positions[0, :]
-                        xs[0, :]
+                        # xs[0, :]
+                        sp[0, :]
                         # - self.target.pop.positions[0, index],
-                        - xt[0, index],
+                        # - xt[0, index],
+                        - tp[0, index],
                         2
                     )
                     + numpy.power(
                         # self.source.pop.positions[1, :]
-                        ys[1, :]
+                        # ys[1, :]
+                        sp[1, :]
                         # - self.target.pop.positions[1, index],
-                        - yt[1, index],
+                        # - yt[1, index],
+                        - tp[1, index],
                         2
                     )
                 )
