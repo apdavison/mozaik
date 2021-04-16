@@ -92,7 +92,7 @@ class ModularConnector(Connector):
         """
         This function calculates the combined weights from the ModularConnectorFunction in weight_functions
         """
-        print(i)
+        # print("weights for", i)
         # evaled = {}
         evaled = OrderedDict()
         # print('i ', i)
