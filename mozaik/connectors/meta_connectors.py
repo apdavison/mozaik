@@ -130,10 +130,10 @@ class GaborConnector(BaseComponent):
         print(min(target.pop.positions[1]), max(target.pop.positions[1]))
         print("target.pop.positions.shape ", target.pop.positions.shape)
         print("target ", target)
-        print("target.pop ", target.pop)
-        print("target.pop.all ", target.pop.all())
-        print("target.pop type ", type(target.pop))
-        print("target.pop.positions ", target.pop.positions)
+        # print("target.pop ", target.pop)
+        # print("target.pop.all ", target.pop.all())
+        # print("target.pop type ", type(target.pop))
+        # print("target.pop.positions ", target.pop.positions)
         for (j, neuron2) in enumerate(target.pop.all()):
             # if j == 1000:
             #     break

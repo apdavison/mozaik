@@ -73,7 +73,6 @@ class DistanceDependentModularConnectorFunction(ModularConnectorFunction):
             xs = numpy.append(xs, self.source.pop.positions[i][0])
             ys = numpy.append(ys, self.source.pop.positions[i][1])
         sp = numpy.vstack((xs, ys))
-
         xt = []
         yt = []
         for (j, neuron2) in enumerate(self.target.pop.all()):

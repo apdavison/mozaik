@@ -141,7 +141,7 @@ def export_SingleValues_as_matricies(simulation_name,master_results_dir,query):
     num_params = numpy.shape(params)[1]
     
     # lets find out unique values of each parameter set
-    param_values  = [sorted(set(params[:,i])) for i in xrange(0,num_params)]
+    param_values = [sorted(set(params[:,i])) for i in range(0,num_params)]
     dimensions = numpy.array([len(x) for x in param_values])
     
     # lets check that the dataset has the same number of entries as the number of all combinations of parameter values
@@ -151,7 +151,7 @@ def export_SingleValues_as_matricies(simulation_name,master_results_dir,query):
             matrix = numpy.zeros(dimensions)
             matrix.fill(numpy.NAN)
             for (pv,datastore) in datastores:
-                index = [param_values[i].index(pv[i]) for i in xrange(0,len(param_values))]
+                index = [param_values[i].index(pv[i]) for i in range(0,len(param_values))]
                 dsv = query.query(datastore)
                 if len(param_filter_query(dsv,identifier='SingleValue',value_name=v).get_analysis_result()) == 1:
                     vv = param_filter_query(dsv,identifier='SingleValue',value_name=v).get_analysis_result()[0].value

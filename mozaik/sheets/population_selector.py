@@ -144,11 +144,17 @@ class RCGrid(PopulationSelector):
           
         picked = []
         z = self.sheet.pop.all_cells.astype(int)
-        for x in self.parameters.offset_x + numpy.arange(0,self.parameters.size,self.parameters.spacing) - self.parameters.size/2.0:
-            for y in self.parameters.offset_y + numpy.arange(0,self.parameters.size,self.parameters.spacing) - self.parameters.size/2.0:
-                xx,yy = self.sheet.cs_2_vf(x,y)
-                picked.append(z[numpy.argmin(numpy.power(self.sheet.pop.positions[0] - xx,2) +  numpy.power(self.sheet.pop.positions[1] - yy,2))])
-          
+        xp = []
+        yp = []
+        for (i, neuron2) in enumerate(self.sheet.pop.all()):
+            xp = numpy.append(xp, self.sheet.pop.positions[i][0])
+            yp = numpy.append(yp, self.sheet.pop.positions[i][1])
+
+        for x in self.parameters.offset_x + numpy.arange(0, self.parameters.size, self.parameters.spacing) - self.parameters.size/2.0:
+            for y in self.parameters.offset_y + numpy.arange(0, self.parameters.size, self.parameters.spacing) - self.parameters.size/2.0:
+                xx, yy = self.sheet.cs_2_vf(x, y)
+                # picked.append(z[numpy.argmin(numpy.power(self.sheet.pop.positions[0] - xx, 2) + numpy.power(self.sheet.pop.positions[1] - yy, 2))])
+                picked.append(z[numpy.argmin(numpy.power(xp - xx, 2) + numpy.power(yp - yy, 2))])
         return list(set(picked))
 
 
@@ -184,14 +190,15 @@ class SimilarAnnotationSelector(PopulationSelector):
         'num_of_cells': int,  # The number of cells to be selected
         'period' :  float, # if the value is periodic this should be set to the period, oterwise it should be set to 0.
     })
+
     def pick_close_to_annotation(self):
         picked = []
         z = self.sheet.pop.all_cells.astype(int)
-        vals = [self.sheet.get_neuron_annotation(i,self.parameters.annotation) for i in xrange(0,len(z))]
+        vals = [self.sheet.get_neuron_annotation(i,self.parameters.annotation) for i in range(0,len(z))]
         if self.parameters.period != 0:
-            picked = numpy.array([i for i in xrange(0,len(z)) if abs(vals[i]-self.parameters.value) < self.parameters.distance])
+            picked = numpy.array([i for i in range(0,len(z)) if abs(vals[i]-self.parameters.value) < self.parameters.distance])
         else:
-            picked = numpy.array([i for i in xrange(0,len(z)) if circular_dist(vals[i],self.parameters.value,self.parameters.period) < self.parameters.distance])
+            picked = numpy.array([i for i in range(0,len(z)) if circular_dist(vals[i],self.parameters.value,self.parameters.period) < self.parameters.distance])
 
         return picked
       
@@ -239,11 +246,16 @@ class SimilarAnnotationSelectorRegion(SimilarAnnotationSelector):
         'offset_y' : float, # the y axis offset from the center of the sheet (micro meters)
     })
 
-
     def generate_idd_list_of_neurons(self):
         picked_or = set(self.pick_close_to_annotation())
-        xx,yy = self.sheet.cs_2_vf(self.sheet.pop.positions[0],self.sheet.pop.positions[1])
-        picked_region = set(numpy.arange(0,len(xx))[numpy.logical_and(
+        xp = []
+        yp = []
+        for (i, neuron2) in enumerate(self.sheet.pop.all()):
+            xp = numpy.append(xp, self.sheet.pop.positions[i][0])
+            yp = numpy.append(yp, self.sheet.pop.positions[i][1])
+        xx, yy = self.sheet.cs_2_vf(xp, yp)
+        # xx, yy = self.sheet.cs_2_vf(self.sheet.pop.positions[0], self.sheet.pop.positions[1])
+        picked_region = set(numpy.arange(0, len(xx))[numpy.logical_and(
             abs(numpy.array(xx - self.parameters.offset_x)) < self.parameters.size/2.0,
             abs(numpy.array(yy - self.parameters.offset_y)) < self.parameters.size/2.0
         )])

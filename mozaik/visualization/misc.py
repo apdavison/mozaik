@@ -7,6 +7,7 @@ generic visualization tools that can in turn be used by plotting algorithms.
 """
 
 import matplotlib.pyplot as plt
+import numpy
 
 
 def plot_layer_activity(sheet, value_to_plot, cortical_coordinates=False, labels=True):
@@ -25,6 +26,11 @@ def plot_layer_activity(sheet, value_to_plot, cortical_coordinates=False, labels
     labels : bool
            Whether to include labels.
     """
+    xp = []
+    yp = []
+    for (i, neuron2) in enumerate(sheet.pop.all()):
+        xp = numpy.append(xp, sheet.pop.positions[i][0])
+        yp = numpy.append(yp, sheet.pop.positions[i][1])
 
     if cortical_coordinates:
         # first we need to check whether sheet is instance of
@@ -32,8 +38,10 @@ def plot_layer_activity(sheet, value_to_plot, cortical_coordinates=False, labels
         # magnification_factor
         if hasattr(sheet, "magnification_factor"):
             plt.scatter(
-                sheet.pop.positions[0] * sheet.magnification_factor,
-                sheet.pop.positions[1] * sheet.magnification_factor,
+                # sheet.pop.positions[0] * sheet.magnification_factor,
+                xp * sheet.magnification_factor,
+                # sheet.pop.positions[1] * sheet.magnification_factor,
+                yp * sheet.magnification_factor,
                 c=value_to_plot,
                 faceted=False,
                 edgecolors="none"
@@ -43,8 +51,10 @@ def plot_layer_activity(sheet, value_to_plot, cortical_coordinates=False, labels
                 plt.ylabel("y (μm)")
     else:
         plt.scatter(
-            sheet.pop.positions[0],
-            sheet.pop.positions[1],
+            # sheet.pop.positions[0],
+            xp,
+            # sheet.pop.positions[1],
+            yp,
             c=value_to_plot,
             faceted=False,
             edgecolors="none"

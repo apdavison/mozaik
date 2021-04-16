@@ -1338,9 +1338,9 @@ class SizeTuningOverviewNew(Plotting):
           res = []
           p0 = [8.0, 0.43, 8.0, 0.18, 3.0 ,1.4,numpy.min(Y)] # Initial guess for the parameters
 
-          for i in xrange(2,15):
-            for j in xrange(5,11):
-              for k in xrange(1,5):
+          for i in range(2,15):
+            for j in range(5,11):
+              for k in range(1,5):
                 p0[1] = i/15.0
                 p0[3] = j/10.0
                 p0[5] = k/2.0
@@ -1725,7 +1725,7 @@ class TrialToTrialVariabilityComparisonNew(Plotting):
             for idd in ids:
                 assert len(dsv.get_analysis_result()) == 1
                 s = dsv.get_analysis_result()[0].get_asl_by_id(idd).magnitude
-                z = [s[i*(len(s)/10):(i+1)*(len(s)/10)] for i in xrange(0,10)]
+                z = [s[i*(len(s)/10):(i+1)*(len(s)/10)] for i in range(0,10)]
                 sp[idd] = 1/numpy.mean(numpy.std(z,axis=0,ddof=1))
 
             return sp

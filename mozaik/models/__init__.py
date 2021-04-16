@@ -283,7 +283,14 @@ class Model(BaseComponent):
         """
         pos = {}
         for s in list(self.sheets.values()):
-            pos[s.name] = s.pop.positions
+            x = []
+            y = []
+            for (i, neuron2) in enumerate(s.pop.all()):
+                x = numpy.append(x, s.pop.positions[i][0])
+                y = numpy.append(y, s.pop.positions[i][1])
+            p = numpy.vstack((x, y))
+            # pos[s.name] = s.pop.positions
+            pos[s.name] = p
         return pos
 
     def neuron_annotations(self):
