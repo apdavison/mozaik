@@ -206,7 +206,7 @@ class ModularSamplingProbabilisticConnector(ModularConnector):
                 ]
             )
             cl.append(a)
-
+        print("weights obtained")
         cl = numpy.hstack(cl).T
         method = self.sim.FromListConnector(cl)
 
