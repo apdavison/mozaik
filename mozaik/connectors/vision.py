@@ -43,18 +43,19 @@ class MapDependentModularConnectorFunction(ModularConnectorFunction):
             list(zip(X.flatten(), Y.flatten())), mmap.flatten()
         )
 
-        xp = []
-        yp = []
-        for (i, neuron2) in enumerate(self.source.pop.all()):
-            xp.append(self.source.pop.positions[i][0])
-            yp.append(self.source.pop.positions[i][1])
+        # xp = []
+        # yp = []
+        # for (i, neuron2) in enumerate(self.source.pop.all()):
+        #    xp.append(self.source.pop.positions[i][0])
+        #    yp.append(self.source.pop.positions[i][1])
 
         self.val_source = (
             self.mmap(
                 np.transpose(
                     np.array(
                         # [self.source.pop.positions[0], self.source.pop.positions[1]]
-                        [xp, yp]
+                        [self.source.pop.positions[:, 0], self.source.pop.positions[:, 1]]
+                        # [xp, yp]
                     )
                 )
             )
@@ -215,17 +216,19 @@ class GaborArborization(ModularConnectorFunction):
         # print("self.source.pop.positions[1] ", self.source.pop.positions[1])
 
         # create lists for x, y positions compatible with SpiNNaker
-        x = []
-        y = []
-        for (i, neuron2) in enumerate(self.source.pop.all()):
-            x.append(self.source.pop.positions[i][0])
-            y.append(self.source.pop.positions[i][1])
+        # x = []
+        # y = []
+        # for (i, neuron2) in enumerate(self.source.pop.all()):
+        #    x.append(self.source.pop.positions[i][0])
+        #    y.append(self.source.pop.positions[i][1])
 
         w = gabor(
             # self.source.pop.positions[0],
-            x,
+            self.source.pop.positions[:, 0],
+            # x,
             # self.source.pop.positions[1],
-            y,
+            self.source.pop.positions[:, 1],
+            # y,
             target_posx,
             target_posy,
             target_or + np.pi / 2,
@@ -725,18 +728,19 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
             list(zip(X.flatten(), Y.flatten())), mmap.flatten()
         )
 
-        xp = []
-        yp = []
-        for (i, neuron2) in enumerate(self.source.pop.all()):
-            xp.append(self.source.pop.positions[i][0])
-            yp.append(self.source.pop.positions[i][1])
+        # xp = []
+        # yp = []
+        # for (i, neuron2) in enumerate(self.source.pop.all()):
+        #    xp.append(self.source.pop.positions[i][0])
+        #    yp.append(self.source.pop.positions[i][1])
 
         self.or_source = (
             self.mmap(
                 np.transpose(
                     np.array(
                         # [self.source.pop.positions[0], self.source.pop.positions[1]]
-                        [xp, yp]
+                        [self.source.pop.positions[:, 0], self.source.pop.positions[:, 1]]
+                        # [xp, yp]
                     )
                 )
             )
@@ -760,18 +764,20 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
         # y_target = self.target.pop.positions[1][index]
         y_target = self.target.pop.positions[index][1]
 
-        xp = []
-        yp = []
-        for (i, neuron2) in enumerate(self.source.pop.all()):
-            xp.append(self.source.pop.positions[i][0])
-            yp.append(self.source.pop.positions[i][1])
+        # xp = []
+        # yp = []
+        # for (i, neuron2) in enumerate(self.source.pop.all()):
+        #    xp.append(self.source.pop.positions[i][0])
+        #    yp.append(self.source.pop.positions[i][1])
 
         # does this work with lists?
         phi = np.arctan2(
             # self.source.pop.positions[1] - y_target,
-            yp - y_target,
+            self.source.pop.positions[:, 1] - y_target,
+            # yp - y_target,
             # self.source.pop.positions[0] - x_target
-            xp - x_target
+            self.source.pop.positions[:, 0] - x_target
+            # xp - x_target
         )
         distance = circular_dist(self.or_source, 2 * phi - or_target, np.pi)
         prob = np.exp(-0.5 * (distance / self.parameters.sigma) ** 2) / (
@@ -813,9 +819,11 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
             logger.error(str(np.max(prob)))
             plt.scatter(
                 # self.source.pop.positions[0],
-                xp,
+                self.source.pop.positions[:, 0],
+                # xp,
                 # self.source.pop.positions[1],
-                yp,
+                self.source.pop.positions[:, 1],
+                # yp,
                 c=self.or_source,
                 alpha=0.5,
                 edgecolors="none",
@@ -828,9 +836,11 @@ class CoCircularModularConnectorFunction(ModularConnectorFunction):
             plt.gca().set_aspect("equal", "box")
             plt.scatter(
                 # self.source.pop.positions[0],
-                xp,
+                self.source.pop.positions[:, 0],
+                # xp,
                 # self.source.pop.positions[1],
-                yp,
+                self.source.pop.positions[:, 1],
+                # yp,
                 c=self.or_source,
                 alpha=0.5,
                 edgecolors="none",

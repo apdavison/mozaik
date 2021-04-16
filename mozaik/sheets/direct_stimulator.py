@@ -445,14 +445,15 @@ class LocalStimulatorArray(DirectStimulator):
         # the number of neurons in the population and m is the number of stimulators
         x = stimulator_coordinates[0].flatten()
         y = stimulator_coordinates[1].flatten()
-        xp = []
-        yp = []
-        for (i, neuron2) in enumerate(self.sheet.pop.all()):
-            xp.append(self.sheet.pop.positions[i][0])
-            yp.append(self.sheet.pop.positions[i][1])
+        # xp = []
+        # yp = []
+        # for (i, neuron2) in enumerate(self.sheet.pop.all()):
+        #    xp.append(self.sheet.pop.positions[i][0])
+        #    yp.append(self.sheet.pop.positions[i][1])
 
         # xx, yy = self.sheet.vf_2_cs(self.sheet.pop.positions[0], self.sheet.pop.positions[1])
-        xx, yy = self.sheet.vf_2_cs(xp, yp)
+        xx, yy = self.sheet.vf_2_cs(self.sheet.pop.positions[:, 0], self.sheet.pop.positions[:, 1])
+        # xx, yy = self.sheet.vf_2_cs(xp, yp)
         zeros = numpy.zeros(len(x))
         f = open(Global.root_directory +'positions' + self.sheet.name.replace('/','_') + '.pickle','w')
         pickle.dump((xx,yy),f)
@@ -476,12 +477,14 @@ class LocalStimulatorArray(DirectStimulator):
         nearest_ix = numpy.rint(yy/self.parameters.spacing)+n
         nearest_iy = numpy.rint(xx/self.parameters.spacing)+n
 
-        zp = []
-        for (i, neuron2) in enumerate(self.sheet.pop.all()):
-            zp.append(self.sheet.pop.positions[i][2])
+        # zp = []
+        # for (i, neuron2) in enumerate(self.sheet.pop.all()):
+        #    zp.append(self.sheet.pop.positions[i][2])
 
         # nearest_iz = numpy.rint((numpy.array(self.sheet.pop.positions[2])-sheet.parameters.min_depth)/self.parameters.depth_sampling_step)
-        nearest_iz = numpy.rint((numpy.array(zp) - sheet.parameters.min_depth) / self.parameters.depth_sampling_step)
+        nearest_iz = numpy.rint((numpy.array(
+            self.sheet.pop.positions[:, 2]) - sheet.parameters.min_depth) / self.parameters.depth_sampling_step)
+        # nearest_iz = numpy.rint((numpy.array(zp) - sheet.parameters.min_depth) / self.parameters.depth_sampling_step)
         nearest_ix[nearest_ix<0] = 0
         nearest_iy[nearest_iy<0] = 0
         nearest_ix[nearest_ix>2*n] = 2*n
@@ -504,12 +507,13 @@ class LocalStimulatorArray(DirectStimulator):
         pylab.gca().set_aspect('equal')
         pylab.title('Activation magnitude (neurons)')
         #ax.scatter(self.sheet.pop.positions[0],self.sheet.pop.positions[1],self.sheet.pop.positions[2],s=10,c=lam,cmap='gray',vmin=0)
-        for (i, neuron2) in enumerate(self.sheet.pop.all()):
-            xp.append(self.sheet.pop.positions[i][0])
-            yp.append(self.sheet.pop.positions[i][1])
+        # for (i, neuron2) in enumerate(self.sheet.pop.all()):
+        #    xp.append(self.sheet.pop.positions[i][0])
+        #    yp.append(self.sheet.pop.positions[i][1])
 
         # ax.scatter(self.sheet.pop.positions[0], self.sheet.pop.positions[1], s=10, c=lam, cmap='gray', vmin=0)
-        ax.scatter(xp, yp, s=10, c=lam, cmap='gray', vmin=0)
+        ax.scatter(self.sheet.pop.positions[:, 0], self.sheet.pop.positions[:, 1], s=10, c=lam, cmap='gray', vmin=0)
+        # ax.scatter(xp, yp, s=10, c=lam, cmap='gray', vmin=0)
         ax = pylab.gca()
         #ax.set_zlim(ax.get_zlim()[::-1])
         
@@ -611,14 +615,15 @@ def test_stimulating_function(sheet, coor_x, coor_y, current_update_interval, pa
     vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in range(0, len(z))])
     mean_orientations = []
 
-    x = []
-    y = []
-    for (i, neuron2) in enumerate(sheet.pop.all()):
-        x.append(sheet.pop.positions[i][0])
-        y.append(sheet.pop.positions[i][1])
+    # x = []
+    # y = []
+    # for (i, neuron2) in enumerate(sheet.pop.all()):
+    #    x.append(sheet.pop.positions[i][0])
+    #    y.append(sheet.pop.positions[i][1])
 
     # px, py = sheet.vf_2_cs(sheet.pop.positions[0], sheet.pop.positions[1])
-    px, py = sheet.vf_2_cs(x, y)
+    px, py = sheet.vf_2_cs(sheet.pop.positions[:, 0], sheet.pop.positions[:, 1])
+    # px, py = sheet.vf_2_cs(x, y)
 
     pylab.subplot(151)
     pylab.gca().set_aspect('equal')
@@ -652,14 +657,15 @@ def test_stimulating_function_Naka(sheet,coor_x,coor_y,current_update_interval,p
     vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in range(0,len(z))])
     mean_orientations = []
 
-    x = []
-    y = []
-    for (i, neuron2) in enumerate(sheet.pop.all()):
-        x.append(sheet.pop.positions[i][0])
-        y.append(sheet.pop.positions[i][1])
+    # x = []
+    # y = []
+    # for (i, neuron2) in enumerate(sheet.pop.all()):
+    #    x.append(sheet.pop.positions[i][0])
+    #    y.append(sheet.pop.positions[i][1])
 
     # px, py = sheet.vf_2_cs(sheet.pop.positions[0], sheet.pop.positions[1])
-    px, py = sheet.vf_2_cs(x, y)
+    px, py = sheet.vf_2_cs(sheet.pop.positions[:, 0], sheet.pop.positions[:, 1])
+    # px, py = sheet.vf_2_cs(x, y)
     pylab.subplot(151)
     pylab.gca().set_aspect('equal')
     pylab.title('Orientatin preference (neurons)')
