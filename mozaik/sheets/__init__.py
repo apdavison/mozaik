@@ -259,13 +259,14 @@ class Sheet(BaseComponent):
             key in self._neuron_annotations[neuron_number]
             and self._neuron_annotations[neuron_number][key][0]
         ):
-            logger.warning(
-                "The annotation<"
-                + str(key)
-                + "> for neuron "
-                + str(neuron_number)
-                + " is protected. Annotation not updated"
-            )
+            pass
+            # logger.warning(
+            #    "The annotation<"
+            #    + str(key)
+            #    + "> for neuron "
+            #    + str(neuron_number)
+            #    + " is protected. Annotation not updated"
+            # )
         else:
             self._neuron_annotations[neuron_number][key] = (protected, value)
 
