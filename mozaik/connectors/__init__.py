@@ -64,20 +64,23 @@ class Connector(BaseComponent):
         print("weight ", weight)
         print("delay ", delay)
         print("self.parameters.short_term_plasticity ", self.parameters.short_term_plasticity)
+        print("not self.parameters.short_term_plasticity != None ", not self.parameters.short_term_plasticity != None )
         # tsodyks_synapse/short term plasticity is not supported by SpiNNaker
         # if not self.parameters.short_term_plasticity != None:
-        if self.parameters.short_term_plasticity != None:
-            print("StaticSynapse")
-            sm = self.sim.StaticSynapse(weight=weight, delay=delay)
-        else:
-            if weight != None:
-                sm = self.sim.native_synapse_type("tsodyks_synapse")(
-                    weight=weight, delay=delay, **self.parameters.short_term_plasticity
-                )
-            else:
-                sm = self.sim.native_synapse_type("tsodyks_synapse")(
-                    **self.parameters.short_term_plasticity
-                )
+        print("StaticSynapse")
+        sm = self.sim.StaticSynapse(weight=weight, delay=delay)
+        # if self.parameters.short_term_plasticity != None:
+        #    print("StaticSynapse")
+        #    sm = self.sim.StaticSynapse(weight=weight, delay=delay)
+        # else:
+        #    if weight != None:
+        #        sm = self.sim.native_synapse_type("tsodyks_synapse")(
+        #            weight=weight, delay=delay, **self.parameters.short_term_plasticity
+        #        )
+        #    else:
+        #        sm = self.sim.native_synapse_type("tsodyks_synapse")(
+        #            **self.parameters.short_term_plasticity
+        #        )
         return sm
 
     def connect(self):
