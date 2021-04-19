@@ -225,7 +225,7 @@ class Model(BaseComponent):
                     "Simulating the network for %s ms with blank stimulus"
                     % self.parameters.null_stimulus_period
                 )
-
+                print("sim.get_max_delay ", self.sim.get_max_delay())
                 self.sim.run(self.parameters.null_stimulus_period)
                 self.simulator_time += self.parameters.null_stimulus_period
                 for sheet in list(self.sheets.values()):
@@ -262,7 +262,10 @@ class Model(BaseComponent):
         ids = {}
         for s in list(self.sheets.values()):
             # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
-            ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
+            if hasattr(s.pop.all()[0], 'id'):
+                ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
+            else:
+                ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
         return ids
 
     def sheet_parameters(self):
