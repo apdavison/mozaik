@@ -132,15 +132,15 @@ class Sheet(BaseComponent):
                 self.parameters.recorders[k].variables = [
                     self.parameters.recorders[k].variables
                 ]
-            print(l)
-            print(k)
-            print(l[0])
-            print(l[20])
-            print(l[0].id)
-            print(l[1])
-            print(type(l[0]))  # IDMixin object
-            print(type(l))
-            print(l.shape)
+            print("l ", l)
+            print("k ", k)
+            print("l[0] ", l[0])
+            # print(l[20])
+            # print(l[0].id)
+            # print(l[1])
+            # print(type(l[0]))  # IDMixin object
+            # print(type(l))
+            # print(l.shape)
             # print(self.to_record.get(self.parameters.recorders[k].variables[0], []))
             # print(type(self.to_record.get(self.parameters.recorders[k].variables[0], [])))
             # print(self.to_record.get(self.parameters.recorders[k].variables[0]))
@@ -154,7 +154,10 @@ class Sheet(BaseComponent):
             # print("ENDTEST")
 
             # get ids from IDMixin objects
-            l = numpy.array([i.id for i in l])
+            # l = numpy.array([i.id for i in l])
+            if hasattr(l[0], 'id'):
+                l = numpy.array([i.id for i in l])
+
             # print("NEW ARRAY")
             # print(l)
             # print(l[0])

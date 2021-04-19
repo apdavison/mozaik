@@ -485,7 +485,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 # print("self.parameters.noise ",  self.parameters.noise)
                 # if not self.parameters.mpi_reproducible_noise:
                 #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+                #    ncs = sim.SpikeSourcePoisson  # test this
+                #    sim.SpikeSourcePoisson
                 # else:
+                # pass
                 #    ncs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
                 # if self.sheets[rf_type].pop._mask_local[i]:  # 'Population' object has no attribute '_mask_local'
@@ -495,7 +498,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #    self.scs[rf_type].append(scs)
                 #    self.ncs[rf_type].append(ncs)
                 # lgn_cell.inject(scs)
-                # lgn_cell.inject(ncs)
+                # lgn_cell.inject(ncs)  # does inject work with SpikeSourcePoisson
                 # print("lgn_cell i offset 2", lgn_cell.i_offset)
 
         P_rf = self.parameters.receptive_field

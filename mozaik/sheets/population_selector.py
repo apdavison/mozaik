@@ -75,8 +75,9 @@ class RCRandomN(PopulationSelector):
         if isinstance(self.sheet.pop.all_cells, list):
             # z = numpy.asarray(self.sheet.pop.all_cells, dtype=numpy.int)
             # z = numpy.asarray(self.sheet.pop.all_cells)
-            print("self.sheet.pop.all_cells ", self.sheet.pop.all_cells)
-            print("self.sheet.pop.all_cells type ", self.sheet.pop.all_cells)
+            # print("self.sheet.pop.all_cells ", self.sheet.pop.all_cells)
+            print("self.sheet.pop.all_cells type ", type(self.sheet.pop.all_cells))
+            print("self.parameters.num_of_cells ", self.parameters.num_of_cells)
             z = numpy.asarray([idm.id for idm in self.sheet.pop.all_cells])  # for IDMixin
             print("Z ", z)
             print("z[:self.parameters.num_of_cells] ", z[:self.parameters.num_of_cells])
