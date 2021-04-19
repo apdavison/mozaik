@@ -168,8 +168,8 @@ class MozaikParametrized(Parameterized):
                 )
 
         for (name, value) in self.get_param_values():
-            print("init name: ", name)
-            print("init value: ", value)
+            # print("init name: ", name)
+            # print("init value: ", value)
             if value == None and self.params()[name].allow_None==False:                
                 logger.error("The parameter %s was not initialized" % name)
                 raise ValueError("The parameter %s was not initialized" % name)
@@ -333,8 +333,8 @@ class MozaikParametrized(Parameterized):
         # print(self.get_param_values())
         # print("MozaikParametrized end XX")
         for name, val in self.get_param_values():
-            print("name: ", name)
-            print("value: ", val)
+            # print("name: ", name)
+            #   print("value: ", val)
             if isinstance(val, MozaikExtendedParameterSet):
                 settings.append(
                     '"%s":MozaikExtendedParameterSet(%s)' % (name, repr(val))
@@ -351,8 +351,8 @@ class MozaikParametrized(Parameterized):
             + ", ".join(settings)
             + "}"
         )
-        print(r)
-        print("MozaikParametrized end XX")
+        # print(r)
+        # print("MozaikParametrized end XX")
         return r
 
     def __repr__(self):
