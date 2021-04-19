@@ -78,7 +78,10 @@ class RCRandomN(PopulationSelector):
             # print("self.sheet.pop.all_cells ", self.sheet.pop.all_cells)
             print("self.sheet.pop.all_cells type ", type(self.sheet.pop.all_cells))
             print("self.parameters.num_of_cells ", self.parameters.num_of_cells)
-            z = numpy.asarray([idm.id for idm in self.sheet.pop.all_cells])  # for IDMixin
+            if hasattr(self.sheet.pop.all_cells[0], 'id'):
+                z = numpy.asarray([idm.id for idm in self.sheet.pop.all_cells])  # for IDMixin
+            else:
+                z = numpy.asarray(self.sheet.pop.all_cells)
             print("Z ", z)
             print("z[:self.parameters.num_of_cells] ", z[:self.parameters.num_of_cells])
         else:
@@ -104,9 +107,17 @@ class RCRandomPercentage(PopulationSelector):
     })
         
     def generate_idd_list_of_neurons(self):
+        # if isinstance(self.sheet.pop.all_cells, list):
+        #    z = numpy.asarray(self.sheet.pop.all_cells, dtype=numpy.int)
+        #    z = numpy.asarray(self.sheet.pop.all_cells)
+        # else:
+        #    z = self.sheet.pop.all_cells.astype(int)
+
         if isinstance(self.sheet.pop.all_cells, list):
-            # z = numpy.asarray(self.sheet.pop.all_cells, dtype=numpy.int)
-            z = numpy.asarray(self.sheet.pop.all_cells)
+            if hasattr(self.sheet.pop.all_cells[0], 'id'):
+                z = numpy.asarray([idm.id for idm in self.sheet.pop.all_cells])  # for IDMixin
+            else:
+                z = numpy.asarray(self.sheet.pop.all_cells)
         else:
             z = self.sheet.pop.all_cells.astype(int)
         mozaik.rng.shuffle(z)
@@ -149,7 +160,14 @@ class RCGrid(PopulationSelector):
         assert math.fmod(self.parameters.size,self.parameters.spacing) < 0.000000001 , "Error the size has to be multiple of spacing!"
           
         picked = []
-        z = self.sheet.pop.all_cells.astype(int)
+        # z = self.sheet.pop.all_cells.astype(int)
+        if isinstance(self.sheet.pop.all_cells, list):
+            if hasattr(self.sheet.pop.all_cells[0], 'id'):
+                z = numpy.asarray([idm.id for idm in self.sheet.pop.all_cells])  # for IDMixin
+            else:
+                z = numpy.asarray(self.sheet.pop.all_cells)
+        else:
+            z = self.sheet.pop.all_cells.astype(int)
         # xp = []
         # yp = []
         # for (i, neuron2) in enumerate(self.sheet.pop.all()):
@@ -201,8 +219,15 @@ class SimilarAnnotationSelector(PopulationSelector):
 
     def pick_close_to_annotation(self):
         picked = []
-        z = self.sheet.pop.all_cells.astype(int)
-        vals = [self.sheet.get_neuron_annotation(i,self.parameters.annotation) for i in range(0,len(z))]
+        # z = self.sheet.pop.all_cells.astype(int)
+        if isinstance(self.sheet.pop.all_cells, list):
+            if hasattr(self.sheet.pop.all_cells[0], 'id'):
+                z = numpy.asarray([idm.id for idm in self.sheet.pop.all_cells])  # for IDMixin
+            else:
+                z = numpy.asarray(self.sheet.pop.all_cells)
+        else:
+            z = self.sheet.pop.all_cells.astype(int)
+        vals = [self.sheet.get_neuron_annotation(i, self.parameters.annotation) for i in range(0, len(z))]
         if self.parameters.period != 0:
             picked = numpy.array([i for i in range(0,len(z)) if abs(vals[i]-self.parameters.value) < self.parameters.distance])
         else:
@@ -270,5 +295,12 @@ class SimilarAnnotationSelectorRegion(SimilarAnnotationSelector):
         )])
         picked = list(picked_or & picked_region)
         mozaik.rng.shuffle(picked)
-        z = self.sheet.pop.all_cells.astype(int)
+        # z = self.sheet.pop.all_cells.astype(int)
+        if isinstance(self.sheet.pop.all_cells, list):
+            if hasattr(self.sheet.pop.all_cells[0], 'id'):
+                z = numpy.asarray([idm.id for idm in self.sheet.pop.all_cells])  # for IDMixin
+            else:
+                z = numpy.asarray(self.sheet.pop.all_cells)
+        else:
+            z = self.sheet.pop.all_cells.astype(int)
         return z[picked[:self.parameters.num_of_cells]]
