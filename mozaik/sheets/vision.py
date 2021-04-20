@@ -47,7 +47,6 @@ class RetinalUniformSheet(Sheet):
         self.pop = self.sim.Population(int(parameters.sx * parameters.sy * parameters.density),
                                        getattr(self.model.sim, self.parameters.cell.model),
                                        self.parameters.cell.params,
-                                       self.sim.SpikeSourcePoisson(rate=0),  # does this work for noise?
                                        structure=rs,
                                        initial_values=self.parameters.cell.initial_values,
                                        label=self.name)
