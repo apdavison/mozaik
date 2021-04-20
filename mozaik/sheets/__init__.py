@@ -132,8 +132,8 @@ class Sheet(BaseComponent):
                 self.parameters.recorders[k].variables = [
                     self.parameters.recorders[k].variables
                 ]
-            print("l ", l)
-            print("k ", k)
+            # print("l ", l)
+            # print("k ", k)
             print("l[0] ", l[0])
             # print(l[20])
             # print(l[0].id)
@@ -156,6 +156,7 @@ class Sheet(BaseComponent):
             # get ids from IDMixin objects
             # l = numpy.array([i.id for i in l])
             if hasattr(l[0], 'id'):
+                print("XXX i.id in sheets init setup_to_record_list")
                 l = numpy.array([i.id for i in l])
 
             # print("NEW ARRAY")

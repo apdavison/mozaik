@@ -189,7 +189,7 @@ class Model(BaseComponent):
         t0 = time.time()
         logger.info("Simulating the network for %s ms" % tstop)
         self.sim.run(tstop)
-        print("simulation begins running", tstop)
+        print("Simulation begins running", tstop)
         logger.info("Finished simulating the network for %s ms" % tstop)
         self.simulator_time += tstop
 
@@ -226,6 +226,8 @@ class Model(BaseComponent):
                     % self.parameters.null_stimulus_period
                 )
                 print("self.parameters.max_delay ", self.parameters.max_delay)
+                print("self.parameters ", self.parameters)
+                print("dir(self.sim) ", dir(self.sim))
                 self.sim.run(self.parameters.null_stimulus_period)
                 self.simulator_time += self.parameters.null_stimulus_period
                 for sheet in list(self.sheets.values()):
