@@ -226,8 +226,8 @@ class Model(BaseComponent):
                     % self.parameters.null_stimulus_period
                 )
                 print("self.parameters.max_delay ", self.parameters.max_delay)
-                print("self.parameters ", self.parameters)
-                print("dir(self.sim) ", dir(self.sim))
+                # print("self.parameters ", self.parameters)
+                # print("dir(self.sim) ", dir(self.sim))
                 self.sim.run(self.parameters.null_stimulus_period)
                 self.simulator_time += self.parameters.null_stimulus_period
                 for sheet in list(self.sheets.values()):
