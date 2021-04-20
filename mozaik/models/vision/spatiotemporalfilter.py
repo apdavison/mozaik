@@ -483,7 +483,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
                 #    ncs = sim.SpikeSourcePoisson  # test this
                 #    sim.SpikeSourcePoisson
-                np = sim.SpikeSourcePoisson(rate=0)
+                #    np = sim.Population.SpikeSourcePoisson(rate=0)
+                np = sim.Population(10, sim.SpikeSourcePoisson(rate=10.0), label="noise")
                 sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
             # print("SpikeSourcePoisson")
             # self.sheets[rf_type].pop(sim.SpikeSourcePoisson(rate=0))
