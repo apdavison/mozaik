@@ -37,7 +37,7 @@ class RetinalUniformSheet(Sheet):
     })
     
     def __init__(self, model, parameters):
-        Sheet.__init__(self, model,parameters.sx, parameters.sy, parameters)
+        Sheet.__init__(self, model, parameters.sx, parameters.sy, parameters)
         logger.info("Creating %s with %d neurons." % (self.__class__.__name__, int(parameters.sx * parameters.sy * parameters.density)))
         rs = space.RandomStructure(boundary=space.Cuboid(self.size_x,self.size_y, 0),
                                    origin=(0.0, 0.0, 0.0),
@@ -47,10 +47,10 @@ class RetinalUniformSheet(Sheet):
         self.pop = self.sim.Population(int(parameters.sx * parameters.sy * parameters.density),
                                        getattr(self.model.sim, self.parameters.cell.model),
                                        self.parameters.cell.params,
+                                       self.sim.SpikeSourcePoisson(rate=0),  # does this work for noise?
                                        structure=rs,
                                        initial_values=self.parameters.cell.initial_values,
-                                       label=self.name,
-                                       cellclass=self.sim.SpikeSourcePoisson(rate=0))  # does this work for noise?
+                                       label=self.name)
 
     def size_in_degrees(self):
         return (self.parameters.sx, self.parameters.sy)
