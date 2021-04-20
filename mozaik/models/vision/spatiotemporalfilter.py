@@ -475,6 +475,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             seeds = get_seeds((self.sheets[rf_type].pop.size,))
             # print("seeds ", seeds)
             # print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
+            if not self.parameters.mpi_reproducible_noise:
+                #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+                #    ncs = sim.SpikeSourcePoisson  # test this
+                #    sim.SpikeSourcePoisson
+                print("SpikeSourcePoisson")
+                self.sheets[rf_type].pop(sim.SpikeSourcePoisson(rate=0))
             # for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
                 # print("lgn_cell ", lgn_cell)
                 # print("lgn_cell type ", type(lgn_cell))
@@ -487,8 +493,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
                 #    ncs = sim.SpikeSourcePoisson  # test this
                 #    sim.SpikeSourcePoisson
+                # self.sheets[rf_type].pop(sim.SpikeSourcePoisson())
                 # else:
-                # pass
+                #    pass
                 #    ncs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
                 # if self.sheets[rf_type].pop._mask_local[i]:  # 'Population' object has no attribute '_mask_local'
@@ -643,7 +650,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 assert isinstance(input_current, dict)
                 t = input_current["times"] + offset
                 a = self.parameters.linear_scaler * input_current["amplitudes"]
-                scs.set_parameters(times=t, amplitudes=a, copy=False)
+                scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
+                # lgn_cell.i_offset = a
                 if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
                     amplitudes = self.parameters.noise.mean + self.parameters.noise.stdev * self.ncs_rng[
@@ -653,7 +661,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     ].randn(
                         len(t)
                     )
-                    ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+                    ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)  # this has to change
 
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
         # input_current_array = numpy.zeros((self.shape[1], self.shape[0], len(visual_space.time_points(duration))))
