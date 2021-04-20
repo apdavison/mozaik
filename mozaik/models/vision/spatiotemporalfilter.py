@@ -484,7 +484,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #    ncs = sim.SpikeSourcePoisson  # test this
                 #    sim.SpikeSourcePoisson
                 np = sim.SpikeSourcePoisson(rate=0)
-                sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector(weights=1))
+                sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
             # print("SpikeSourcePoisson")
             # self.sheets[rf_type].pop(sim.SpikeSourcePoisson(rate=0))
             # for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
