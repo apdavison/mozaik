@@ -12,6 +12,7 @@ from mozaik.sheets import Sheet
         
 logger = mozaik.getMozaikLogger()
 
+
 class RetinalUniformSheet(Sheet):
     """
     Retinal sheet corresponds to a sheet of retinal cells (retinal ganglion cells or photoreceptors). 
@@ -44,11 +45,12 @@ class RetinalUniformSheet(Sheet):
         
         #rs = space.Grid2D(aspect_ratio=1, dx=parameters.sx/parameters.density, dy=parameters.sy/parameters.density, x0=-parameters.sx/2,y0=-parameters.sy/2,z=0.0)
         self.pop = self.sim.Population(int(parameters.sx * parameters.sy * parameters.density),
-                                           getattr(self.model.sim, self.parameters.cell.model),
-                                           self.parameters.cell.params,
-                                           structure=rs,
-                                           initial_values=self.parameters.cell.initial_values,
-                                           label=self.name)
+                                       getattr(self.model.sim, self.parameters.cell.model),
+                                       self.parameters.cell.params,
+                                       structure=rs,
+                                       initial_values=self.parameters.cell.initial_values,
+                                       label=self.name,
+                                       cellclass=self.sim.SpikeSourcePoisson(rate=0))  # does this work for noise?
 
     def size_in_degrees(self):
         return (self.parameters.sx, self.parameters.sy)

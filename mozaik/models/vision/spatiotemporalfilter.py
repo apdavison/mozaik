@@ -473,14 +473,17 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs[rf_type] = []
             self.ncs_rng[rf_type] = []
             seeds = get_seeds((self.sheets[rf_type].pop.size,))
+            print("self.sheets[rf_type] ", self.sheets[rf_type])
+            print("type(self.sheets[rf_type]) ", type(self.sheets[rf_type]))
+            print("dir(self.sheets[rf_type]) ", dir(self.sheets[rf_type]))
             # print("seeds ", seeds)
             # print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
-            if not self.parameters.mpi_reproducible_noise:
-                #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
-                #    ncs = sim.SpikeSourcePoisson  # test this
-                #    sim.SpikeSourcePoisson
-                print("SpikeSourcePoisson")
-                self.sheets[rf_type](sim.SpikeSourcePoisson(rate=0))
+            # if not self.parameters.mpi_reproducible_noise:
+            #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+            #    ncs = sim.SpikeSourcePoisson  # test this
+            #    sim.SpikeSourcePoisson
+            # print("SpikeSourcePoisson")
+            # self.sheets[rf_type](sim.SpikeSourcePoisson(rate=0))
             # for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
                 # print("lgn_cell ", lgn_cell)
                 # print("lgn_cell type ", type(lgn_cell))
