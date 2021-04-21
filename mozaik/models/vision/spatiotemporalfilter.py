@@ -476,7 +476,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             print("self.sheets[rf_type] ", self.sheets[rf_type])
             print("self.sheets[rf_type].pop ", self.sheets[rf_type].pop)
             print("type(self.sheets[rf_type]) ", type(self.sheets[rf_type]))
-            print("dir(self.sheets[rf_type]) ", dir(self.sheets[rf_type]))
+            # print("dir(self.sheets[rf_type]) ", dir(self.sheets[rf_type]))
             # print("seeds ", seeds)
             # print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
             # if not self.parameters.mpi_reproducible_noise:
@@ -487,7 +487,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
             #    np = sim.Population(10, sim.SpikeSourcePoisson(rate=10.0), label="noise")
             #    sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
-            
+
             # print("SpikeSourcePoisson")
             # self.sheets[rf_type].pop(sim.SpikeSourcePoisson(rate=0))
             # for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
@@ -659,8 +659,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 assert isinstance(input_current, dict)
                 t = input_current["times"] + offset
                 a = self.parameters.linear_scaler * input_current["amplitudes"]
-                scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
+                print("step current time ", t)
+                print("step current amplitude ", a)
                 # lgn_cell.i_offset = a
+                scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
                 if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
                     amplitudes = self.parameters.noise.mean + self.parameters.noise.stdev * self.ncs_rng[
