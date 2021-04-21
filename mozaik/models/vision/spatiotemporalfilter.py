@@ -479,13 +479,15 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             print("dir(self.sheets[rf_type]) ", dir(self.sheets[rf_type]))
             # print("seeds ", seeds)
             # print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
-            if not self.parameters.mpi_reproducible_noise:
+            # if not self.parameters.mpi_reproducible_noise:
                 #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
                 #    ncs = sim.SpikeSourcePoisson  # test this
                 #    sim.SpikeSourcePoisson
                 #    np = sim.Population.SpikeSourcePoisson(rate=0)
-                np = sim.Population(10, sim.SpikeSourcePoisson(rate=10.0), label="noise")
-                sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
+
+            #    np = sim.Population(10, sim.SpikeSourcePoisson(rate=10.0), label="noise")
+            #    sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
+            
             # print("SpikeSourcePoisson")
             # self.sheets[rf_type].pop(sim.SpikeSourcePoisson(rate=0))
             # for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
