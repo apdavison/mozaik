@@ -172,10 +172,11 @@ class LinearModularConnectorFunction(DistanceDependentModularConnectorFunction):
         # return (
         x = self.parameters.linear_scaler * distance + self.parameters.constant_scaler
         print("X distance_dependent_function", x)
-        if x <= 14.4:
-            return x
-        else:
-            return 14.4
+        # if x <= 14.4:
+        #    return x
+        # else:
+        #    return 14.4
+        return x
 
 
 class LinearModularConnectorFunction1(DistanceDependentModularConnectorFunction):
