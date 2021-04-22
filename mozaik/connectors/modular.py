@@ -128,7 +128,7 @@ class ModularConnector(Connector):
         delays = (
             numpy.rint(delays / self.simulator_time_step) * self.simulator_time_step
         )
-        print("delays in connectors modular ", delays)
+        # print("delays in connectors modular ", delays)
         return delays
 
     def _connect(self):
