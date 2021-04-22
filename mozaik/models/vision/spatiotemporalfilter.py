@@ -481,10 +481,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             # print("seeds ", seeds)
             # print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)
             # if not self.parameters.mpi_reproducible_noise:
-                #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
-                #    ncs = sim.SpikeSourcePoisson  # test this
-                #    sim.SpikeSourcePoisson
-                #    np = sim.Population.SpikeSourcePoisson(rate=0)
+            #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+            #    ncs = sim.SpikeSourcePoisson  # test this
+            #    sim.SpikeSourcePoisson
+            #    np = sim.Population.SpikeSourcePoisson(rate=0)
 
             #    np = sim.Population(10, sim.SpikeSourcePoisson(rate=10.0), label="noise")
             #    sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
@@ -492,31 +492,31 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             # print("SpikeSourcePoisson")
             # self.sheets[rf_type].pop(sim.SpikeSourcePoisson(rate=0))
             # for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
-                # print("lgn_cell ", lgn_cell)
-                # print("lgn_cell type ", type(lgn_cell))
-                # print("lgn_cell i offset ", lgn_cell.i_offset)
-                # print("not self.parameters.mpi_reproducible_noise", not self.parameters.mpi_reproducible_noise)
-                # lgn_cell.i_offset = lgn_cell.i_offset + 1  # test
-                # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])  # update i_offset between calls to run()
-                # print("self.parameters.noise ",  self.parameters.noise)
-                # if not self.parameters.mpi_reproducible_noise:
-                #    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
-                #    ncs = sim.SpikeSourcePoisson  # test this
-                #    sim.SpikeSourcePoisson
-                # self.sheets[rf_type].pop(sim.SpikeSourcePoisson())
-                # else:
-                #    pass
-                #    ncs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
+            #     print("lgn_cell ", lgn_cell)
+            #     print("lgn_cell type ", type(lgn_cell))
+            #     print("lgn_cell i offset ", lgn_cell.i_offset)
+            #     print("not self.parameters.mpi_reproducible_noise", not self.parameters.mpi_reproducible_noise)
+            #     lgn_cell.i_offset = lgn_cell.i_offset + 1  # test
+            #     scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])  # update i_offset between calls to run()
+            #     print("self.parameters.noise ",  self.parameters.noise)
+            #     if not self.parameters.mpi_reproducible_noise:
+            #        ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+            #        ncs = sim.SpikeSourcePoisson  # test this
+            #        sim.SpikeSourcePoisson
+            #     self.sheets[rf_type].pop(sim.SpikeSourcePoisson())
+            #     else:
+            #        pass
+            #        ncs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
-                # if self.sheets[rf_type].pop._mask_local[i]:  # 'Population' object has no attribute '_mask_local'
-                #    self.ncs_rng[rf_type].append(
-                #        numpy.random.RandomState(seed=seeds[i])
-                #    )
-                #    self.scs[rf_type].append(scs)
-                #    self.ncs[rf_type].append(ncs)
-                # lgn_cell.inject(scs)
-                # lgn_cell.inject(ncs)  # does inject work with SpikeSourcePoisson
-                # print("lgn_cell i offset 2", lgn_cell.i_offset)
+            #    if self.sheets[rf_type].pop._mask_local[i]:  # 'Population' object has no attribute '_mask_local'
+            #        self.ncs_rng[rf_type].append(
+            #            numpy.random.RandomState(seed=seeds[i])
+            #        )
+            #        self.scs[rf_type].append(scs)
+            #        self.ncs[rf_type].append(ncs)
+            #     lgn_cell.inject(scs)
+            #     lgn_cell.inject(ncs)  # does inject work with SpikeSourcePoisson
+            #     print("lgn_cell i offset 2", lgn_cell.i_offset)
 
         P_rf = self.parameters.receptive_field
         rf_function = eval(P_rf.func)
