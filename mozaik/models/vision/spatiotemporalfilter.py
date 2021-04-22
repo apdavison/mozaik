@@ -474,9 +474,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs[rf_type] = []
             self.ncs_rng[rf_type] = []
             seeds = get_seeds((self.sheets[rf_type].pop.size,))
-            print("self.sheets[rf_type] ", self.sheets[rf_type])
-            print("self.sheets[rf_type].pop ", self.sheets[rf_type].pop)
-            print("type(self.sheets[rf_type]) ", type(self.sheets[rf_type]))
+            # print("self.sheets[rf_type] ", self.sheets[rf_type])
+            # print("self.sheets[rf_type].pop ", self.sheets[rf_type].pop)
+            # print("type(self.sheets[rf_type]) ", type(self.sheets[rf_type]))
             # print("dir(self.sheets[rf_type]) ", dir(self.sheets[rf_type]))
             # print("seeds ", seeds)
             # print("self.sheets[rf_type].pop.all_cells ", self.sheets[rf_type].pop.all_cells)

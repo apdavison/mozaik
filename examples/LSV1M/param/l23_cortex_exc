@@ -103,8 +103,7 @@
         'delay_functions' : {},
         'weight_expression' : 'f1*f2',
         'delay_expression' : '1.4',
-        # 'delay_expression' : '1.0',
-        
+
         'base_weight': ref('sheets.l4_cortex_exc.AfferentConnection.base_weight'),
         'num_samples' : ref('sheets.l4_cortex_exc.layer23_aff_ratio')*ref('sheets.l4_cortex_exc.K')*4.0/5.0,
     },
@@ -134,8 +133,7 @@
         'delay_functions' : {},
         'weight_expression' : 'f1*f2',
         'delay_expression' : '1.4',
-        # 'delay_expression' : '1.0',
-        
+
         'base_weight': ref('sheets.l4_cortex_exc.L4ExcL4ExcConnection.base_weight'),
         'num_samples' : ref('sheets.l4_cortex_exc.K')*4.0/5.0*ref('sheets.l23_cortex_exc.feedback_conn_ratio'),
     },
@@ -165,7 +163,6 @@
         'delay_functions' : {},
         'weight_expression' : 'f1*f2',
         'delay_expression' : '0.5',
-        # 'delay_expression' : '0.2',
         'base_weight': ref('sheets.l4_cortex_exc.L4ExcL4InhConnection.base_weight'),
 	'num_samples' : ref('sheets.l23_cortex_exc.L23ExcL4ExcConnection.num_samples')*ref('sheets.l4_cortex_exc.inhibitory_connection_ratio'),
     },
