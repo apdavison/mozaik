@@ -85,7 +85,8 @@
                                          'component' : 'mozaik.connectors.modular_connector_functions.HyperbolicModularConnectorFunction',
                                          'params' : {
                                                 	            'theta':  154.45,
-	                                                            'alpha': 0.017452,
+	                                                            # 'alpha': 0.017452,
+	                                                            'alpha': 0.010452,
                                                     }
                                        },            
 				'f2' : {

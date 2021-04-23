@@ -67,6 +67,10 @@ class Connector(BaseComponent):
         print("not self.parameters.short_term_plasticity != None ", not self.parameters.short_term_plasticity != None )
         # tsodyks_synapse/short term plasticity is not supported by SpiNNaker
         # if not self.parameters.short_term_plasticity != None:
+        if delay > 14.4:
+            print("init_synaptic_mechanisms delay larger than 14.4 ", delay)
+            print(type(delay))
+            delay = 14.4
         print("StaticSynapse")
         sm = self.sim.StaticSynapse(weight=weight, delay=delay)
         # if self.parameters.short_term_plasticity != None:
