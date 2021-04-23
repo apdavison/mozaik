@@ -51,7 +51,8 @@
                 'recorders' : url("examples/LSV1M/param/l4_exc_rec"),
     },
 
-    'K' : 1000, # Number of synapses per neuron
+    # 'K' : 1000, # Number of synapses per neuron
+    'K' : 500, # Number of synapses per neuron
     'layer23_aff_ratio' : 0.2,
     'inhibitory_connection_ratio' : 0.7, # The fraction of connections that are onto inhibitory neurons compared to excitatory
 

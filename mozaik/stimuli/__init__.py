@@ -55,8 +55,8 @@ class BaseStimulus(MozaikParametrized):
     )
 
     def __init__(self, **params):
-        print("params in BaseStimulus")
-        print(params)
+        # print("params in BaseStimulus")
+        # print(params)
         MozaikParametrized.__init__(self, **params)
         self.input = None
         self._frames = self.frames()

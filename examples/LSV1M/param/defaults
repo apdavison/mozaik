@@ -21,7 +21,7 @@
     'name' : 'SelfSustainedPushPullV1',
     'reset' : False,
     'feedback' :  True,
-    'null_stimulus_period' : 25.0,
+    'null_stimulus_period' : 20.0,
     # 'null_stimulus_period' : 150.0,
     'store_stimuli' : False,
     'min_delay' : 0.1,

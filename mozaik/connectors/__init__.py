@@ -60,7 +60,7 @@ class Connector(BaseComponent):
             self.weight_scaler = 1000.0
 
     def init_synaptic_mechanisms(self, weight=None, delay=None):
-        print("self.sim ", dir(self.sim))
+        # print("self.sim ", dir(self.sim))
         print("weight ", weight)
         print("delay ", delay)
         print("self.parameters.short_term_plasticity ", self.parameters.short_term_plasticity)

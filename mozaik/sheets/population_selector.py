@@ -76,14 +76,14 @@ class RCRandomN(PopulationSelector):
             # z = numpy.asarray(self.sheet.pop.all_cells, dtype=numpy.int)
             # z = numpy.asarray(self.sheet.pop.all_cells)
             # print("self.sheet.pop.all_cells ", self.sheet.pop.all_cells)
-            print("self.sheet.pop.all_cells type ", type(self.sheet.pop.all_cells))
-            print("self.parameters.num_of_cells ", self.parameters.num_of_cells)
+            # print("self.sheet.pop.all_cells type ", type(self.sheet.pop.all_cells))
+            # print("self.parameters.num_of_cells ", self.parameters.num_of_cells)
             if hasattr(self.sheet.pop.all_cells[0], 'id'):
                 z = numpy.asarray([idm.id for idm in self.sheet.pop.all_cells])  # for IDMixin
             else:
                 z = numpy.asarray(self.sheet.pop.all_cells)
-            print("Z ", z)
-            print("z[:self.parameters.num_of_cells] ", z[:self.parameters.num_of_cells])
+            # print("Z ", z)
+            # print("z[:self.parameters.num_of_cells] ", z[:self.parameters.num_of_cells])
         else:
             z = self.sheet.pop.all_cells.astype(int)
         mozaik.rng.shuffle(z)
