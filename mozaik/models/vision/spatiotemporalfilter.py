@@ -660,8 +660,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 assert isinstance(input_current, dict)
                 t = input_current["times"] + offset
                 a = self.parameters.linear_scaler * input_current["amplitudes"]
-                print("step current time ", t)
-                print("step current amplitude ", a)
+                # print("step current time ", t)
+                # print("step current amplitude ", a)
                 # lgn_cell.i_offset = a
                 scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
                 if self.parameters.mpi_reproducible_noise:
