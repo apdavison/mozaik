@@ -83,10 +83,10 @@ class Experiment(ParametrizedObject):
         the list of stimuli which to present to prevent repetitions, and lets this function know via the stimuli argument which stimuli to actually present.
         """
         srtsum = 0
-        print("list of stimulus")
-        print(stimulus_indexes)
-        print(self.stimuli)
-        print("end list of stimulus")
+        # print("list of stimulus")
+        # print(stimulus_indexes)
+        # print(self.stimuli)
+        # print("end list of stimulus")
         for i in stimulus_indexes:
             s = self.stimuli[i]
             logger.debug('Presenting stimulus: ' + str(s) + '\n')
@@ -188,20 +188,20 @@ class NoStimulation(Experiment):
                                         'duration': float,
                                        })
 
-    def __init__(self,model,parameters):
-        Experiment.__init__(self, model,parameters)
-        print("No stimulation 0 XX")
-        print(parameters)
-        print(self.stimuli)
-        x = InternalStimulus(frame_duration=self.parameters.duration,
-                                             duration=self.parameters.duration,
-                                             trial=0,)
-        print(x)
-        print(x.name)
-        print("No stimulation 0 XX end")
+    def __init__(self, model, parameters):
+        Experiment.__init__(self, model, parameters)
+        # print("No stimulation 0 XX")
+        # print(parameters)
+        # print(self.stimuli)
+        # x = InternalStimulus(frame_duration=self.parameters.duration,
+        #                                     duration=self.parameters.duration,
+        #                                     trial=0,)
+        # print(x)
+        # print(x.name)
+        # print("No stimulation 0 XX end")
         self.stimuli.append(InternalStimulus(frame_duration=self.parameters.duration,
                                              duration=self.parameters.duration,
                                              trial=0,))
-        print("No stimulation")
-        print(self.stimuli)
-        print("no st end")
+        # print("No stimulation")
+        # print(self.stimuli)
+        # print("no st end")

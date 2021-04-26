@@ -664,6 +664,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 # print("step current amplitude ", a)
                 # lgn_cell.i_offset = a
                 scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
+                # np = sim.Population(10, sim.SpikeSourceArray(spike_times=t), label="noise")  # test this
+                # sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
                 if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
                     amplitudes = self.parameters.noise.mean + self.parameters.noise.stdev * self.ncs_rng[

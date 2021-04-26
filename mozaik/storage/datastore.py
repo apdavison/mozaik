@@ -390,8 +390,8 @@ class DataStore(DataStoreView):
         """
         Add a recording into the datastore.
         """
-        print("add_recording datastore")
-        print(stimulus)
+        # print("add_recording datastore")
+        # print(stimulus)
         # we get recordings as seg
         for s in segments:
             s.annotations["stimulus"] = str(stimulus)
@@ -589,8 +589,8 @@ class PickledDataStore(Hdf5DataStore):
         f.close()
 
     def add_recording(self, segments, stimulus):
-        print("add recording stimulus")
-        print(stimulus)
+        # print("add recording stimulus")
+        # print(stimulus)
         # we get recordings as seg
         for s in segments:
             s.annotations["stimulus"] = str(stimulus)
@@ -618,8 +618,8 @@ class PickledDataStore(Hdf5DataStore):
         """
         Add recordings due to the null stimuli presented between the standard stimuli.
         """
-        print("add null recording stimulus")
-        print(stimulus)
+        # print("add null recording stimulus")
+        # print(stimulus)
         # we get recordings as seg
         for s in segments:
             s.annotations["stimulus"] = str(stimulus)

@@ -121,8 +121,8 @@ class InternalStimulus(BaseStimulus):
     """
 
     def __init__(self, **params):
-        print("params in InternalStimulus")
-        print(params)
+        # print("params in InternalStimulus")
+        # print(params)
         BaseStimulus.__init__(self, **params)
         assert self.frame_duration == self.duration, (
             "Mozaik requires that frame_duration and duration for InternalStimulus are"
