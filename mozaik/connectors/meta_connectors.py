@@ -101,8 +101,8 @@ class GaborConnector(BaseComponent):
             coords_y = numpy.linspace(
                 -t_size[1] / 2.0, t_size[1] / 2.0, numpy.shape(or_map)[1]
             )
-            print(min(coords_x), max(coords_x))
-            print(min(coords_y), max(coords_y))
+            # print(min(coords_x), max(coords_x))
+            # print(min(coords_y), max(coords_y))
 
             X, Y = numpy.meshgrid(coords_x, coords_y)
 
@@ -126,10 +126,10 @@ class GaborConnector(BaseComponent):
                 list(zip(X.flatten(), Y.flatten())), phase_map.flatten()
             )
 
-        print(min(target.pop.positions[0]), max(target.pop.positions[0]))
-        print(min(target.pop.positions[1]), max(target.pop.positions[1]))
-        print("target.pop.positions.shape ", target.pop.positions.shape)
-        print("target ", target)
+        # print(min(target.pop.positions[0]), max(target.pop.positions[0]))
+        # print(min(target.pop.positions[1]), max(target.pop.positions[1]))
+        # print("target.pop.positions.shape ", target.pop.positions.shape)
+        # print("target ", target)
         # print("target.pop ", target.pop)
         # print("target.pop.all ", target.pop.all())
         # print("target.pop type ", type(target.pop))

@@ -61,17 +61,17 @@ class Connector(BaseComponent):
 
     def init_synaptic_mechanisms(self, weight=None, delay=None):
         # print("self.sim ", dir(self.sim))
-        print("weight ", weight)
-        print("delay ", delay)
-        print("self.parameters.short_term_plasticity ", self.parameters.short_term_plasticity)
-        print("not self.parameters.short_term_plasticity != None ", not self.parameters.short_term_plasticity != None )
+        # print("weight ", weight)
+        # print("delay ", delay)
+        # print("self.parameters.short_term_plasticity ", self.parameters.short_term_plasticity)
+        # print("not self.parameters.short_term_plasticity != None ", not self.parameters.short_term_plasticity != None )
         # tsodyks_synapse/short term plasticity is not supported by SpiNNaker
         # if not self.parameters.short_term_plasticity != None:
         if delay is not None and delay > 14.4:
             print("init_synaptic_mechanisms delay larger than 14.4 ", delay)
             print(type(delay))
             delay = 14.4
-        print("StaticSynapse")
+        # print("StaticSynapse")
         sm = self.sim.StaticSynapse(weight=weight, delay=delay)
         # if self.parameters.short_term_plasticity != None:
         #    print("StaticSynapse")
@@ -131,7 +131,7 @@ class Connector(BaseComponent):
 
         weights = self.proj.get("weight", format="list", gather=True)
         delays = self.proj.get("delay", format="list", gather=True)
-        print(self.name)
+        # print(self.name)
         datastore.add_analysis_result(
             Connections(
                 weights,

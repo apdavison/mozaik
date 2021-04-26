@@ -215,7 +215,7 @@ class ModularSamplingProbabilisticConnector(ModularConnector):
                 ]
             )
             cl.append(a)
-        print("weights obtained")
+        # print("weights obtained")
         cl = numpy.hstack(cl).T
         method = self.sim.FromListConnector(cl)
 
@@ -388,7 +388,7 @@ class ModularSamplingProbabilisticConnectorAnnotationSamplesCount(ModularConnect
             indices = numpy.nonzero(self.target.pop._mask_local)[0]
         else:
             indices = numpy.arange(self.target.pop.size)
-        print("self.target.pop.size ", self.target.pop.size)
+        # print("self.target.pop.size ", self.target.pop.size)
         # print("indices ", indices)
         for i in indices:
             # for i in numpy.nonzero(self.target.pop._mask_local)[0]:

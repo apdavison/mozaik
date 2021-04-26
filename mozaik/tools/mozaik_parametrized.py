@@ -329,7 +329,7 @@ class MozaikParametrized(Parameterized):
         Turn the MozaikParametrized instance into string - this stores ONLY the names and values of each parameter and the module path from which this instance class came from.
         """
         settings = []
-        print("MozaikParametrized XX")
+        # print("MozaikParametrized XX")
         # print(self.get_param_values())
         # print("MozaikParametrized end XX")
         for name, val in self.get_param_values():
@@ -373,8 +373,8 @@ class MozaikParametrized(Parameterized):
         
         Furthermore if given an instance of MozaikParametrized instead it will convert it into the 'Shell' object.
         """
-        print(cls)
-        print(obj)
+        # print(cls)
+        # print(obj)
         if isinstance(obj, MozaikParametrized):
             return MozaikParametrized.idd(str(obj))
         assert isinstance(
@@ -386,19 +386,19 @@ class MozaikParametrized(Parameterized):
         module_path = params.pop("module_path")
 
         if (module_path, name) in MozaikParametrized._module_cache:
-            print("in MozaikParametrized._module_cache")
-            print(MozaikParametrized._module_cache)
+            # print("in MozaikParametrized._module_cache")
+            # print(MozaikParametrized._module_cache)
             z = MozaikParametrized._module_cache[(module_path, name)]
         else:
-            print("globals and locals")
-            print(globals())
-            print(locals())
-            print("globals and locals end")
+            # print("globals and locals")
+            # print(globals())
+            # print(locals())
+            # print("globals and locals end")
             z = __import__(module_path, globals(), locals(), name)
             MozaikParametrized._module_cache[(module_path, name)] = z
-        print(z)
-        print(name)
-        print(dir(z))
+        # print(z)
+        # print(name)
+        # print(dir(z))
         cls = getattr(z, name)
 
         obj = cls.__new__(cls, **params)
