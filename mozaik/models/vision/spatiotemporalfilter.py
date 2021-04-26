@@ -469,7 +469,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # print("SIM ", dir(sim))
         # print(self.rf_types[8])  # induce error
         for rf_type in self.rf_types:
-            print("rf_type ", rf_type)
+            # print("rf_type ", rf_type)
             self.scs[rf_type] = []
             self.ncs[rf_type] = []
             self.ncs_rng[rf_type] = []

@@ -44,9 +44,9 @@ class InputSpace(ParametrizedObject):
 
     def add_object(self, name, input_object):
         """Add an inputObject to the input scene."""
-        logger.debug(
-            "Adding %s with name '%s' to the input scene." % (input_object, name)
-        )
+        # logger.debug(
+        #    "Adding %s with name '%s' to the input scene." % (input_object, name)
+        # )
         self.content[name] = input_object
         self.input = input_object  # really self.input should be a list, and we should append to it
 
