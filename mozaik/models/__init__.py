@@ -225,7 +225,7 @@ class Model(BaseComponent):
                     "Simulating the network for %s ms with blank stimulus"
                     % self.parameters.null_stimulus_period
                 )
-                print("self.parameters.max_delay ", self.parameters.max_delay)
+                # print("self.parameters.max_delay ", self.parameters.max_delay)
                 # print("self.parameters ", self.parameters)
                 # print("dir(self.sim) ", dir(self.sim))
                 self.sim.run(self.parameters.null_stimulus_period)
