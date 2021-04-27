@@ -657,12 +657,13 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             # np = sim.Population(10, sim.SpikeSourceArray(spike_times=t), label="spikes")  # test this
             # sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
 
-            for i, (lgn_cell, input_current, scs, ncs) in enumerate(
+            # for i, (lgn_cell, input_current, scs, ncs) in enumerate(
+            for i, (lgn_cell, input_current) in enumerate(
                 zip(
                     self.sheets[rf_type].pop,
                     input_currents[rf_type],
-                    self.scs[rf_type],
-                    self.ncs[rf_type]
+                    # self.scs[rf_type],
+                    # self.ncs[rf_type]
                 )
             ):
                 if i == 1:
@@ -678,7 +679,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
                 # scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
 
-                if self.parameters.mpi_reproducible_noise:
+                if False:
+                    # if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
                     amplitudes = self.parameters.noise.mean + self.parameters.noise.stdev * self.ncs_rng[
                         rf_type
