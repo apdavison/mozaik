@@ -170,12 +170,15 @@ class VisualSpace(InputSpace):
         # Let's make it more efficient if there is only one object in the scene that is not transparrent (which is often the case):
         # o = self.content.values()[0]
         o = list(self.content.values())
-        if len(self.content.values()) == 1 and not o.transparent and o.is_visible:
-            return o.display(region, pixel_size)
+        # if len(self.content.values()) == 1 and not o.transparent and o.is_visible:
+        #    return o.display(region, pixel_size)
+        if len(self.content.values()) == 1 and not o[0].transparent and o[0].is_visible:
+            return o[0].display(region, pixel_size)
 
         size_in_pixels = numpy.ceil(xy2ij((region.size_x, region.size_y)) / float(pixel_size)).astype(int)
         scene = TRANSPARENT * numpy.ones(size_in_pixels)
-        for obj in self.content.values():
+        # for obj in self.content.values():
+        for obj in o:
             if obj.is_visible:
                 if region.overlaps(obj.region):
                     obj_view = obj.display(region, pixel_size)
@@ -246,6 +249,9 @@ class VisualRegion(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash((self.location_x,self.location_y,self.size_x,self.size_y))
 
     def overlaps(self, another_region):
         """
