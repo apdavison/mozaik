@@ -683,6 +683,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                         len(t)
                     )
                     ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)  # this has to change
+                if i == 2:
+                    break
 
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
         # input_current_array = numpy.zeros((self.shape[1], self.shape[0], len(visual_space.time_points(duration))))
