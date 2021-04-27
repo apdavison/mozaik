@@ -168,7 +168,8 @@ class VisualSpace(InputSpace):
                        downsample such that one pixel has `pixel_size` degree.
         """
         # Let's make it more efficient if there is only one object in the scene that is not transparrent (which is often the case):
-        o = self.content.values()[0]
+        # o = self.content.values()[0]
+        o = list(self.content.values())
         if len(self.content.values()) == 1 and not o.transparent and o.is_visible:
             return o.display(region, pixel_size)
 
