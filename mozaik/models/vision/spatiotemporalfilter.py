@@ -649,10 +649,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
         for rf_type in self.rf_types:
             assert isinstance(input_currents[rf_type], list)
-            ts = input_current["times"] + offset
-            ams = self.parameters.linear_scaler * input_current["amplitudes"]
-            print("step current time ", ts)
-            print("step current amplitude ", ams)
+            # ts = input_current["times"] + offset
+            # ams = self.parameters.linear_scaler * input_current["amplitudes"]
+            # print("step current time ", ts)
+            # print("step current amplitude ", ams)
             # np = sim.Population(10, sim.SpikeSourceArray(spike_times=t), label="spikes")  # test this
             # sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
 
@@ -667,8 +667,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 assert isinstance(input_current, dict)
                 t = input_current["times"] + offset
                 a = self.parameters.linear_scaler * input_current["amplitudes"]
-                # print("step current time ", t)
-                # print("step current amplitude ", a)
+                print("step current time ", t)
+                print("step current amplitude ", a)
+                print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
                 # lgn_cell.i_offset = a[0]
                 scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
 

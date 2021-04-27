@@ -91,10 +91,10 @@ class Connector(BaseComponent):
         t0 = time.time()
         self._connect()
         connect_time = time.time() - t0
-        logger.info(
-            "Connector %s took %.0fs to compute"
-            % (self.__class__.__name__, connect_time)
-        )
+        # logger.info(
+        #    "Connector %s took %.0fs to compute"
+        #    % (self.__class__.__name__, connect_time)
+        # )
 
     def _connect(self):
         raise NotImplementedError
