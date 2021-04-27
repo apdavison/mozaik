@@ -646,7 +646,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             (input_currents, retinal_input) = cached
 
         ts = self.model.sim.get_time_step()
-
+        # a = []
+        # t = []
         for rf_type in self.rf_types:
             assert isinstance(input_currents[rf_type], list)
             # ts = input_current["times"] + offset
@@ -664,6 +665,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     self.ncs[rf_type]
                 )
             ):
+                if i == 1:
+                    break
                 assert isinstance(input_current, dict)
                 t = input_current["times"] + offset
                 a = self.parameters.linear_scaler * input_current["amplitudes"]
@@ -671,7 +674,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 print("step current amplitude ", a)
                 print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
                 # lgn_cell.i_offset = a[0]
-                scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
+                # sim.reset ?
+
+                # scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
 
                 if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
@@ -683,8 +688,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                         len(t)
                     )
                     ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)  # this has to change
-                if i == 2:
-                    break
+
 
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
         # input_current_array = numpy.zeros((self.shape[1], self.shape[0], len(visual_space.time_points(duration))))
@@ -704,7 +708,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # also save into internal cache
         self.internal_stimulus_cache[str(st)] = (input_currents, retinal_input)
 
-        return retinal_input
+        return retinal_input, a, t
 
     def provide_null_input(self, visual_space, duration=None, offset=0):
         """

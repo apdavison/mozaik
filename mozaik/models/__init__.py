@@ -126,9 +126,11 @@ class Model(BaseComponent):
             self.input_space.clear()
             if not isinstance(stimulus, InternalStimulus):
                 self.input_space.add_object(str(stimulus), stimulus)
-                sensory_input = self.input_layer.process_input(
+                sensory_input, a, t = self.input_layer.process_input(
                     self.input_space, stimulus, stimulus.duration, self.simulator_time
                 )
+                print("Amplitudes for current input", a)
+                print("times for current inpit", t)
             else:
                 self.input_layer.provide_null_input(
                     self.input_space, stimulus.duration, self.simulator_time
@@ -137,6 +139,9 @@ class Model(BaseComponent):
         else:
             sensory_input = None
 
+        # multiple runs here with i_offset update ?
+        # pop = sim.Population(...)
+        # pop.set(i_offset=0.5)
         sim_run_time += self.run(stimulus.duration)
         segments = []
 
