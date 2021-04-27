@@ -51,7 +51,7 @@ class InputSpace(ParametrizedObject):
 
     def add_object(self, name, input_object):
         """Add an inputObject to the input scene."""
-        logger.debug("Adding %s with name '%s' to the input scene." % (input_object, name))
+        # logger.debug("Adding %s with name '%s' to the input scene." % (input_object, name))
         self.content[name] = input_object
         self.input = input_object  # really self.input should be a list, and we should append to it
 
@@ -186,10 +186,10 @@ class VisualSpace(InputSpace):
                         scene = numpy.where(obj_view > scene, obj_view,
                                             scene)  # later objects overlay earlier ones with no transparency
                     except ValueError:
-                        logger.error("Array dimensions mismatch. obj_view.shape=%s, scene.shape=%s" % (
-                        obj_view.shape, scene.shape))
-                        logger.error("  region: %s" % region.describe())
-                        logger.error("  visual object: %s" % obj.describe())
+                        # logger.error("Array dimensions mismatch. obj_view.shape=%s, scene.shape=%s" % (
+                        # obj_view.shape, scene.shape))
+                        # logger.error("  region: %s" % region.describe())
+                        # logger.error("  visual object: %s" % obj.describe())
                         raise
                 else:
                     # logger.debug("Warning: region %s does not overlap this object (%s)." % (region.describe(), obj.describe()))

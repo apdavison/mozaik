@@ -108,12 +108,12 @@ class VisualStimulus(BaseStimulus):
                     img = self.img
                 else:
                     if self.first_resolution_mismatch_display:
-                        logger.warning(
-                            "Image pixel size does not match desired size (%g vs. %g)"
-                            " degrees. This is extremely inefficient!!!!!!!!!!!"
-                            % (pixel_size, img_pixel_size[0])
-                        )
-                        logger.warning("Image pixel size %g,%g" % numpy.shape(self.img))
+                        # logger.warning(
+                        #    "Image pixel size does not match desired size (%g vs. %g)"
+                        #    " degrees. This is extremely inefficient!!!!!!!!!!!"
+                        #    % (pixel_size, img_pixel_size[0])
+                        # )
+                        # logger.warning("Image pixel size %g,%g" % numpy.shape(self.img))
                         self.first_resolution_mismatch_display = False
                     # note that if the image is much larger than the view region, we might save some
                     # time by not rescaling the whole image, only the part within the view region.
@@ -183,25 +183,25 @@ class VisualStimulus(BaseStimulus):
                         k_start : k_start + delta_k, l_start : l_start + delta_l
                     ] = img[i_start : i_start + delta_i, j_start : j_start + delta_j]
                 except ValueError:
-                    logger.error(
-                        "i_start = %d, i_stop = %d, j_start = %d, j_stop = %d"
-                        % (i_start, i_stop, j_start, j_stop)
-                    )
-                    logger.error(
-                        "k_start = %d, k_stop = %d, l_start = %d, l_stop = %d"
-                        % (k_start, k_stop, l_start, l_stop)
-                    )
-                    logger.error(
-                        "img.shape = %s, view.shape = %s" % (img.shape, view.shape)
-                    )
-                    logger.error(
-                        "img[i_start:i_stop, j_start:j_stop].shape = %s"
-                        % str(img[i_start:i_stop, j_start:j_stop].shape)
-                    )
-                    logger.error(
-                        "view[k_start:k_stop, l_start:l_stop].shape = %s"
-                        % str(view[k_start:k_stop, l_start:l_stop].shape)
-                    )
+                    # logger.error(
+                    #    "i_start = %d, i_stop = %d, j_start = %d, j_stop = %d"
+                    #    % (i_start, i_stop, j_start, j_stop)
+                    # )
+                    # logger.error(
+                    #    "k_start = %d, k_stop = %d, l_start = %d, l_stop = %d"
+                    #    % (k_start, k_stop, l_start, l_stop)
+                    # )
+                    # logger.error(
+                    #    "img.shape = %s, view.shape = %s" % (img.shape, view.shape)
+                    # )
+                    # logger.error(
+                    #    "img[i_start:i_stop, j_start:j_stop].shape = %s"
+                    #    % str(img[i_start:i_stop, j_start:j_stop].shape)
+                    # )
+                    # logger.error(
+                    #    "view[k_start:k_stop, l_start:l_stop].shape = %s"
+                    #    % str(view[k_start:k_stop, l_start:l_stop].shape)
+                    # )
                     raise
             else:
                 try:
@@ -213,25 +213,25 @@ class VisualStimulus(BaseStimulus):
                         tx_min:tx_max, ty_min:ty_max
                     ]
                 except ValueError:
-                    logger.error(
-                        "i_start = %d, i_stop = %d, j_start = %d, j_stop = %d"
-                        % (i_start, i_stop, j_start, j_stop)
-                    )
-                    logger.error(
-                        "k_start = %d, k_stop = %d, l_start = %d, l_stop = %d"
-                        % (k_start, k_stop, l_start, l_stop)
-                    )
-                    logger.error(
-                        "img.shape = %s, view.shape = %s" % (img.shape, view.shape)
-                    )
-                    logger.error(
-                        "img[i_start:i_stop, j_start:j_stop].shape = %s"
-                        % str(img[i_start:i_stop, j_start:j_stop].shape)
-                    )
-                    logger.error(
-                        "view[k_start:k_stop, l_start:l_stop].shape = %s"
-                        % str(view[k_start:k_stop, l_start:l_stop].shape)
-                    )
+                    # logger.error(
+                    #    "i_start = %d, i_stop = %d, j_start = %d, j_stop = %d"
+                    #    % (i_start, i_stop, j_start, j_stop)
+                    # )
+                    # logger.error(
+                    #    "k_start = %d, k_stop = %d, l_start = %d, l_stop = %d"
+                    #    % (k_start, k_stop, l_start, l_stop)
+                    # )
+                    # logger.error(
+                    #    "img.shape = %s, view.shape = %s" % (img.shape, view.shape)
+                    # )
+                    # logger.error(
+                    #    "img[i_start:i_stop, j_start:j_stop].shape = %s"
+                    #    % str(img[i_start:i_stop, j_start:j_stop].shape)
+                    # )
+                    # logger.error(
+                    #    "view[k_start:k_stop, l_start:l_stop].shape = %s"
+                    #    % str(view[k_start:k_stop, l_start:l_stop].shape)
+                    # )
                     raise
         return view
 
