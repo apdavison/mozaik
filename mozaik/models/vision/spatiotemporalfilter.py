@@ -705,7 +705,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                         )
                         ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)  # this has to change
             # sim.run(0.7)
-            sim.run(self.parameters.receptive_field.temporal_resolution)
+            self.model.sim.run(self.parameters.receptive_field.temporal_resolution)
 
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
         # input_current_array = numpy.zeros((self.shape[1], self.shape[0], len(visual_space.time_points(duration))))
