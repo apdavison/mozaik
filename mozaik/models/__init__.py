@@ -131,10 +131,15 @@ class Model(BaseComponent):
                     self.input_space, stimulus, stimulus.duration, self.simulator_time
                 )
                 print("Amplitudes for current input", a)
+                logger.debug("Amplitudes for current input", a)
                 print("Amplitudes for current input length", len(a))
+                logger.debug("Amplitudes for current input length", len(a))
                 print("times for current inpit", t)
+                logger.debug("times for current inpit", t)
                 print("times for current inpit", len(t))
+                logger.debug("times for current inpit", len(t))
                 print("list(self.sheets.values()) ", list(self.sheets.values()))
+                logger.debug("list(self.sheets.values()) ", list(self.sheets.values()))
                 # here i offset sim run loop
                 for i, c in enumerate(a):
                     for sheet in list(self.sheets.values()):
