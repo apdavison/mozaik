@@ -4,7 +4,7 @@
         # 'density': 100, # neurons per degree squared
         # 'density': 70,
         # 'density': 50,
-        'density': 30,
+        'density': 25,
         'size'  : (5.0,5.0), # the effective size of the modelled section of retina/lgn
         'linear_scaler': 6.0,
         'mpi_reproducible_noise' : False,
@@ -36,7 +36,8 @@
             'spatial_resolution': 0.1, # degrees
             'temporal_resolution': 7.0, # ms
             # 'duration': 200.0,
-            'duration': 100.0,
+            # 'duration': 100.0,
+            'duration': 50.0,
         },
         'gain_control' : {
             'gain': 12,

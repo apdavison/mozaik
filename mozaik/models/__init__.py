@@ -134,7 +134,13 @@ class Model(BaseComponent):
                 print("Amplitudes for current input length", len(a))
                 print("times for current inpit", t)
                 print("times for current inpit", len(t))
+                print("list(self.sheets.values()) ", list(self.sheets.values()))
                 # here i offset sim run loop
+                for i, c in enumerate(a):
+                    for sheet in list(self.sheets.values()):
+                        sheet.pop(i_offset=c)
+                        self.sim.run(t[i])
+
             else:
                 self.input_layer.provide_null_input(
                     self.input_space, stimulus.duration, self.simulator_time
