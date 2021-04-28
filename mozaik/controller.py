@@ -3,6 +3,7 @@ This is the nexus of workflow execution controll of *mozaik*.
 """
 from datetime import datetime
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 import os
 import time
 

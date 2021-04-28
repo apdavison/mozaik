@@ -12,6 +12,7 @@ allow None value, are instantiated and allow for definition of units and period.
 import collections
 import inspect
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 import numbers
 
 from param import Number, Integer, String, ClassSelector

@@ -2,6 +2,7 @@
 from collections import Counter
 import ast
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 import numpy
 from collections import OrderedDict
 

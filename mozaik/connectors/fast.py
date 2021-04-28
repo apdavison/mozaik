@@ -5,6 +5,7 @@ they tend to use the more native pyNN or even backend specific pyNN methods.
 To obtain speed they generally sacrifice ease customization.
 """
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 
 from parameters import ParameterSet
 from pyNN import space

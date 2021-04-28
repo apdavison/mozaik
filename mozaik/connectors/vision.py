@@ -2,6 +2,7 @@
 Vision specific connectors.
 """
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 
 from parameters import ParameterSet
 from scipy.interpolate import NearestNDInterpolator

@@ -3,6 +3,7 @@
 Retina/LGN model based on that developed by Jens Kremkow (CNRS-INCM/ALUF)
 """
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 import os.path
 import pickle
 # import _pickle as cPickle

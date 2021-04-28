@@ -4,6 +4,7 @@ Mozaik connector interface.
 """
 from collections import Counter
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 import math
 import time
 

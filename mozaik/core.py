@@ -4,6 +4,7 @@
 Definition of the component interfaces. These interfaces are not currently directly checked or enforced.
 """
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 
 from parameters import ParameterSet, ParameterDist
 from parameters.random import UniformDist

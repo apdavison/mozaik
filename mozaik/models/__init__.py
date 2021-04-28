@@ -4,6 +4,7 @@ Each simulation contains one model, that overarches the neural network that has 
 the basic *mozaik* components (sheets and connectors) and some additional structures such as the recording configurations.
 """
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 import time
 
 from parameters import ParameterSet
@@ -130,7 +131,10 @@ class Model(BaseComponent):
                     self.input_space, stimulus, stimulus.duration, self.simulator_time
                 )
                 print("Amplitudes for current input", a)
+                print("Amplitudes for current input length", len(a))
                 print("times for current inpit", t)
+                print("times for current inpit", len(t))
+                # here i offset sim run loop
             else:
                 self.input_layer.provide_null_input(
                     self.input_space, stimulus.duration, self.simulator_time

@@ -3,6 +3,8 @@ This module implements the data storage functionality.
 """
 import collections
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
+
 import os.path
 import pickle
 import _pickle as cPickle

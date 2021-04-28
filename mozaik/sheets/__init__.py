@@ -5,6 +5,7 @@ Module containing the implementation of sheets - one of the basic building block
 
 from string import Template
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 
 from neo.core.spiketrain import SpikeTrain
 from parameters import ParameterSet, UniformDist

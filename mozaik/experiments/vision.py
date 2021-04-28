@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 
 from parameters import ParameterSet
 import numpy
