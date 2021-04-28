@@ -667,16 +667,19 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     # self.ncs[rf_type]
                 )
             ):
-                if i == 1:
+                if i == 2:
                     break
                 assert isinstance(input_current, dict)
                 t = input_current["times"] + offset
                 a = self.parameters.linear_scaler * input_current["amplitudes"]
                 logger.debug("input_current ", input_current)
                 print("step current time ", t)
+                logger.debug("step current time ", t)
                 print("step current amplitude ", a)
+                logger.debug("step current amplitude ", a)
                 print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
                 # lgn_cell.i_offset = a[0]
+                # lgn_cell.i_offset = a
                 # sim.reset ?
 
                 # scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
