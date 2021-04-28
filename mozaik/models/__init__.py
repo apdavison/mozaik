@@ -123,28 +123,30 @@ class Model(BaseComponent):
                 self.simulator_time,
                 artificial_stimulators.get(sheet.name, [])
             )
+        r = False
         if self.input_space:
             self.input_space.clear()
             if not isinstance(stimulus, InternalStimulus):
                 self.input_space.add_object(str(stimulus), stimulus)
-                sensory_input, a, t = self.input_layer.process_input(
+                sensory_input = self.input_layer.process_input(
                     self.input_space, stimulus, stimulus.duration, self.simulator_time
                 )
-                print("Amplitudes for current input", a)
-                logger.debug("Amplitudes for current input", a)
-                print("Amplitudes for current input length", len(a))
-                logger.debug("Amplitudes for current input length", len(a))
-                print("times for current inpit", t)
-                logger.debug("times for current inpit", t)
-                print("times for current inpit", len(t))
-                logger.debug("times for current inpit", len(t))
-                print("list(self.sheets.values()) ", list(self.sheets.values()))
-                logger.debug("list(self.sheets.values()) ", list(self.sheets.values()))
+                r = True
+                # print("Amplitudes for current input", a)
+                # logger.debug("Amplitudes for current input", a)
+                # print("Amplitudes for current input length", len(a))
+                # logger.debug("Amplitudes for current input length", len(a))
+                # print("times for current inpit", t)
+                # logger.debug("times for current inpit", t)
+                # print("times for current inpit", len(t))
+                # logger.debug("times for current inpit", len(t))
+                # print("list(self.sheets.values()) ", list(self.sheets.values()))
+                # logger.debug("list(self.sheets.values()) ", list(self.sheets.values()))
                 # here i offset sim run loop
-                for i, c in enumerate(a):
-                    for sheet in list(self.sheets.values()):
-                        sheet.pop(i_offset=c)
-                        self.sim.run(t[i])
+                # for i, c in enumerate(a):
+                #    for sheet in list(self.sheets.values()):
+                #        sheet.pop(i_offset=c)
+                #        self.sim.run(t[i])
 
             else:
                 self.input_layer.provide_null_input(
@@ -157,7 +159,8 @@ class Model(BaseComponent):
         # multiple runs here with i_offset update ?
         # pop = sim.Population(...)
         # pop.set(i_offset=0.5)
-        sim_run_time += self.run(stimulus.duration)
+        if not r:
+            sim_run_time += self.run(stimulus.duration)
         segments = []
 
         for sheet in list(self.sheets.values()):

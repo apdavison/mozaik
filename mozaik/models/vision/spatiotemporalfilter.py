@@ -646,63 +646,67 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             logger.debug("Retrieved spikes from cache...")
             (input_currents, retinal_input) = cached
 
-        print("input_currents ", input_currents)
-        print("input_currents X_ON ", input_currents['X_ON'])
-        logger.debug("input_currents X_ON ", input_currents['X_ON'])
+        # print("input_currents ", input_currents)
+        # print("input_currents X_ON ", input_currents['X_ON'])
+        # print("input_currents X_ON ", input_currents['X_ON'])
+        # logger.debug("input_currents X_ON ", input_currents['X_ON'])
 
         ts = self.model.sim.get_time_step()
         # a = []
         # t = []
-        """
-        for rf_type in self.rf_types:
-            assert isinstance(input_currents[rf_type], list)
-            # ts = input_current["times"] + offset
-            # ams = self.parameters.linear_scaler * input_current["amplitudes"]
-            # print("step current time ", ts)
-            # print("step current amplitude ", ams)
-            # np = sim.Population(10, sim.SpikeSourceArray(spike_times=t), label="spikes")  # test this
-            # sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
+        for n in range(len(input_currents['X_ON'][0]['times'])):
+            for rf_type in self.rf_types:
+                assert isinstance(input_currents[rf_type], list)
+                # ts = input_current["times"] + offset
+                # ams = self.parameters.linear_scaler * input_current["amplitudes"]
+                # print("step current time ", ts)
+                # print("step current amplitude ", ams)
+                # np = sim.Population(10, sim.SpikeSourceArray(spike_times=t), label="spikes")  # test this
+                # sim.Projection(np, self.sheets[rf_type].pop, sim.AllToAllConnector())
 
-            # for i, (lgn_cell, input_current, scs, ncs) in enumerate(
-            for i, (lgn_cell, input_current) in enumerate(
-                zip(
-                    self.sheets[rf_type].pop,
-                    input_currents[rf_type],
-                    # self.scs[rf_type],
-                    # self.ncs[rf_type]
-                )
-            ):
-                if i == 2:
-                    break
-                assert isinstance(input_current, dict)
-                t = input_current["times"] + offset
-                a = self.parameters.linear_scaler * input_current["amplitudes"]
-                logger.debug("input_current ", input_current)
-                print("step current time ", t)
-                logger.debug("step current time ", t)
-                print("step current amplitude ", a)
-                logger.debug("step current amplitude ", a)
-                print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
-
-                # lgn_cell.i_offset = a[0]
-                # lgn_cell.i_offset = a
-                # sim.reset ?
-
-                # scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
-
-                if False:
-                    # if self.parameters.mpi_reproducible_noise:
-                    t = numpy.arange(0, duration, ts) + offset
-                    amplitudes = self.parameters.noise.mean + self.parameters.noise.stdev * self.ncs_rng[
-                        rf_type
-                    ][
-                        i
-                    ].randn(
-                        len(t)
+                # for i, (lgn_cell, input_current, scs, ncs) in enumerate(
+                for i, (lgn_cell, input_current) in enumerate(
+                    zip(
+                        self.sheets[rf_type].pop,
+                        input_currents[rf_type],
+                        # self.scs[rf_type],
+                        # self.ncs[rf_type]
                     )
-                    ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)  # this has to change
+                ):
+                    # if i == 2:
+                    #    break
+                    # assert isinstance(input_current, dict)
 
-        """
+                    # t = input_current["times"] + offset
+
+                    a = self.parameters.linear_scaler * input_current["amplitudes"]
+                    # logger.debug("input_current ", input_current)
+                    # print("step current time ", t)
+                    # logger.debug("step current time ", t)
+                    # print("step current amplitude ", a)
+                    # logger.debug("step current amplitude ", a)
+                    # print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
+
+                    # lgn_cell.i_offset = a[0]
+                    lgn_cell.i_offset = a[n]
+                    # sim.reset ?
+
+                    # scs.set_parameters(times=t, amplitudes=a, copy=False)  # this has to change
+
+                    if False:
+                        # if self.parameters.mpi_reproducible_noise:
+                        t = numpy.arange(0, duration, ts) + offset
+                        amplitudes = self.parameters.noise.mean + self.parameters.noise.stdev * self.ncs_rng[
+                            rf_type
+                        ][
+                            i
+                        ].randn(
+                            len(t)
+                        )
+                        ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)  # this has to change
+            # sim.run(0.7)
+            sim.run(self.parameters.receptive_field.temporal_resolution)
+
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
         # input_current_array = numpy.zeros((self.shape[1], self.shape[0], len(visual_space.time_points(duration))))
         # update_factor = int(visual_space.update_interval/self.parameters.receptive_field.temporal_resolution)
@@ -721,7 +725,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # also save into internal cache
         self.internal_stimulus_cache[str(st)] = (input_currents, retinal_input)
 
-        return retinal_input, a, t
+        # return retinal_input, a, t
+        return retinal_input
 
     def provide_null_input(self, visual_space, duration=None, offset=0):
         """
