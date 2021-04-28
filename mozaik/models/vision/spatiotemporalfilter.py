@@ -646,9 +646,14 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             logger.debug("Retrieved spikes from cache...")
             (input_currents, retinal_input) = cached
 
+        print("input_currents ", input_currents)
+        print("input_currents X_ON ", input_currents['X_ON'])
+        logger.debug("input_currents X_ON ", input_currents['X_ON'])
+
         ts = self.model.sim.get_time_step()
         # a = []
         # t = []
+        """
         for rf_type in self.rf_types:
             assert isinstance(input_currents[rf_type], list)
             # ts = input_current["times"] + offset
@@ -678,6 +683,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 print("step current amplitude ", a)
                 logger.debug("step current amplitude ", a)
                 print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
+
                 # lgn_cell.i_offset = a[0]
                 # lgn_cell.i_offset = a
                 # sim.reset ?
@@ -696,7 +702,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     )
                     ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)  # this has to change
 
-
+        """
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
         # input_current_array = numpy.zeros((self.shape[1], self.shape[0], len(visual_space.time_points(duration))))
         # update_factor = int(visual_space.update_interval/self.parameters.receptive_field.temporal_resolution)
