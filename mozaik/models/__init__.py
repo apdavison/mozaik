@@ -123,7 +123,7 @@ class Model(BaseComponent):
                 self.simulator_time,
                 artificial_stimulators.get(sheet.name, [])
             )
-        r = False
+        # r = False
         if self.input_space:
             self.input_space.clear()
             if not isinstance(stimulus, InternalStimulus):
@@ -131,7 +131,7 @@ class Model(BaseComponent):
                 sensory_input = self.input_layer.process_input(
                     self.input_space, stimulus, stimulus.duration, self.simulator_time
                 )
-                r = True
+                # r = True
                 # print("Amplitudes for current input", a)
                 # logger.debug("Amplitudes for current input", a)
                 # print("Amplitudes for current input length", len(a))
@@ -153,15 +153,17 @@ class Model(BaseComponent):
                     self.input_space, stimulus.duration, self.simulator_time
                 )
                 sensory_input = None
+                sim_run_time += self.run(stimulus.duration)
         else:
             sensory_input = None
+            sim_run_time += self.run(stimulus.duration)
 
         # multiple runs here with i_offset update ?
         # pop = sim.Population(...)
         # pop.set(i_offset=0.5)
-        print("stimulus.duration ", stimulus.duration)
-        if not r:
-            sim_run_time += self.run(stimulus.duration)
+        # print("stimulus.duration ", stimulus.duration)
+        # if not r:
+        #    sim_run_time += self.run(stimulus.duration)
         segments = []
 
         for sheet in list(self.sheets.values()):

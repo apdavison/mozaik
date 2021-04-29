@@ -660,8 +660,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         print("input_currents[rf_type] len", len(input_currents['X_ON']))
         # i_offset update and sim.run instead of stepcurrentsource
         for n in range(len(input_currents['X_ON'][0]['times'])):
-            if n == 0:
-                break
+            # if n == 0:
+            #    break
             for rf_type in self.rf_types:
                 # assert isinstance(input_currents[rf_type], list)
                 # ts = input_current["times"] + offset
@@ -711,8 +711,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                             len(t)
                         )
                         ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)  # this has to change
-            self.model.sim.run(10)
-            # self.model.sim.run(self.parameters.receptive_field.temporal_resolution)  # 7.0
+            # self.model.sim.run(10)
+            self.model.sim.run(self.parameters.receptive_field.temporal_resolution)  # 7.0
 
         # for debugging/testing, doesn't work with MPI !!!!!!!!!!!!
         # input_current_array = numpy.zeros((self.shape[1], self.shape[0], len(visual_space.time_points(duration))))
