@@ -131,6 +131,7 @@ class Model(BaseComponent):
                 sensory_input = self.input_layer.process_input(
                     self.input_space, stimulus, stimulus.duration, self.simulator_time
                 )
+                # sim_run_time ?
                 # r = True
                 # print("Amplitudes for current input", a)
                 # logger.debug("Amplitudes for current input", a)
