@@ -59,7 +59,7 @@
 
     # 'K' : 1000, # Number of synapses per neuron
     # 'K' : 500, # Number of synapses per neuron
-    'K' : 100, # Number of synapses per neuron
+    'K' : 200, # Number of synapses per neuron
     # 'K' : 750, # Number of synapses per neuron
     'layer23_aff_ratio' : 0.2,
     'inhibitory_connection_ratio' : 0.7, # The fraction of connections that are onto inhibitory neurons compared to excitatory
