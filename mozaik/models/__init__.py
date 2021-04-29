@@ -213,7 +213,7 @@ class Model(BaseComponent):
         t0 = time.time()
         logger.info("Simulating the network for %s ms" % tstop)
         self.sim.run(tstop)
-        print("Simulation begins running", tstop)
+        # print("Simulation begins running", tstop)
         logger.info("Finished simulating the network for %s ms" % tstop)
         self.simulator_time += tstop
 

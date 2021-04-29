@@ -12,7 +12,7 @@ allow None value, are instantiated and allow for definition of units and period.
 import collections
 import inspect
 import logging
-logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
+# logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 import numbers
 
 from param import Number, Integer, String, ClassSelector
@@ -172,7 +172,7 @@ class MozaikParametrized(Parameterized):
             # print("init name: ", name)
             # print("init value: ", value)
             if value == None and self.params()[name].allow_None==False:                
-                logger.error("The parameter %s was not initialized" % name)
+                # logger.error("The parameter %s was not initialized" % name)
                 raise ValueError("The parameter %s was not initialized" % name)
 
         def _expand_parameter_set(ps):
