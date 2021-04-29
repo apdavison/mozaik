@@ -656,9 +656,11 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # t = []
         print("len(input_currents['X_ON'][0]['times'])", len(input_currents['X_ON'][0]['times']))
         print("len(input_currents['X_OFF'][0]['times'])", len(input_currents['X_OFF'][0]['times']))
+        print("self.sheets[rf_type].pop len ", len(self.sheets['X_ON'].pop))
+        print("input_currents[rf_type] len", len(input_currents['X_ON']))
         # i_offset update and sim.run instead of stepcurrentsource
         for n in range(len(input_currents['X_ON'][0]['times'])):
-            if n == 1:
+            if n == 0:
                 break
             for rf_type in self.rf_types:
                 # assert isinstance(input_currents[rf_type], list)
