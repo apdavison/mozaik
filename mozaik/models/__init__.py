@@ -159,6 +159,7 @@ class Model(BaseComponent):
         # multiple runs here with i_offset update ?
         # pop = sim.Population(...)
         # pop.set(i_offset=0.5)
+        print("stimulus.duration ", stimulus.duration)
         if not r:
             sim_run_time += self.run(stimulus.duration)
         segments = []

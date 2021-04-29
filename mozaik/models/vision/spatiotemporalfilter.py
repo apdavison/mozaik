@@ -654,9 +654,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         ts = self.model.sim.get_time_step()
         # a = []
         # t = []
+        print("len(input_currents['X_ON'][0]['times'])", len(input_currents['X_ON'][0]['times']))
+        print("len(input_currents['X_OFF'][0]['times'])", len(input_currents['X_OFF'][0]['times']))
+        # i_offset update and sim.run instead of stepcurrentsource
         for n in range(len(input_currents['X_ON'][0]['times'])):
             for rf_type in self.rf_types:
-                assert isinstance(input_currents[rf_type], list)
+                # assert isinstance(input_currents[rf_type], list)
                 # ts = input_current["times"] + offset
                 # ams = self.parameters.linear_scaler * input_current["amplitudes"]
                 # print("step current time ", ts)
@@ -719,6 +722,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         #        input_current_array[i,j, :] = input_currents['X_ON'][k]['amplitudes'][::update_factor]
         #        k += 1
 
+        # move these to somewhere else (before the loop)?
         # if record() has already been called, setup the recording now
         self._built = True
         self.write_cache(st, input_currents, retinal_input)
