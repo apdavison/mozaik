@@ -154,7 +154,7 @@ class Model(BaseComponent):
                     self.input_space, stimulus.duration, self.simulator_time
                 )
                 sensory_input = None
-                sim_run_time += self.run(stimulus.duration)
+                # sim_run_time += self.run(stimulus.duration)
         else:
             sensory_input = None
             sim_run_time += self.run(stimulus.duration)
@@ -247,16 +247,20 @@ class Model(BaseComponent):
                         self.parameters.null_stimulus_period,
                         self.simulator_time
                     )
-
-                logger.info(
-                    "Simulating the network for %s ms with blank stimulus"
-                    % self.parameters.null_stimulus_period
-                )
-                # print("self.parameters.max_delay ", self.parameters.max_delay)
-                # print("self.parameters ", self.parameters)
-                # print("dir(self.sim) ", dir(self.sim))
-                self.sim.run(self.parameters.null_stimulus_period)
-                self.simulator_time += self.parameters.null_stimulus_period
+                    logger.info(
+                        "Simulated the network for %s ms with blank stimulus"
+                        % self.parameters.null_stimulus_period
+                    )
+                else:
+                    logger.info(
+                        "Simulating the network for %s ms with blank stimulus"
+                        % self.parameters.null_stimulus_period
+                    )
+                    # print("self.parameters.max_delay ", self.parameters.max_delay)
+                    # print("self.parameters ", self.parameters)
+                    # print("dir(self.sim) ", dir(self.sim))
+                    self.sim.run(self.parameters.null_stimulus_period)
+                    self.simulator_time += self.parameters.null_stimulus_period
                 for sheet in list(self.sheets.values()):
                     if sheet.to_record != None:
                         s = sheet.get_data(self.parameters.null_stimulus_period)

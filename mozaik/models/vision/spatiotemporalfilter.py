@@ -775,51 +775,56 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 visual_space
             )
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
-
-        for rf_type in self.rf_types:
-
-            if self.parameters.gain_control.non_linear_gain != None:
-                print("non_linear_gain != None ")
-                amplitude = (
-                    self.parameters.linear_scaler
-                    * self.parameters.gain_control.non_linear_gain.luminance_gain
-                    * numpy.sum(input_cells[rf_type].receptive_field.kernel.flatten())
-                    * visual_space.background_luminance
-                    / (
-                        self.parameters.gain_control.non_linear_gain.luminance_scaler
+        for n in enumerate(times):
+            for rf_type in self.rf_types:
+                if self.parameters.gain_control.non_linear_gain != None:
+                    print("non_linear_gain != None ")
+                    amplitude = (
+                        self.parameters.linear_scaler
+                        * self.parameters.gain_control.non_linear_gain.luminance_gain
+                        * numpy.sum(input_cells[rf_type].receptive_field.kernel.flatten())
                         * visual_space.background_luminance
-                        + 1.0
+                        / (
+                            self.parameters.gain_control.non_linear_gain.luminance_scaler
+                            * visual_space.background_luminance
+                            + 1.0
+                        )
                     )
-                )
+                else:
+                    amplitude = (
+                        self.parameters.linear_scaler
+                        * self.parameters.gain_control.gain
+                        * numpy.sum(input_cells[rf_type].receptive_field.kernel.flatten())
+                        * visual_space.background_luminance
+                    )
+
+                print("times ", times)
+                print("times len", len(times))
+                logger.debug("times ", times)
+                print("amplitude ", amplitude)
+                print("zers + amplitude ", zers + amplitude)
+                a = zers + amplitude
+                self.sheets[rf_type].pop(i_offset=a[n])
+                # self.parameters.mpi_reproducible_noise part ?
+                # for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
+                #    print("scs ", scs)
+                #    scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)  # this has to change
+                #    print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
+                #    if self.parameters.mpi_reproducible_noise:
+                #        t = numpy.arange(0, duration, ts) + offset
+                #        amplitudes = self.parameters.noise.mean + self.parameters.noise.stdev * self.ncs_rng[
+                #            rf_type
+                #        ][
+                #            i
+                #        ].randn(
+                #            len(t)
+                #        )
+                #        ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+            # find a better way (duration)
+            if n == 0:
+                self.model.simulator_time += self.model.sim.run(times[1]-times[0])
             else:
-                amplitude = (
-                    self.parameters.linear_scaler
-                    * self.parameters.gain_control.gain
-                    * numpy.sum(input_cells[rf_type].receptive_field.kernel.flatten())
-                    * visual_space.background_luminance
-                )
-
-            print("times ", times)
-            print("times len", len(times))
-            logger.debug("times ", times)
-            print("amplitude ", amplitude)
-            print("zers + amplitude ", zers + amplitude)
-            print("len self.scs[rf_type]", len(self.scs[rf_type]))
-            for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
-                print("scs ", scs)
-                scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)  # this has to change
-                print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
-                if self.parameters.mpi_reproducible_noise:
-                    t = numpy.arange(0, duration, ts) + offset
-
-                    amplitudes = self.parameters.noise.mean + self.parameters.noise.stdev * self.ncs_rng[
-                        rf_type
-                    ][
-                        i
-                    ].randn(
-                        len(t)
-                    )
-                    ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+                self.model.simulator_time += self.model.sim.run(duration - times[1])
 
     def _calculate_input_currents(self, visual_space, duration):
         """
