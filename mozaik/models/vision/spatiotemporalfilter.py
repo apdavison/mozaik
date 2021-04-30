@@ -775,7 +775,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 visual_space
             )
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
-        for n in enumerate(times):
+        for n in range(len(times)):
             for rf_type in self.rf_types:
                 if self.parameters.gain_control.non_linear_gain != None:
                     print("non_linear_gain != None ")
@@ -803,8 +803,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 logger.debug("times ", times)
                 print("amplitude ", amplitude)
                 print("zers + amplitude ", zers + amplitude)
-                a = zers + amplitude
-                self.sheets[rf_type].pop(i_offset=a[n])
+                # a = zers + amplitude
+                # self.sheets[rf_type].pop.set(i_offset=a[n])
+                self.sheets[rf_type].pop.set(i_offset=amplitude)
                 # self.parameters.mpi_reproducible_noise part ?
                 # for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
                 #    print("scs ", scs)
