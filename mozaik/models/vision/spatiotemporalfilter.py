@@ -654,11 +654,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         ts = self.model.sim.get_time_step()
         # a = []
         # t = []
-        print("len(input_currents['X_ON'][0]['times'])", len(input_currents['X_ON'][0]['times']))
-        print("len(input_currents['X_OFF'][0]['times'])", len(input_currents['X_OFF'][0]['times']))
-        print("self.sheets[rf_type].pop len ", len(self.sheets['X_ON'].pop))
-        print("input_currents[rf_type] len", len(input_currents['X_ON']))
+        # print("len(input_currents['X_ON'][0]['times'])", len(input_currents['X_ON'][0]['times']))
+        # print("len(input_currents['X_OFF'][0]['times'])", len(input_currents['X_OFF'][0]['times']))
+        # print("self.sheets[rf_type].pop len ", len(self.sheets['X_ON'].pop))
+        # print("input_currents[rf_type] len", len(input_currents['X_ON']))
         # i_offset update and sim.run instead of stepcurrentsource
+        print(self.rf_types[8])  # induce error
         for n in range(len(input_currents['X_ON'][0]['times'])):
             # if n == 0:
             #    break
@@ -778,6 +779,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         for rf_type in self.rf_types:
 
             if self.parameters.gain_control.non_linear_gain != None:
+                print("non_linear_gain != None ")
                 amplitude = (
                     self.parameters.linear_scaler
                     * self.parameters.gain_control.non_linear_gain.luminance_gain
@@ -797,8 +799,17 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     * visual_space.background_luminance
                 )
 
+            print("times ", times)
+            print("times len", len(times))
+            logger.debug("times ", times)
+            print("amplitude ", amplitude)
+            print("amplitude len", len(amplitude))
+            logger.debug("amplitude ", amplitude)
+            print("len self.scs[rf_type]", len(self.scs[rf_type]))
             for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
+                print("scs ", scs)
                 scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)  # this has to chenge
+                print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
                 if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
 
