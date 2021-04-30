@@ -803,12 +803,11 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             print("times len", len(times))
             logger.debug("times ", times)
             print("amplitude ", amplitude)
-            print("amplitude len", len(amplitude))
-            logger.debug("amplitude ", amplitude)
+            print("zers + amplitude ", zers + amplitude)
             print("len self.scs[rf_type]", len(self.scs[rf_type]))
             for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
                 print("scs ", scs)
-                scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)  # this has to chenge
+                scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)  # this has to change
                 print("self.parameters.mpi_reproducible_noise ", self.parameters.mpi_reproducible_noise)
                 if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
