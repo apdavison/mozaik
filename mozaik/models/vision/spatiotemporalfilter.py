@@ -754,6 +754,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         retinal_input : list(ndarray)
                       List of 2D arrays containing the frames of luminances that were presented to the retina.
         """
+        print("XXX provide_null_input XXX ", duration)
+        logger.debug("XXX provide_null_input XXX ", duration)
         times = numpy.array(
             [offset, duration - visual_space.update_interval + offset]
         )  # numpy.arange(0, duration, visual_space.update_interval) + offset
