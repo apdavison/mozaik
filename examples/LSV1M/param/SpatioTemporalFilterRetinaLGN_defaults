@@ -35,9 +35,9 @@
             'height': 6.0, # degrees
             'spatial_resolution': 0.1, # degrees
             'temporal_resolution': 7.0, # ms
-            # 'duration': 200.0,
+            'duration': 200.0,
             # 'duration': 100.0,
-            'duration': 25.0,
+            # 'duration': 25.0,
         },
         'gain_control' : {
             'gain': 12,
