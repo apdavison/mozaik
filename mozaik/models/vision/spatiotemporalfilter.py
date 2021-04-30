@@ -659,7 +659,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # print("self.sheets[rf_type].pop len ", len(self.sheets['X_ON'].pop))
         # print("input_currents[rf_type] len", len(input_currents['X_ON']))
         # i_offset update and sim.run instead of stepcurrentsource
-        print(self.rf_types[8])  # induce error
+        # print(self.rf_types[8])  # induce error
         for n in range(len(input_currents['X_ON'][0]['times'])):
             # if n == 0:
             #    break
@@ -762,6 +762,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         )  # numpy.arange(0, duration, visual_space.update_interval) + offset
         zers = times * 0
         ts = self.model.sim.get_time_step()
+        i = len(times)
 
         input_cells = {}
         for rf_type in self.rf_types:
@@ -823,10 +824,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #        ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
             # find a better way, this works only if the times length is 2
             # self.model.simulator_time += self.model.sim.run(duration / 2)
-            if t == times[-1]:
-                self.model.simulator_time += self.model.sim.run(duration - t)
-            else:
-                self.model.simulator_time += self.model.sim.run(times[n+1] - times[n])
+            # sometimes times[0] is not 0, what then?
+            # if t == times[-1]:
+            #    self.model.simulator_time += self.model.sim.run(duration - t)
+            # else:
+            #    self.model.simulator_time += self.model.sim.run(times[n+1] - times[n])
+            self.model.simulator_time += self.model.sim.run(duration / i)
 
     def _calculate_input_currents(self, visual_space, duration):
         """
