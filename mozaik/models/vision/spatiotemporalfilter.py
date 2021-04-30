@@ -821,11 +821,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #            len(t)
                 #        )
                 #        ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
-            # find a better way (duration)
-            if n == 0:
-                self.model.simulator_time += self.model.sim.run(times[1]-times[0])
-            else:
-                self.model.simulator_time += self.model.sim.run(duration - times[1])
+            # find a better way, this works only if the times length is 2
+            self.model.simulator_time += self.model.sim.run(duration / 2)
+            # if n == 0:
+            #    self.model.simulator_time += self.model.sim.run(times[1]-times[0])
+            # else:
+            #    self.model.simulator_time += self.model.sim.run(duration - times[1])
 
     def _calculate_input_currents(self, visual_space, duration):
         """
