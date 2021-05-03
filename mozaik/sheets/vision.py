@@ -3,6 +3,7 @@
 This module contains implementation of vision related sheets.
 """
 
+import logging
 import numpy
 import mozaik
 from parameters import ParameterSet
@@ -10,7 +11,7 @@ from pyNN import space
 from pyNN.errors import NothingToWriteError
 from mozaik.sheets import Sheet
         
-logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
 
 
 class RetinalUniformSheet(Sheet):

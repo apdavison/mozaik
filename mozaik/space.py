@@ -1,7 +1,7 @@
 """
 This modules implements the API for input space.
 """
-
+import logging
 import os.path
 import numpy
 import mozaik
@@ -13,7 +13,7 @@ from collections import OrderedDict
 from mozaik import __version__
 
 TRANSPARENT = -1
-logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
 
 
 def xy2ij(coordinates):

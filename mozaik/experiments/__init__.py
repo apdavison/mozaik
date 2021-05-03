@@ -1,6 +1,7 @@
 """
 Module containing the experiment API.
 """
+import logging
 import numpy
 import resource
 import mozaik
@@ -9,7 +10,7 @@ from parameters import ParameterSet
 from mozaik.core import ParametrizedObject
 from mozaik.tools.distribution_parametrization import ParameterWithUnitsAndPeriod, MozaikExtendedParameterSet
 
-logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
 
 
 class Experiment(ParametrizedObject):

@@ -15,7 +15,7 @@ import sys
 # from pyNN import nest
 from pyNN import spiNNaker
 
-mpi_comm = MPI.COMM_WORLD
+# mpi_comm = MPI.COMM_WORLD
 
 
 if True:

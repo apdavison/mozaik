@@ -2,6 +2,7 @@ import os
 import psutil
 import sys
 import mozaik
+import logging
 from mozaik.visualization.plotting import *
 from mozaik.analysis.technical import NeuronAnnotationsToPerNeuronValues
 from mozaik.analysis.analysis import *
@@ -11,7 +12,8 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.controller import Global
 from visualization_functions import *
 
-logger = mozaik.getMozaikLogger()
+# logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
 
 process = psutil.Process(os.getpid())
 

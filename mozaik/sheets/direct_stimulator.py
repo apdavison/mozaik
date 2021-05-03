@@ -7,6 +7,7 @@ of spikes/currents etc into cells. In mozaik this happens at population level - 
 each direct stimulator specifies how the given population is stimulated. In general each population can have several
 stimultors.
 """
+import logging
 from mozaik.core import ParametrizedObject
 from parameters import ParameterSet
 import numpy
@@ -26,7 +27,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from mozaik.controller import Global
 import pickle
 
-logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
 
 
 class DirectStimulator(ParametrizedObject):

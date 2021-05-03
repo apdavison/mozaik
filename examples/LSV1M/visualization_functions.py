@@ -1,6 +1,6 @@
 import pylab
 import numpy
-
+import logging
 import mozaik.storage.queries as queries
 import matplotlib.gridspec as gridspec
 from mozaik.visualization.plotting import Plotting
@@ -18,7 +18,8 @@ from mozaik.tools.circ_stat import circular_dist
 import mozaik.visualization.helper_functions as phf
 
 import mozaik
-logger = mozaik.getMozaikLogger()
+# logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
 
 low_contrast=30
 
