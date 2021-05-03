@@ -945,8 +945,11 @@ class MeasureNaturalImagesWithEyeMovement(VisualExperiment):
                     trial=k,
                     size=60,  # x size of image
                     eye_movement_period=6.66,  # eye movement period
-                    eye_path_location='./eye_path.pickle',
-                    image_location='./image_naturelle_HIGHC.bmp'))
+                    # eye_path_location='./eye_path.pickle',
+                    eye_path_location='examples/LSV1M/eye_path.pickle',
+                    # image_location='./image_naturelle_HIGHC.bmp'))
+                    image_location='examples/LSV1M/image_naturelle_HIGHC.bmp'))
+
 
     def do_analysis(self, data_store):
         pass
