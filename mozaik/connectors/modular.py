@@ -357,6 +357,7 @@ class ModularSamplingProbabilisticConnectorAnnotationSamplesCount(ModularConnect
             if self.parameters.num_samples == 0:
                 co = Counter(sample_from_bin_distribution(weights, int(samples)))
             else:
+                # AssertionError: V1L4ExcL4ExcConnection: 64 110
                 assert self.parameters.num_samples > 2 * int(samples), "%s: %d %d" % (
                     self.name,
                     self.parameters.num_samples,
