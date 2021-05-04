@@ -110,6 +110,9 @@ class PerNeuronValue(AnalysisDataStructure):
         ids : AnalogSignal or list(AnalogSignal)
             List (or single) of AnalogSignal objects corresponding to ids in `idd`.
         """
+        print("self.ids ", self.ids)
+        print("self.values ", self.values)
+        print("idds ", idds)
         if isinstance(idds, list) or isinstance(idds, numpy.ndarray):
             return [self.values[list(self.ids).index(i)] for i in idds]
         else:

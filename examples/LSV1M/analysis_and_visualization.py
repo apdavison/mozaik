@@ -11,6 +11,7 @@ from mozaik.storage.queries import *
 from mozaik.storage.datastore import PickledDataStore
 from mozaik.controller import Global
 from visualization_functions import *
+from parameters import ParameterSet
 
 # logger = mozaik.getMozaikLogger()
 logger = logging.getLogger(__name__)
