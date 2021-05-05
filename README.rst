@@ -1,3 +1,6 @@
+This version of mozaik (with models LSV1M and VogelsAbbott) is modified to run on the SpiNNaker Neuromorphic Platform.
+
+========================
 Installation intructions
 ========================
 
