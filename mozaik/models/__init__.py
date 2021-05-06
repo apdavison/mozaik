@@ -79,6 +79,8 @@ class Model(BaseComponent):
             max_delay=self.parameters.max_delay,
             threads=num_threads
         )  # should have some parameters here
+        # workaround for SpiNNaker error: parameter n_neurons of 2048 is too big (maximum 2047)
+        sim.set_number_of_neurons_per_core(self, 2047)
         self.sheets = {}
         self.connectors = {}
         self.num_threads = num_threads
