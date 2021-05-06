@@ -80,12 +80,14 @@ class Model(BaseComponent):
             threads=num_threads
         )  # should have some parameters here
         # workaround for SpiNNaker error: parameter n_neurons of 2048 is too big (maximum 2047)
-        if self.parameters.cell.model == 'Izhikevich':
-            print("cell model is Izhikevich")
-            sim.set_number_of_neurons_per_core(sim.Izhikevich, 2047)
-        elif self.parameters.cell.model == 'IF_cond_exp':
-            print("cell model is IF_cond_exp")
-            sim.set_number_of_neurons_per_core(sim.IF_cond_exp, 2047)
+        sim.set_number_of_neurons_per_core(sim.Izhikevich, 2047)
+        sim.set_number_of_neurons_per_core(sim.IF_cond_exp, 2047)
+        # if self.parameters.cell.model == 'Izhikevich':
+        #    print("cell model is Izhikevich")
+        #    sim.set_number_of_neurons_per_core(sim.Izhikevich, 2047)
+        # elif self.parameters.cell.model == 'IF_cond_exp':
+        #    print("cell model is IF_cond_exp")
+        #    sim.set_number_of_neurons_per_core(sim.IF_cond_exp, 2047)
         self.sheets = {}
         self.connectors = {}
         self.num_threads = num_threads
