@@ -2,7 +2,7 @@
     'component': 'mozaik.models.vision.spatiotemporalfilter.SpatioTemporalFilterRetinaLGN',
     'params': {
         # 'density': 100, # neurons per degree squared
-        'density': 90,
+        'density': 70,
         # 'density': 50,
         # 'density': 5,
         'size'  : (5.0,5.0), # the effective size of the modelled section of retina/lgn
