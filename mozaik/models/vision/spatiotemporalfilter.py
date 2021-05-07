@@ -814,12 +814,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 print("times len", len(times))
                 logger.debug("times ", times)
                 print("amplitude ", amplitude)
-                # print("self.sheets[rf_type].pop.set(i_offset=amplitude) ", self.sheets[rf_type].pop.get(i_offset))
+                print("self.sheets[rf_type].pop.set(i_offset=amplitude) ", self.sheets[rf_type].pop.get("i_offset"))
                 # print("zers + amplitude ", zers + amplitude)
                 # a = zers + amplitude
                 # self.sheets[rf_type].pop.set(i_offset=a[n])
                 self.sheets[rf_type].pop.set(i_offset=amplitude)
-                print("self.sheets[rf_type].pop.set(i_offset=amplitude) ", self.sheets[rf_type].pop.get(i_offset))
+                print("self.sheets[rf_type].pop.set(i_offset=amplitude) ", self.sheets[rf_type].pop.get("i_offset"))
                 # self.parameters.mpi_reproducible_noise part ?
                 # for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
                 #    print("scs ", scs)
