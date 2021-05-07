@@ -761,8 +761,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         logger.debug("XXX provide_null_input XXX ", duration)
         # self.model.sim.set_number_of_neurons_per_core(self.model.sim.Izhikevich, 2047)
         # self.model.sim.set_number_of_neurons_per_core(self.model.sim.IF_cond_exp, 2047)
-        # self.model.sim.set_number_of_neurons_per_core(self.sheets["X_ON"].pop, 2047)
-        # self.model.sim.set_number_of_neurons_per_core(self.sheets["X_OFF"].pop, 2047)
+        self.model.sim.set_number_of_neurons_per_core(self.sheets["X_ON"].pop, 2047)
+        self.model.sim.set_number_of_neurons_per_core(self.sheets["X_OFF"].pop, 2047)
         times = numpy.array(
             [offset, duration - visual_space.update_interval + offset]
         )  # numpy.arange(0, duration, visual_space.update_interval) + offset
