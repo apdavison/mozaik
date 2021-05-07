@@ -763,6 +763,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # self.model.sim.set_number_of_neurons_per_core(self.model.IF_cond_exp, 2047)
         # self.model.sim.set_number_of_neurons_per_core(self.sheets["X_ON"].pop.cellclass, 2047)
         # self.model.sim.set_number_of_neurons_per_core(self.sheets["X_OFF"].pop.cellclass, 2047)
+        print("offset ", offset)
+        print("visual_space.update_interval ", visual_space.update_interval)
         times = numpy.array(
             [offset, duration - visual_space.update_interval + offset]
         )  # numpy.arange(0, duration, visual_space.update_interval) + offset
@@ -783,6 +785,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             )
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
         for n, t in enumerate(times):
+            print("n ", n)
+            if n == 1:
+                break
             for rf_type in self.rf_types:
                 if self.parameters.gain_control.non_linear_gain != None:
                     # print("non_linear_gain != None ")
@@ -809,10 +814,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 print("times len", len(times))
                 logger.debug("times ", times)
                 print("amplitude ", amplitude)
+                # print("self.sheets[rf_type].pop.set(i_offset=amplitude) ", self.sheets[rf_type].pop.get(i_offset))
                 # print("zers + amplitude ", zers + amplitude)
                 # a = zers + amplitude
                 # self.sheets[rf_type].pop.set(i_offset=a[n])
                 self.sheets[rf_type].pop.set(i_offset=amplitude)
+                print("self.sheets[rf_type].pop.set(i_offset=amplitude) ", self.sheets[rf_type].pop.get(i_offset))
                 # self.parameters.mpi_reproducible_noise part ?
                 # for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
                 #    print("scs ", scs)
@@ -837,7 +844,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             #    self.model.simulator_time += self.model.sim.run(times[n+1] - times[n])
             # self.model.sim.set_number_of_neurons_per_core(self.model.sim.Izhikevich, 2047)
             # self.model.sim.set_number_of_neurons_per_core(self.model.sim.IF_cond_exp, 2047)
-            self.model.simulator_time += self.model.sim.run(duration / i)
+
+            # self.model.simulator_time += self.model.sim.run(duration / i)
+            self.model.simulator_time += self.model.sim.run(duration)
 
     def _calculate_input_currents(self, visual_space, duration):
         """
