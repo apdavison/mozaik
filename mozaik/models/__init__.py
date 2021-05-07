@@ -82,8 +82,8 @@ class Model(BaseComponent):
         # workaround for SpiNNaker error: parameter n_neurons of 2048 is too big (maximum 2047)
         # sim.set_number_of_neurons_per_core(sim.Izhikevich, 2047)
         # sim.set_number_of_neurons_per_core(sim.IF_cond_exp, 2047)
-        sim.set_number_of_neurons_per_core(sim.Izhikevich, 255)
-        sim.set_number_of_neurons_per_core(sim.IF_cond_exp, 255)
+        # sim.set_number_of_neurons_per_core(sim.Izhikevich, 255)
+        # sim.set_number_of_neurons_per_core(sim.IF_cond_exp, 255)
         # if self.parameters.cell.model == 'Izhikevich':
         #    print("cell model is Izhikevich")
         #    sim.set_number_of_neurons_per_core(sim.Izhikevich, 2047)
