@@ -785,9 +785,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             )
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
         for n, t in enumerate(times):
-            print("n ", n)
-            if n == 1:
-                break
+            # print("n ", n)
+            # if n == 1:
+            #    break
             for rf_type in self.rf_types:
                 if self.parameters.gain_control.non_linear_gain != None:
                     # print("non_linear_gain != None ")
@@ -845,8 +845,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             # self.model.sim.set_number_of_neurons_per_core(self.model.sim.Izhikevich, 2047)
             # self.model.sim.set_number_of_neurons_per_core(self.model.sim.IF_cond_exp, 2047)
 
-            # self.model.simulator_time += self.model.sim.run(duration / i)
-            self.model.simulator_time += self.model.sim.run(duration)
+            self.model.simulator_time += self.model.sim.run(duration / i)
+            # self.model.simulator_time += self.model.sim.run(duration)
 
     def _calculate_input_currents(self, visual_space, duration):
         """
