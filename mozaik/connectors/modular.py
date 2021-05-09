@@ -131,11 +131,13 @@ class ModularConnector(Connector):
         )
         # print("delays in connectors modular ", delays)
         for i, d in enumerate(delays):
-            if d > 14.4:
+            # if d > 14.4:
+            if d > 144:
                 # print("delay larger than 14.4 ", d)
                 # print("i ", i)
                 # print("type d", type(d))
-                delays[i] = 14.4
+                # delays[i] = 14.4
+                delays[i] = 144
 
         return delays
 
