@@ -768,6 +768,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         times = numpy.array(
             [offset, duration - visual_space.update_interval + offset]
         )  # numpy.arange(0, duration, visual_space.update_interval) + offset
+
+        # workaround because of multiple sim runs ?
+        times2 = numpy.array(0, duration - visual_space.update_interval)
+        print("times2 ", times2)
         zers = times * 0
         ts = self.model.sim.get_time_step()
         i = len(times)
@@ -785,7 +789,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             )
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
             # if False:
-        for n, t in enumerate(times):
+        for n, t in enumerate(times2):
             print("n ", n)
             # if n == 0:
             #    break
@@ -845,8 +849,13 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             #    self.model.simulator_time += self.model.sim.run(times[n+1] - times[n])
             # self.model.sim.set_number_of_neurons_per_core(self.model.sim.Izhikevich, 2047)
             # self.model.sim.set_number_of_neurons_per_core(self.model.sim.IF_cond_exp, 2047)
-
-            self.model.simulator_time += self.model.sim.run(duration / i)
+            if n == 0:
+                print("1. duration - visual_space.update_interval ", duration - visual_space.update_interval)
+                self.model.simulator_time += self.model.sim.run(duration - visual_space.update_interval)
+            elif n == 1:
+                print("2. visual_space.update_interval ", visual_space.update_interval)
+                self.model.simulator_time += self.model.sim.run(visual_space.update_interval)
+            # self.model.simulator_time += self.model.sim.run(duration / i)
             # self.model.simulator_time += self.model.sim.run(duration)
 
     def _calculate_input_currents(self, visual_space, duration):

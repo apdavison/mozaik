@@ -6,7 +6,8 @@ from parameters import ParameterSet
 
 
 def create_experiments(model):
-
+    # duration for NoStimulation: 3 * 8 * 2 * 5 * 3 * 8 * 7 = 40320
+    # stimulus_duration for MeasureNaturalImagesWithEyeMovement: 2*143*7 =  2002
     return [
         # Lets kick the network up into activation
 
