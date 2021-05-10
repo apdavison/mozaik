@@ -770,7 +770,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         )  # numpy.arange(0, duration, visual_space.update_interval) + offset
 
         # workaround because of multiple sim runs ?
-        times2 = numpy.array(0, duration - visual_space.update_interval)
+        # times2 = numpy.array(0, duration - visual_space.update_interval)
+        times2 = numpy.array(
+            [0, duration - visual_space.update_interval]
+        )
         print("times2 ", times2)
         zers = times * 0
         ts = self.model.sim.get_time_step()
