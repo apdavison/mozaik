@@ -73,11 +73,13 @@ class Model(BaseComponent):
         BaseComponent.__init__(self, self, parameters)
         self.first_time = True
         self.sim = sim
+        # slow down the simulation with time_scale_factor
         self.node = sim.setup(
             timestep=self.parameters.time_step,
             min_delay=self.parameters.min_delay,
             max_delay=self.parameters.max_delay,
-            threads=num_threads
+            threads=num_threads,
+            time_scale_factor=10.0
         )  # should have some parameters here
         # workaround for SpiNNaker error: parameter n_neurons of 2048 is too big (maximum 2047)
         # sim.set_number_of_neurons_per_core(sim.Izhikevich, 2047)
