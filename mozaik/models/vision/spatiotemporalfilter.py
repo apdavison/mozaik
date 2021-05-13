@@ -663,8 +663,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # i_offset update and sim.run instead of stepcurrentsource
         # print(self.rf_types[8])  # induce error
         for n in range(len(input_currents['X_ON'][0]['times'])):
-            # if n == 0:
-            #    break
+            print("process input ", n)
+            if n == 1:
+                break
             for rf_type in self.rf_types:
                 # assert isinstance(input_currents[rf_type], list)
                 # ts = input_current["times"] + offset
@@ -793,9 +794,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
             # if False:
         for n, t in enumerate(times2):
-            print("n ", n)
-            # if n == 0:
-            #    break
+            print("provide null input ", n)
+            if n == 1:
+                break
             for rf_type in self.rf_types:
                 if self.parameters.gain_control.non_linear_gain != None:
                     # print("non_linear_gain != None ")
