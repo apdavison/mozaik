@@ -19,7 +19,7 @@ from ...sheets.vision import RetinalUniformSheet
 from ...space import VisualSpace, VisualRegion
 from ...tools.misc import load_pickle_crosscompat
 from ...tools.mozaik_parametrized import MozaikParametrized
-
+from collections import OrderedDict
 
 logger = logging.getLogger(__name__)
 
@@ -440,6 +440,70 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
     def __init__(self, model, parameters):
         SensoryInputComponent.__init__(self, model, parameters)
         self.shape = (self.parameters.density, self.parameters.density)
+        self.sheets = OrderedDict()
+        self._built = False
+        self.rf_types = ('X_ON', 'X_OFF')
+        sim = self.model.sim
+        self.pops = OrderedDict()
+        self.scs = OrderedDict()
+        self.ncs = OrderedDict()
+        self.ncs_rng = OrderedDict()
+        self.internal_stimulus_cache = OrderedDict()
+        for rf_type in self.rf_types:
+            p = RetinalUniformSheet(model,
+                                    ParameterSet({'sx': self.parameters.size[0],
+                                                  'sy': self.parameters.size[1],
+                                                  'density': self.parameters.density,
+                                                  'cell': self.parameters.cell,
+                                                  'name': rf_type,
+                                                  'artificial_stimulators': OrderedDict(),
+                                                  'recorders': self.parameters.recorders,
+                                                  'recording_interval': self.parameters.recording_interval,
+                                                  'mpi_safe': False}))
+            self.sheets[rf_type] = p
+
+        for rf_type in self.rf_types:
+            self.scs[rf_type] = []
+            self.ncs[rf_type] = []
+            self.ncs_rng[rf_type] = []
+            seeds = mozaik.get_seeds((self.sheets[rf_type].pop.size,))
+            for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
+                scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
+
+                if not self.parameters.mpi_reproducible_noise:
+                    ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+                else:
+                    ncs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
+                if hasattr(self.sheets[rf_type].pop, "_mask_local"):
+                    if self.sheets[rf_type].pop._mask_local[i]:
+                        self.ncs_rng[rf_type].append(numpy.random.RandomState(seed=seeds[i]))
+                        self.scs[rf_type].append(scs)
+                        self.ncs[rf_type].append(ncs)
+                lgn_cell.inject(scs)
+                lgn_cell.inject(ncs)
+
+        P_rf = self.parameters.receptive_field
+        rf_function = eval(P_rf.func)
+
+        rf_ON = SpatioTemporalReceptiveField(rf_function,
+                                             P_rf.func_params,
+                                             P_rf.width, P_rf.height,
+                                             P_rf.duration)
+        rf_OFF = SpatioTemporalReceptiveField(lambda x, y, t, p: -1.0 * rf_function(x, y, t, p),
+                                              P_rf.func_params,
+                                              P_rf.width, P_rf.height,
+                                              P_rf.duration)
+
+        dx = dy = P_rf.spatial_resolution
+        dt = P_rf.temporal_resolution
+        for rf in rf_ON, rf_OFF:
+            rf.quantize(dx, dy, dt)
+
+        self.rf = {'X_ON': rf_ON, 'X_OFF': rf_OFF}
+
+    def __init__2(self, model, parameters):
+        SensoryInputComponent.__init__(self, model, parameters)
+        self.shape = (self.parameters.density, self.parameters.density)
         self.sheets = {}
         self._built = False
         self.rf_types = ("X_ON", "X_OFF")
@@ -608,6 +672,79 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         """
         Present a visual stimulus to the model, and create the LGN output
         (relay) neurons.
+
+        Parameters
+        ----------
+        visual_space : VisualSpace
+                     The visual space to which the stimuli are presented.
+
+        stimulus : VisualStimulus
+                 The visual stimulus to be shown.
+
+        duration : int (ms)
+                 The time for which we will simulate the stimulus
+
+        offset : int(ms)
+               The time (in absolute time of the whole simulation) at which the stimulus starts.
+
+        Returns
+        -------
+        retinal_input : list(ndarray)
+                      List of 2D arrays containing the frames of luminances that were presented to the retina.
+        """
+        logger.debug("Presenting visual stimulus from visual space %s" % visual_space)
+        visual_space.set_duration(duration)
+        self.input = visual_space
+        st = MozaikParametrized.idd(stimulus)
+        st.trial = None  # to avoid recalculating RFs response to multiple trials of the same stimulus
+
+        cached = self.get_cache(st)
+
+        if cached == None:
+            logger.debug("Generating output spikes...")
+            # Even if we didn't find the stimulus in cache, we still check if we haven't already presented it during this simulation run.
+            # This is mainly to avoid regenerating stimuli for multiple trials.
+
+            if str(st) in self.internal_stimulus_cache:
+                (input_currents, retinal_input) = self.internal_stimulus_cache[str(st)]
+            else:
+                (input_currents, retinal_input) = self._calculate_input_currents(visual_space,
+                                                                                 duration)
+        else:
+            logger.debug("Retrieved spikes from cache...")
+            (input_currents, retinal_input) = cached
+
+        ts = self.model.sim.get_time_step()
+
+        for rf_type in self.rf_types:
+            assert isinstance(input_currents[rf_type], list)
+            for i, (lgn_cell, input_current, scs, ncs) in enumerate(
+                    zip(self.sheets[rf_type].pop,
+                        input_currents[rf_type],
+                        self.scs[rf_type],
+                        self.ncs[rf_type])):
+                assert isinstance(input_current, dict)
+                t = input_current['times'] + offset
+                a = self.parameters.linear_scaler * input_current['amplitudes']
+                scs.set_parameters(times=t, amplitudes=a, copy=False)
+                if self.parameters.mpi_reproducible_noise:
+                    t = numpy.arange(0, duration, ts) + offset
+                    amplitudes = (self.parameters.noise.mean
+                                  + self.parameters.noise.stdev
+                                  * self.ncs_rng[rf_type][i].randn(len(t)))
+                    ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+
+        self._built = True
+        self.write_cache(st, input_currents, retinal_input)
+        # also save into internal cache
+        self.internal_stimulus_cache[str(st)] = (input_currents, retinal_input)
+
+        return retinal_input
+
+    def process_input2(self, visual_space, stimulus, duration=None, offset=0):
+        """
+        Present a visual stimulus to the model, and create the LGN output
+        (relay) neurons.
         Parameters
         ----------
         visual_space : VisualSpace
@@ -741,6 +878,59 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         return retinal_input
 
     def provide_null_input(self, visual_space, duration=None, offset=0):
+        """
+        This function exists for optimization purposes. It is the analog to
+        :func:.`mozaik.retinal.SpatioTemporalFilterRetinaLGN.process_input` for the
+        special case when blank stimulus is shown.
+
+        Parameters
+        ----------
+        visual_space : VisualSpace
+                     The visual space to which the blank stimulus are presented.
+
+        duration : int (ms)
+                 The time for which we will simulate the blank stimulus
+
+        offset : int(ms)
+               The time (in absolute time of the whole simulation) at which the stimulus starts.
+
+        Returns
+        -------
+        retinal_input : list(ndarray)
+                      List of 2D arrays containing the frames of luminances that were presented to the retina.
+        """
+        times = numpy.array([offset,
+                             duration - visual_space.update_interval + offset])  # numpy.arange(0, duration, visual_space.update_interval) + offset
+        zers = times * 0
+        ts = self.model.sim.get_time_step()
+
+        input_cells = OrderedDict()
+        for rf_type in self.rf_types:
+            input_cells[rf_type] = CellWithReceptiveField(self.sheets[rf_type].pop.positions[0][0],
+                                                          self.sheets[rf_type].pop.positions[1][0],
+                                                          self.rf[rf_type],
+                                                          self.parameters.gain_control, visual_space)
+            input_cells[rf_type].initialize(visual_space.background_luminance, duration)
+
+        for rf_type in self.rf_types:
+            if self.parameters.gain_control.non_linear_gain != None:
+                amplitude = self.parameters.linear_scaler * self.parameters.gain_control.non_linear_gain.luminance_gain * numpy.sum(
+                    input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance / (
+                                        self.parameters.gain_control.non_linear_gain.luminance_scaler * visual_space.background_luminance + 1.0)
+            else:
+                amplitude = self.parameters.linear_scaler * self.parameters.gain_control.gain * numpy.sum(
+                    input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance
+
+            for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
+                scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)
+                if self.parameters.mpi_reproducible_noise:
+                    t = numpy.arange(0, duration, ts) + offset
+                    amplitudes = (self.parameters.noise.mean
+                                  + self.parameters.noise.stdev
+                                  * self.ncs_rng[rf_type][i].randn(len(t)))
+                    ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+
+    def provide_null_input2(self, visual_space, duration=None, offset=0):
         """
         This function exists for optimization purposes. It is the analog to
         :func:.`mozaik.retinal.SpatioTemporalFilterRetinaLGN.process_input` for the

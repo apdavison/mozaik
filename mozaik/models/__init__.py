@@ -79,7 +79,7 @@ class Model(BaseComponent):
             min_delay=self.parameters.min_delay,
             max_delay=self.parameters.max_delay,
             threads=num_threads,
-            time_scale_factor=15.0
+            # time_scale_factor=15.0
         )  # should have some parameters here
         # workaround for SpiNNaker error: parameter n_neurons of 2048 is too big (maximum 2047)
         # sim.set_number_of_neurons_per_core(sim.Izhikevich, 2047)
@@ -170,7 +170,8 @@ class Model(BaseComponent):
                 # sim_run_time += self.run(stimulus.duration)
         else:
             sensory_input = None
-            sim_run_time += self.run(stimulus.duration)
+            # don't use with current sources
+            # sim_run_time += self.run(stimulus.duration)
 
         # multiple runs here with i_offset update ?
         # pop = sim.Population(...)
@@ -178,6 +179,8 @@ class Model(BaseComponent):
         # print("stimulus.duration ", stimulus.duration)
         # if not r:
         #    sim_run_time += self.run(stimulus.duration)
+        # use with current sources
+        sim_run_time += self.run(stimulus.duration)
         segments = []
 
         for sheet in list(self.sheets.values()):
@@ -264,16 +267,18 @@ class Model(BaseComponent):
                         "Simulated the network for %s ms with blank stimulus"
                         % self.parameters.null_stimulus_period
                     )
-                else:
-                    logger.info(
-                        "Simulating the network for %s ms with blank stimulus"
-                        % self.parameters.null_stimulus_period
-                    )
+                    # don't use with current source
+                    # else:
+                    #     logger.info(
+                    #        "Simulating the network for %s ms with blank stimulus"
+                    #        % self.parameters.null_stimulus_period
+                    #    )
                     # print("self.parameters.max_delay ", self.parameters.max_delay)
                     # print("self.parameters ", self.parameters)
                     # print("dir(self.sim) ", dir(self.sim))
-                    self.sim.run(self.parameters.null_stimulus_period)
-                    self.simulator_time += self.parameters.null_stimulus_period
+                # move inside else when using i offset
+                self.sim.run(self.parameters.null_stimulus_period)
+                self.simulator_time += self.parameters.null_stimulus_period
                 for sheet in list(self.sheets.values()):
                     if sheet.to_record != None:
                         s = sheet.get_data(self.parameters.null_stimulus_period)
