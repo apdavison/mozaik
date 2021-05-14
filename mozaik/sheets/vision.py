@@ -39,17 +39,18 @@ class RetinalUniformSheet(Sheet):
     
     def __init__(self, model, parameters):
         Sheet.__init__(self, model, parameters.sx, parameters.sy, parameters)
-        logger.info("Creating %s with %d neurons." % (self.__class__.__name__, int(parameters.sx * parameters.sy * parameters.density)))
+        logger.info("Creating *LGN* %s with %d neurons." % (self.__class__.__name__, int(parameters.sx * parameters.sy * parameters.density)))
         rs = space.RandomStructure(boundary=space.Cuboid(self.size_x,self.size_y, 0),
                                    origin=(0.0, 0.0, 0.0),
                                    rng=mozaik.pynn_rng)
-        
+        print("* getattr(self.model.sim, self.parameters.cell.model) ", getattr(self.model.sim, self.parameters.cell.model))
         #rs = space.Grid2D(aspect_ratio=1, dx=parameters.sx/parameters.density, dy=parameters.sy/parameters.density, x0=-parameters.sx/2,y0=-parameters.sy/2,z=0.0)
         self.pop = self.sim.Population(int(parameters.sx * parameters.sy * parameters.density),
-                                       getattr(self.model.sim, self.parameters.cell.model),
+                                       getattr(self.model.sim, self.parameters.cell.model),  # replace with SpikeSourceArray
                                        self.parameters.cell.params,
                                        structure=rs,
                                        initial_values=self.parameters.cell.initial_values,
+                                       # cellclass = self.sim.SpikeSourceArray(spike_times=[])) # spike times from nest/lgn output
                                        label=self.name)
 
     def size_in_degrees(self):
