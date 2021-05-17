@@ -437,7 +437,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         }
     )
 
-    def __init__(self, model, parameters):
+    def __init__2(self, model, parameters):
         SensoryInputComponent.__init__(self, model, parameters)
         self.shape = (self.parameters.density, self.parameters.density)
         self.sheets = {}
@@ -538,7 +538,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             rf.quantize(dx, dy, dt)
         self.rf = {"X_ON": rf_ON, "X_OFF": rf_OFF}
 
-    def __init__2(self, model, parameters):
+    def __init__(self, model, parameters):
         SensoryInputComponent.__init__(self, model, parameters)
         self.shape = (self.parameters.density, self.parameters.density)
         self.sheets = OrderedDict()
@@ -668,7 +668,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             f.close()
             f1.close()
 
-    def process_input2(self, visual_space, stimulus, duration=None, offset=0):
+    def process_input(self, visual_space, stimulus, duration=None, offset=0):
         """
         Present a visual stimulus to the model, and create the LGN output
         (relay) neurons.
@@ -741,7 +741,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
         return retinal_input
 
-    def process_input(self, visual_space, stimulus, duration=None, offset=0):
+    def process_input2(self, visual_space, stimulus, duration=None, offset=0):
         """
         Present a visual stimulus to the model, and create the LGN output
         (relay) neurons.
@@ -880,7 +880,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # return retinal_input, a, t
         return retinal_input
 
-    def provide_null_input2(self, visual_space, duration=None, offset=0):
+    def provide_null_input(self, visual_space, duration=None, offset=0):
         """
         This function exists for optimization purposes. It is the analog to
         :func:.`mozaik.retinal.SpatioTemporalFilterRetinaLGN.process_input` for the
@@ -933,7 +933,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                                   * self.ncs_rng[rf_type][i].randn(len(t)))
                     ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
 
-    def provide_null_input(self, visual_space, duration=None, offset=0):
+    def provide_null_input2(self, visual_space, duration=None, offset=0):
         """
         This function exists for optimization purposes. It is the analog to
         :func:.`mozaik.retinal.SpatioTemporalFilterRetinaLGN.process_input` for the
