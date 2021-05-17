@@ -3,7 +3,7 @@
     'params': {
         # 'density': 100, # neurons per degree squared
         # 'density': 70,
-        'density': 25,
+        'density': 10,
         # 'density': 5,
         'size'  : (5.0,5.0), # the effective size of the modelled section of retina/lgn
         'linear_scaler': 6.0,
