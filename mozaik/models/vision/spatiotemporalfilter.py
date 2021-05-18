@@ -910,8 +910,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
         input_cells = OrderedDict()
         for rf_type in self.rf_types:
-            input_cells[rf_type] = CellWithReceptiveField(self.sheets[rf_type].pop.positions[0][0],
-                                                          self.sheets[rf_type].pop.positions[1][0],
+            input_cells[rf_type] = CellWithReceptiveField(  # self.sheets[rf_type].pop.positions[0][0],
+                                                          self.sheets[rf_type].pop.positions[0][0],
+                                                          # self.sheets[rf_type].pop.positions[1][0],
+                                                          self.sheets[rf_type].pop.positions[0][1],
                                                           self.rf[rf_type],
                                                           self.parameters.gain_control, visual_space)
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
