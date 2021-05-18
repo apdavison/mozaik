@@ -30,13 +30,13 @@ class SelfSustainedPushPull(Model):
             self.parameters.sheets.l4_cortex_exc.component)
         CortexInhL4 = load_component(
             self.parameters.sheets.l4_cortex_inh.component)
-        """
+
         if not self.parameters.only_afferent and self.parameters.l23:
             CortexExcL23 = load_component(
                 self.parameters.sheets.l23_cortex_exc.component)
             CortexInhL23 = load_component(
                 self.parameters.sheets.l23_cortex_inh.component)
-        """
+
         RetinaLGN = load_component(self.parameters.sheets.retina_lgn.component)
 
         # Build and instrument the network
@@ -51,13 +51,13 @@ class SelfSustainedPushPull(Model):
 
         cortex_inh_l4 = CortexInhL4(
             self, self.parameters.sheets.l4_cortex_inh.params)
-        """
+
         if not self.parameters.only_afferent and self.parameters.l23:
             cortex_exc_l23 = CortexExcL23(
                 self, self.parameters.sheets.l23_cortex_exc.params)
             cortex_inh_l23 = CortexInhL23(
                 self, self.parameters.sheets.l23_cortex_inh.params)
-        """
+
         # initialize afferent layer 4 projections
         GaborConnector(self, self.input_layer.sheets['X_ON'], self.input_layer.sheets['X_OFF'],
                        cortex_exc_l4, self.parameters.sheets.l4_cortex_exc.AfferentConnection, 'V1AffConnection')
@@ -76,7 +76,7 @@ class SelfSustainedPushPull(Model):
                                                   cortex_exc_l4, self.parameters.sheets.l4_cortex_inh.L4InhL4ExcConnection).connect()
             ModularSamplingProbabilisticConnector(self, 'V1L4InhL4InhConnection', cortex_inh_l4,
                                                   cortex_inh_l4, self.parameters.sheets.l4_cortex_inh.L4InhL4InhConnection).connect()
-            """
+
             if self.parameters.l23:
                 # if False:
                 # initialize afferent layer 4 to layer 2/3 projection
@@ -98,4 +98,4 @@ class SelfSustainedPushPull(Model):
                                                           cortex_exc_l4, self.parameters.sheets.l23_cortex_exc.L23ExcL4ExcConnection).connect()
                     ModularSamplingProbabilisticConnector(self, 'V1L23ExcL4InhConnection', cortex_exc_l23,
                                                           cortex_inh_l4, self.parameters.sheets.l23_cortex_exc.L23ExcL4InhConnection).connect()
-            """
+            
