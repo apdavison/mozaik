@@ -448,8 +448,10 @@ def perform_analysis_and_visualization(data_store):
 
     NeuronAnnotationsToPerNeuronValues(data_store, ParameterSet({})).analyse()
 
+    # wrong analog_ids here
     analog_ids = param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[
         0].get_stored_esyn_ids()
+
     analog_ids_inh = param_filter_query(
         data_store, sheet_name="V1_Inh_L4").get_segments()[0].get_stored_esyn_ids()
     spike_ids = param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[
