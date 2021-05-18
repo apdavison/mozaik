@@ -58,7 +58,7 @@
     },
 
     # 'K' : 1000, # Number of synapses per neuron
-    'K' : 500, # Number of synapses per neuron
+    'K' : 250, # Number of synapses per neuron
     # 'K' : 200, # Number of synapses per neuron
     # 'K' : 750, # Number of synapses per neuron
     'layer23_aff_ratio' : 0.2,
