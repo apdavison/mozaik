@@ -32,6 +32,7 @@ class NeuronAnnotationsToPerNeuronValues(Analysis):
     def perform_analysis(self):
         logger.info("Starting NeuronAnnotationsToPerNeuronValues Analysis")
         anns = self.datastore.get_neuron_annotations()
+        print("self.datastore.get_neuron_annotations() ", anns)
 
         for sheet in self.datastore.sheets():
             dsv = queries.param_filter_query(self.datastore, sheet_name=sheet)
