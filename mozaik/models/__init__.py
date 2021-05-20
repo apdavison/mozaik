@@ -318,7 +318,7 @@ class Model(BaseComponent):
             # print(s.pop.all()[0].id)
             ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
             x[s.name] = numpy.array([a.id for a in s.pop.all()])
-            y[s.name] = numpy.array([a for a in s.pop.all()])
+            # y[s.name] = numpy.array([a for a in s.pop.all()])
             # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
             # if hasattr(s.pop.all()[0], 'id'):
             #    ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
