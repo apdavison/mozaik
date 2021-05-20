@@ -311,12 +311,9 @@ class Model(BaseComponent):
         """
         ids = {}
         print("neuron ids")
-        print(list(self.sheets.values())[0].pop.all()[0])
-        print(type(list(self.sheets.values())[0].pop.all()[0]))
-        print(list(self.sheets.values())[0].pop.all()[0].id)
-        print(type(list(self.sheets.values())[0].pop.all()[0].id))
-        print(list(self.sheets.values())[0].pop.all()[2])
         for s in list(self.sheets.values()):
+            print(s.pop.all()[0])
+            print(s.pop.all()[0].id)
             ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
             # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
             # if hasattr(s.pop.all()[0], 'id'):
