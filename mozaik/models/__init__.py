@@ -311,11 +311,11 @@ class Model(BaseComponent):
         """
         ids = {}
         print("neuron ids")
-        print(self.sheets.values()[0].pop.all()[0])
-        print(type(self.sheets.values()[0].pop.all()[0]))
-        print(self.sheets.values()[0].pop.all()[0].id)
-        print(type(self.sheets.values()[0].pop.all()[0].id))
-        print(self.sheets.values()[0].pop.all()[2])
+        print(list(self.sheets.values())[0].pop.all()[0])
+        print(type(list(self.sheets.values())[0].pop.all()[0]))
+        print(list(self.sheets.values())[0].pop.all()[0].id)
+        print(type(list(self.sheets.values())[0].pop.all()[0].id))
+        print(list(self.sheets.values())[0].pop.all()[2])
         for s in list(self.sheets.values()):
             ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
             # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
