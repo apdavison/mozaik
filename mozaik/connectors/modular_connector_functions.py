@@ -81,7 +81,7 @@ class DistanceDependentModularConnectorFunction(ModularConnectorFunction):
             yt = numpy.append(yt, self.target.pop.positions[j][1])
         tp = numpy.vstack((xt, yt))
         """
-        print("modular connector functions self.source.pop.positions ", self.source.pop.positions)
+        # print("modular connector functions self.source.pop.positions ", self.source.pop.positions)
         return self.distance_dependent_function(
             self.source.dvf_2_dcs(
                 numpy.sqrt(

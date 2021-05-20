@@ -30,7 +30,7 @@ from pyNN import spiNNaker
 if True:
     data_store, model = run_workflow(
         'SelfSustainedPushPull', SelfSustainedPushPull, create_experiments)
-    print("data_store ", data_store)
+    print("data_store neuron ids", data_store.block.annotations["neuron_ids"])
     if False:
         model.connectors['V1AffConnectionOn'].store_connections(data_store)
         model.connectors['V1AffConnectionOff'].store_connections(data_store)

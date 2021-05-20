@@ -310,23 +310,23 @@ class Model(BaseComponent):
         Returns the list of ids of neurons in the model.
         """
         ids = {}
-        x = {}
-        y = {}
-        print("neuron ids")
+        # x = {}
+        # y = {}
+        # print("neuron ids")
         for s in list(self.sheets.values()):
             # print(s.pop.all()[0])
             # print(s.pop.all()[0].id)
             ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
-            x[s.name] = numpy.array([a.id for a in s.pop.all()])
+            # x[s.name] = numpy.array([a.id for a in s.pop.all()])
             # y[s.name] = numpy.array([a for a in s.pop.all()])
             # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
             # if hasattr(s.pop.all()[0], 'id'):
             #    ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
             # else:
             #    ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
-        print("neuron ids ", ids)
-        print("neuron ids x", x)
-        print("neuron ids y ", y)
+        # print("neuron ids ", ids)
+        # print("neuron ids x", x)
+        # print("neuron ids y ", y)
         return ids
 
     def sheet_parameters(self):
@@ -346,23 +346,23 @@ class Model(BaseComponent):
         containing the x and y coordinates of the neurons in the given sheet.
         """
         pos = {}
-        k = {}
+        # k = {}
         for s in list(self.sheets.values()):
-            x = []
-            y = []
-            for (i, neuron2) in enumerate(s.pop.all()):
-                x = numpy.append(x, s.pop.positions[i][0])
-                y = numpy.append(y, s.pop.positions[i][1])
-            p = numpy.vstack((x, y))
-            # pos[s.name] = s.pop.positions
-            k[s.name] = s.pop.positions
+            # x = []
+            # y = []
+            # for (i, neuron2) in enumerate(s.pop.all()):
+            #    x = numpy.append(x, s.pop.positions[i][0])
+            #    y = numpy.append(y, s.pop.positions[i][1])
+            # p = numpy.vstack((x, y))
+            pos[s.name] = s.pop.positions
+            # k[s.name] = s.pop.positions
             # print("neuron positions nest ", s.pop.positions)
             # print("neuron positions spin ", p)
-            pos[s.name] = p
-        print("neuron positions spin ", pos)
-        print("neuron positions nest ", k)
-        # return pos
-        return k
+            # pos[s.name] = p
+        # print("neuron positions spin ", pos)
+        # print("neuron positions nest ", k)
+        return pos
+        # return k
 
     def neuron_annotations(self):
         """
