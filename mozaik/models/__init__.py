@@ -361,7 +361,8 @@ class Model(BaseComponent):
             pos[s.name] = p
         print("neuron positions spin ", pos)
         print("neuron positions nest ", k)
-        return pos
+        # return pos
+        return k
 
     def neuron_annotations(self):
         """

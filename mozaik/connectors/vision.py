@@ -49,7 +49,7 @@ class MapDependentModularConnectorFunction(ModularConnectorFunction):
         # for (i, neuron2) in enumerate(self.source.pop.all()):
         #    xp.append(self.source.pop.positions[i][0])
         #    yp.append(self.source.pop.positions[i][1])
-
+        print("MapDependentModularConnectorFunction self.source.pop.positions ", self.source.pop.positions)
         self.val_source = (
             self.mmap(
                 np.transpose(
