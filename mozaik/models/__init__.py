@@ -310,17 +310,23 @@ class Model(BaseComponent):
         Returns the list of ids of neurons in the model.
         """
         ids = {}
+        x = {}
+        y = {}
         print("neuron ids")
         for s in list(self.sheets.values()):
-            print(s.pop.all()[0])
-            print(s.pop.all()[0].id)
+            # print(s.pop.all()[0])
+            # print(s.pop.all()[0].id)
             ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
+            x[s.name] = numpy.array([a.id for a in s.pop.all()])
+            y[s.name] = numpy.array([a for a in s.pop.all()])
             # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
             # if hasattr(s.pop.all()[0], 'id'):
             #    ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
             # else:
             #    ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
         print("neuron ids ", ids)
+        print("neuron ids x", x)
+        print("neuron ids y ", y)
         return ids
 
     def sheet_parameters(self):
