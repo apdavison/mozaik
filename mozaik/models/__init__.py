@@ -346,6 +346,7 @@ class Model(BaseComponent):
         containing the x and y coordinates of the neurons in the given sheet.
         """
         pos = {}
+        k = {}
         for s in list(self.sheets.values()):
             x = []
             y = []
@@ -354,9 +355,12 @@ class Model(BaseComponent):
                 y = numpy.append(y, s.pop.positions[i][1])
             p = numpy.vstack((x, y))
             # pos[s.name] = s.pop.positions
-            print("neuron positions nest ", s.pop.positions)
-            print("neuron positions spin ", p)
+            k[s.name] = s.pop.positions
+            # print("neuron positions nest ", s.pop.positions)
+            # print("neuron positions spin ", p)
             pos[s.name] = p
+        print("neuron positions spin ", pos)
+        print("neuron positions nest ", k)
         return pos
 
     def neuron_annotations(self):
