@@ -310,6 +310,12 @@ class Model(BaseComponent):
         Returns the list of ids of neurons in the model.
         """
         ids = {}
+        print("neuron ids")
+        print(self.sheets.values()[0].pop.all()[0])
+        print(type(self.sheets.values()[0].pop.all()[0]))
+        print(self.sheets.values()[0].pop.all()[0].id)
+        print(type(self.sheets.values()[0].pop.all()[0].id))
+        print(self.sheets.values()[0].pop.all()[2])
         for s in list(self.sheets.values()):
             ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
             # ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
@@ -317,6 +323,7 @@ class Model(BaseComponent):
             #    ids[s.name] = numpy.array([int(a.id) for a in s.pop.all()])
             # else:
             #    ids[s.name] = numpy.array([int(a) for a in s.pop.all()])
+        print("neuron ids ", ids)
         return ids
 
     def sheet_parameters(self):
@@ -344,6 +351,8 @@ class Model(BaseComponent):
                 y = numpy.append(y, s.pop.positions[i][1])
             p = numpy.vstack((x, y))
             # pos[s.name] = s.pop.positions
+            print("neuron positions nest ", s.pop.positions)
+            print("neuron positions spin ", p)
             pos[s.name] = p
         return pos
 
@@ -355,5 +364,6 @@ class Model(BaseComponent):
         neuron_annotations = {}
         for s in list(self.sheets.values()):
             neuron_annotations[s.name] = s.get_neuron_annotations()
+        print("neuron_annotations ", neuron_annotations)
         return neuron_annotations
 
