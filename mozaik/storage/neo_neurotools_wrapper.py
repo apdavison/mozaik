@@ -166,6 +166,7 @@ class MozaikSegment(Segment):
         """
         Returns ids of neurons for which excitatory conductance is stored in this segment.
         """
+        # getting wrong ids here
         if not self.full:
             self.load_full()
         print("self.analogsignals ", self.analogsignals)

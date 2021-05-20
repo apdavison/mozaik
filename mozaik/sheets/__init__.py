@@ -371,6 +371,7 @@ class Sheet(BaseComponent):
             block = self.pop.get_data(
                 ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             )
+            print("Sheet gsyn_exc ", self.pop.get_data("gsyn_exc"))
         except NothingToWriteError as e:
             logger.debug(e.message)
 
