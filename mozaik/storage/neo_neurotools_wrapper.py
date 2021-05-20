@@ -174,6 +174,7 @@ class MozaikSegment(Segment):
         print([a.annotations["source_ids"] for a in self.analogsignals])
         for a in self.analogsignals:
             if a.name == "gsyn_exc":
+                print("gsyn_exc analogsignal ", a)
                 return a.annotations["source_ids"]
 
     def get_stored_vm_ids(self):
