@@ -433,7 +433,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     }
                 )
             },
-            "noise": ParameterSet({"mean": float, "stdev": float}),  # nA
+            # "noise": ParameterSet({"mean": float, "stdev": float}),  # nA
+            "noise": ParameterSet({"mean": float, "stdev": float, "dt": float}),
         }
     )
 
