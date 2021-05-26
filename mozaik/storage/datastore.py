@@ -396,6 +396,7 @@ class DataStore(DataStoreView):
         # print(stimulus)
         # we get recordings as seg
         for s in segments:
+            print("check DataStore ", [a.annotations["source_ids"] for a in s.analogsignals])
             s.annotations["stimulus"] = str(stimulus)
             self.block.segments.append(MozaikSegment(s))
         self.stimulus_dict[str(stimulus)] = True
@@ -406,6 +407,7 @@ class DataStore(DataStoreView):
         """
         # we get recordings as seg
         for s in segments:
+            print("check DataStore null ", [a.annotations["source_ids"] for a in s.analogsignals])
             s.null = True
             s.annotations["stimulus"] = str(stimulus)
             self.block.segments.append(MozaikSegment(s, null=True))

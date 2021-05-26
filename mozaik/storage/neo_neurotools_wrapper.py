@@ -168,8 +168,8 @@ class MozaikSegment(Segment):
         """
         # getting wrong ids here
         print("self.full ", self.full)
-        # if not self.full:
-        self.load_full()
+        if not self.full:
+            self.load_full()
         print("self.analogsignals ", self.analogsignals)
         print([a.name for a in self.analogsignals])
         print([a.annotations["source_ids"] for a in self.analogsignals])
