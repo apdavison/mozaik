@@ -371,7 +371,7 @@ class Sheet(BaseComponent):
             block = self.pop.get_data(
                 ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             )
-            print("Sheet gsyn_exc ", self.pop.get_data("gsyn_exc"))
+            print("XXX Sheet gsyn_exc ", [a.annotations["source_ids"] for a in self.pop.get_data("gsyn_exc").segments[0].analogsignals[0]])
         except NothingToWriteError as e:
             logger.debug(e.message)
 
