@@ -15,6 +15,7 @@ from .tools.distribution_parametrization import (
     load_parameters
 )
 from .tools.misc import result_directory_name
+from pyNN.spiNNaker.extra_models import *
 
 logger = logging.getLogger(__name__)
 

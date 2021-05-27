@@ -20,6 +20,7 @@ import mozaik.controller
 import sys
 # from pyNN import nest
 from pyNN import spiNNaker
+from pyNN.spiNNaker.extra_models import *
 # import spynnaker8
 
 # from mpi4py import MPI
