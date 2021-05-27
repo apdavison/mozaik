@@ -912,9 +912,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         retinal_input : list(ndarray)
                       List of 2D arrays containing the frames of luminances that were presented to the retina.
         """
-        times = numpy.array([offset,
+        times1 = numpy.array([offset,
                              duration - visual_space.update_interval + offset])  # numpy.arange(0, duration, visual_space.update_interval) + offset
-        zers = times * 0
+        zers = times1 * 0
         ts = self.model.sim.get_time_step()
 
         input_cells = OrderedDict()
@@ -938,7 +938,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance
 
             for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
-                scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)
+                scs.set_parameters(times=times1, amplitudes=zers + amplitude, copy=False)
                 if self.parameters.mpi_reproducible_noise:
                     t = numpy.arange(0, duration, ts) + offset
                     amplitudes = (self.parameters.noise.mean
