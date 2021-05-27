@@ -469,8 +469,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs_rng[rf_type] = []
             seeds = mozaik.get_seeds((self.sheets[rf_type].pop.size,))
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
-                if i == 0:
-                    break
+                # if i == 0:
+                #    break
                 scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
                 if not self.parameters.mpi_reproducible_noise:
@@ -482,7 +482,6 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     self.ncs_rng[rf_type].append(numpy.random.RandomState(seed=seeds[i]))
                     self.scs[rf_type].append(scs)
                     self.ncs[rf_type].append(ncs)
-                # inject not implemented yet
                 lgn_cell.inject(scs)
                 lgn_cell.inject(ncs)
 
@@ -727,8 +726,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                         input_currents[rf_type],
                         self.scs[rf_type],
                         self.ncs[rf_type])):
-                if i == 0:
-                    break
+                # if i == 0:
+                #    break
                 assert isinstance(input_current, dict)
                 t = input_current['times'] + offset
                 a = self.parameters.linear_scaler * input_current['amplitudes']
@@ -924,7 +923,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
 
         for rf_type in self.rf_types:
-            break
+            # break
             if self.parameters.gain_control.non_linear_gain != None:
                 amplitude = self.parameters.linear_scaler * self.parameters.gain_control.non_linear_gain.luminance_gain * numpy.sum(
                     input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance / (
