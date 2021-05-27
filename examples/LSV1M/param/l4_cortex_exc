@@ -39,7 +39,7 @@
                     #},
 
                 'cell': {
-                        'model': 'Izhikevich_cond',
+                        'model': 'extra_models.IZK_cond_exp',
                         'params': {
                             'a': 0.02,
                             'b': 0.2,
