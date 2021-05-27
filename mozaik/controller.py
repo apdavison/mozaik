@@ -15,7 +15,8 @@ from .tools.distribution_parametrization import (
     load_parameters
 )
 from .tools.misc import result_directory_name
-from pyNN.spiNNaker.extra_models import *
+# from pyNN.spiNNaker.extra_models import *
+from spynnaker8.extra_models import Izhikevich_cond
 
 logger = logging.getLogger(__name__)
 

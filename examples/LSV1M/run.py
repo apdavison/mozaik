@@ -20,8 +20,9 @@ import mozaik.controller
 import sys
 # from pyNN import nest
 from pyNN import spiNNaker
-from pyNN.spiNNaker.extra_models import *
+# from pyNN.spiNNaker.extra_models import *
 # import spynnaker8
+from spynnaker8.extra_models import Izhikevich_cond
 
 # from mpi4py import MPI
 
