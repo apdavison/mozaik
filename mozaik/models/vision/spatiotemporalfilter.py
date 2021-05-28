@@ -738,14 +738,16 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 assert isinstance(input_current, dict)
                 t = input_current['times'] + offset
                 a = self.parameters.linear_scaler * input_current['amplitudes']
-                scs.set_parameters(times=t, amplitudes=a, copy=False)
+                # scs.set_parameters(times=t, amplitudes=a, copy=False)
+                scs.set_parameters(times=t, amplitudes=a)
                 if self.parameters.mpi_reproducible_noise:
                     print("noisy current modified in process input")
                     t = numpy.arange(0, duration, ts) + offset
                     amplitudes = (self.parameters.noise.mean
                                   + self.parameters.noise.stdev
                                   * self.ncs_rng[rf_type][i].randn(len(t)))
-                    ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+                    # ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+                    ncs.set_parameters(times=t, amplitudes=amplitudes)
 
         self._built = True
         self.write_cache(st, input_currents, retinal_input)
@@ -941,14 +943,16 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance
 
             for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
-                scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)
+                # scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)
+                scs.set_parameters(times=times, amplitudes=zers + amplitude)
                 if self.parameters.mpi_reproducible_noise:
                     print("noisy current modified in null input")
                     t = numpy.arange(0, duration, ts) + offset
                     amplitudes = (self.parameters.noise.mean
                                   + self.parameters.noise.stdev
                                   * self.ncs_rng[rf_type][i].randn(len(t)))
-                    ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+                    # ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
+                    ncs.set_parameters(times=t, amplitudes=amplitudes)
 
     def provide_null_input2(self, visual_space, duration=None, offset=0):
         """
