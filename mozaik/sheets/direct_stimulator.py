@@ -342,6 +342,7 @@ class Depolarization(DirectStimulator):
         population_selector = load_component(self.parameters.population_selector.component)
         self.ids = population_selector(sheet,self.parameters.population_selector.params).generate_idd_list_of_neurons()
         self.scs = self.sheet.sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
+        print("inject current in direct simulator")
         for cell in self.sheet.pop.all_cells:
             cell.inject(self.scs)
 
