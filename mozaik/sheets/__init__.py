@@ -375,6 +375,7 @@ class Sheet(BaseComponent):
             # block = self.pop.get_data(["spikes", "v", "u"], clear=True)  # for Izhikevich
             # print("XXX Sheet gsyn_exc ", [a for a in self.pop.get_data("gsyn_exc").segments[0].analogsignals[0]])
             # x = self.pop.get_data("gsyn_exc")
+            x = self.pop.get_data("spikes")
         except NothingToWriteError as e:
             logger.debug(e.message)
 
@@ -396,7 +397,8 @@ class Sheet(BaseComponent):
                 st.t_start = 0 * pq.ms
             for i in range(0, len(s.analogsignals)):
                 s.analogsignals[i].t_start = 0 * pq.ms
-
+        print("XX self.name ", self.name)
+        print("XX spiketrains ", s.spiketrains)
         return s
 
     def mean_spike_count(self):
