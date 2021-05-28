@@ -161,7 +161,7 @@ class Sheet(BaseComponent):
                 l = numpy.array([i.id for i in l])
 
             # print("NEW ARRAY")
-            print("l ", l)
+            # print("l ", l)
             # print(l[0])
             # print(type(l[0]))
             # print(type(l))
@@ -185,11 +185,11 @@ class Sheet(BaseComponent):
             # idds = self.pop.all_cells.astype(int)
             # idds = numpy.asarray(self.pop.all_cells)
             idds = numpy.array([i.id for i in self.pop.all_cells])
-            print("idds ", idds)
+            # print("idds ", idds)
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
             ]
-            print("self.to_record[k] ", self.to_record[k])
+            # print("self.to_record[k] ", self.to_record[k])
 
         """
         self.to_record = {}
@@ -372,7 +372,9 @@ class Sheet(BaseComponent):
             block = self.pop.get_data(
                 ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             )
+            # block = self.pop.get_data(["spikes", "v", "u"], clear=True)  # for Izhikevich
             # print("XXX Sheet gsyn_exc ", [a for a in self.pop.get_data("gsyn_exc").segments[0].analogsignals[0]])
+            # x = self.pop.get_data("gsyn_exc")
         except NothingToWriteError as e:
             logger.debug(e.message)
 
