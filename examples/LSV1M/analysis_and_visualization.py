@@ -521,10 +521,11 @@ def perform_analysis_and_visualization(data_store):
     orr = list(set([MozaikParametrized.idd(s).orientation for s in queries.param_filter_query(
         data_store, st_name='FullfieldDriftingSinusoidalGrating', st_contrast=100).get_stimuli()]))
 
-    l4_exc_or_many_analog = numpy.array(analog_ids)[numpy.nonzero(numpy.array(
-        [circular_dist(l4_exc_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids]) < 0.1)[0]]
-    l4_inh_or_many_analog = numpy.array(analog_ids_inh)[numpy.nonzero(numpy.array(
-        [circular_dist(l4_inh_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh]) < 0.15)[0]]
+    # wrong ids
+    # l4_exc_or_many_analog = numpy.array(analog_ids)[numpy.nonzero(numpy.array(
+    #    [circular_dist(l4_exc_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids]) < 0.1)[0]]
+    # l4_inh_or_many_analog = numpy.array(analog_ids_inh)[numpy.nonzero(numpy.array(
+    #    [circular_dist(l4_inh_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh]) < 0.15)[0]]
 
     if l23_flag:
         l23_inh_or_many_analog = numpy.array(analog_ids_inh23)[numpy.nonzero(numpy.array(
