@@ -488,6 +488,7 @@ def perform_analysis_and_visualization(data_store):
     # print("l4_exc_or[0] ", l4_exc_or[0])
     # print("l4_exc_phase ", l4_exc_phase)
     # print("l4_exc_phase[0] ", l4_exc_phase[0])
+    # wrong ids
     # l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
     #    l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
     l4_inh_or = data_store.get_analysis_result(
@@ -503,9 +504,9 @@ def perform_analysis_and_visualization(data_store):
     # else:
     #    print("l4_inh is empty")
     #    l4_inh = []
-
-    l4_inh = analog_ids_inh[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
-        l4_inh_or[0].get_value_by_id(analog_ids_inh), l4_inh_phase[0].get_value_by_id(analog_ids_inh))])]
+    # wrong ids
+    # l4_inh = analog_ids_inh[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
+    #    l4_inh_or[0].get_value_by_id(analog_ids_inh), l4_inh_phase[0].get_value_by_id(analog_ids_inh))])]
     
     l4_exc_or_many = numpy.array(l4_exc_or[0].ids)[numpy.nonzero(numpy.array([circular_dist(
         o, 0, numpy.pi) for (o, p) in zip(l4_exc_or[0].values, l4_exc_phase[0].values)]) < 0.1)[0]]
