@@ -460,6 +460,7 @@ def perform_analysis_and_visualization(data_store):
         0].get_stored_spike_train_ids()
 
     if l23_flag:
+        print("l23_flag ", l23_flag)
         analog_ids23 = param_filter_query(
             data_store, sheet_name="V1_Exc_L2/3").get_segments()[0].get_stored_esyn_ids()
         analog_ids_inh23 = param_filter_query(
@@ -483,12 +484,12 @@ def perform_analysis_and_visualization(data_store):
     l4_exc_phase = data_store.get_analysis_result(
         identifier='PerNeuronValue', value_name='LGNAfferentPhase', sheet_name='V1_Exc_L4')
     print("analog_ids ", analog_ids)
-    print("l4_exc_or ", l4_exc_or)
-    print("l4_exc_or[0] ", l4_exc_or[0])
-    print("l4_exc_phase ", l4_exc_phase)
-    print("l4_exc_phase[0] ", l4_exc_phase[0])
-    l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
-        l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
+    # print("l4_exc_or ", l4_exc_or)
+    # print("l4_exc_or[0] ", l4_exc_or[0])
+    # print("l4_exc_phase ", l4_exc_phase)
+    # print("l4_exc_phase[0] ", l4_exc_phase[0])
+    # l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
+    #    l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
     l4_inh_or = data_store.get_analysis_result(
         identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Inh_L4')
     l4_inh_phase = data_store.get_analysis_result(
