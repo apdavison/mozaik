@@ -185,10 +185,12 @@ class Sheet(BaseComponent):
             # idds = self.pop.all_cells.astype(int)
             # idds = numpy.asarray(self.pop.all_cells)
             idds = numpy.array([i.id for i in self.pop.all_cells])
-            # print("idds ", idds)
+            print("idds setup_to_record_list ", idds)
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
             ]
+            print("numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k] ",
+                  [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]])
             print("self.to_record[k] ", self.to_record[k])
 
         """
@@ -266,14 +268,18 @@ class Sheet(BaseComponent):
             and self._neuron_annotations[neuron_number][key][0]
         ):
             pass
-            # logger.warning(
-            #    "The annotation<"
-            #    + str(key)
-            #    + "> for neuron "
-            #    + str(neuron_number)
-            #    + " is protected. Annotation not updated"
-            # )
+            logger.warning(
+                "The annotation<"
+                + str(key)
+                + "> for neuron "
+                + str(neuron_number)
+                + " is protected. Annotation not updated"
+             )
         else:
+            print("key ", key)
+            print("neuron_number ", neuron_number)
+            print("value ", value)
+            print("protected ", protected)
             self._neuron_annotations[neuron_number][key] = (protected, value)
 
     def get_neuron_annotation(self, neuron_number, key):
