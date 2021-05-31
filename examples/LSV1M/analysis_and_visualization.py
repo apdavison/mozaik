@@ -591,10 +591,11 @@ def perform_analysis_and_visualization(data_store):
 
         dsv = param_filter_query(
             data_store, st_name='FullfieldDriftingSinusoidalGrating', st_orientation=[0, numpy.pi/2])
-        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc.png").plot({'Vm_plot.y_lim': (-80, -50)})
-        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Inh.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        # NameError: name 'l4_exc' is not defined
+        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Inh.png").plot({'Vm_plot.y_lim': (-80, -50)})
 
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[0], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
                      'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc1.png").plot({'Vm_plot.y_lim': (-80, -50)})
@@ -654,10 +655,10 @@ def perform_analysis_and_visualization(data_store):
 
         dsv = param_filter_query(
             data_store, st_name='NaturalImageWithEyeMovement')
-        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
-                     'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
-        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMInh.png', fig_param={
-                     'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
+        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
+        #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
+        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMInh.png', fig_param={
+        #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
 
         TrialCrossCorrelationAnalysis(data_store, ParameterSet({'neurons1': list(analog_ids), 'sheet_name1': 'V1_Exc_L4', 'neurons2': list(
             analog_ids23), 'sheet_name2': 'V1_Exc_L2/3', 'window_length': 250}), fig_param={"dpi": 100, "figsize": (15, 6.5)}, plot_file_name="trial-to-trial-cross-correlation.png").plot({'*.Vm.title': None, '*.fontsize': 19})
