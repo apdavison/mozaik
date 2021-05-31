@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
 import os
 import time
-
+from mozaik.storage.queries import *
 import mozaik
 from .cli import parse_workflow_args
 from .storage.datastore import PickledDataStore
@@ -315,5 +315,7 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
         "Mozaik run time: %.0fs (%d%%)"
         % (mozaik_run_time, int(mozaik_run_time / total_run_time * 100))
     )
-    
+    print("controller data_store get_stored_esyn_ids",
+          param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
+
     return data_store
