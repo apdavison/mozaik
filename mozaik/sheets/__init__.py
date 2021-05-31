@@ -118,7 +118,7 @@ class Sheet(BaseComponent):
         """
         Set up the recording configuration.
         """
-
+        # source of wrong neuron indexes?
         self.to_record = {}
         for k in self.parameters.recorders:
             recording_configuration = load_component(
@@ -343,12 +343,16 @@ class Sheet(BaseComponent):
             variables.append(spike_var)
 
         for variable in variables:
+            print("variable ", variable)
             cells = self.to_record[variable]
+            print("cells ", cells)
             if cells != "all":
+                print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
                 self.pop[cells].record(
                     variable, sampling_interval=self.parameters.recording_interval
                 )
             else:
+                print("self.parameters.recording_interval all ", self.parameters.recording_interval)
                 self.pop.record(
                     variable, sampling_interval=self.parameters.recording_interval
                 )
@@ -374,8 +378,9 @@ class Sheet(BaseComponent):
             )
             # block = self.pop.get_data(["spikes", "v", "u"], clear=True)  # for Izhikevich
             # print("XXX Sheet gsyn_exc ", [a for a in self.pop.get_data("gsyn_exc").segments[0].analogsignals[0]])
-            # x = self.pop.get_data("gsyn_exc")
-            x = self.pop.get_data("spikes")
+            x = self.pop.get_data("gsyn_exc")
+            print("x ", x)
+            # x = self.pop.get_data("spikes")
         except NothingToWriteError as e:
             logger.debug(e.message)
 
