@@ -327,6 +327,7 @@ class Model(BaseComponent):
         # print("neuron ids ", ids)
         # print("neuron ids x", x)
         # print("neuron ids y ", y)
+        print("XXX neuron ids ", ids)
         return ids
 
     def sheet_parameters(self):

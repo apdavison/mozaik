@@ -347,6 +347,7 @@ class DataStore(DataStoreView):
 
     def set_neuron_ids(self, neuron_ids):
         self.block.annotations["neuron_ids"] = neuron_ids
+        print("neuron ids datastore set ", neuron_ids)
 
     def set_model_parameters(self, parameters):
         self.block.annotations["model_parameters"] = parameters
@@ -490,6 +491,7 @@ class Hdf5DataStore(DataStore):
             self.stimulus_dict[s.stimulus] = True
 
         self.analysis_results = load_pickle_crosscompat(self.parameters.root_directory + "/datastore.analysis.pickle")
+        print("check Hdf5DataStore load ", [a.annotations["source_ids"] for a in self.block.segments[0].analogsignals])
 
     def save(self):
         # we need to first unwrap segments from MozaikWrapper
@@ -509,6 +511,7 @@ class Hdf5DataStore(DataStore):
         # pickle.dump(self.analysis_results, f)
         cPickle.dump(self.analysis_results, f)
         f.close()
+        print("check Hdf5DataStore save ", [a.annotations["source_ids"] for a in self.block.segments[0].analogsignals])
 
     def add_analysis_result(self, result):
         flag = True
@@ -573,6 +576,7 @@ class PickledDataStore(Hdf5DataStore):
             self.sensory_stimulus = load_pickle_crosscompat(self.parameters.root_directory + "/datastore.sensory.stimulus.pickle")
         else:
             self.sensory_stimulus = {}
+        print("check PickledDataStore load ", [a.annotations["source_ids"] for a in self.block.segments[0].analogsignals])
 
     def save(self):
         f = open(self.parameters.root_directory + "/datastore.recordings.pickle", "wb")
@@ -591,6 +595,8 @@ class PickledDataStore(Hdf5DataStore):
         pickle.dump(self.sensory_stimulus, f)
         # cPickle.dump(self.sensory_stimulus, f)
         f.close()
+        print("check PickledDataStore save ", [a.annotations["source_ids"] for a in self.block.segments[0].analogsignals])
+
 
     def add_recording(self, segments, stimulus):
         # print("add recording stimulus")
@@ -617,6 +623,7 @@ class PickledDataStore(Hdf5DataStore):
             # cPickle.dump(s, f)
 
         self.stimulus_dict[str(stimulus)] = True
+        print("check PickledDataStore add recording ", [a.annotations["source_ids"] for a in self.block.segments[0].analogsignals])
 
     def add_null_recording(self, segments, stimulus):
         """

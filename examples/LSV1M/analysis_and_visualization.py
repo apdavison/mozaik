@@ -489,8 +489,8 @@ def perform_analysis_and_visualization(data_store):
     # print("l4_exc_phase ", l4_exc_phase)
     # print("l4_exc_phase[0] ", l4_exc_phase[0])
     # wrong ids
-    # l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
-    #    l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
+    l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
+        l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
     l4_inh_or = data_store.get_analysis_result(
         identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Inh_L4')
     l4_inh_phase = data_store.get_analysis_result(

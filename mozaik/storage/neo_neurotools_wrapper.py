@@ -12,6 +12,7 @@ import numpy
 import quantities as qt
 
 from ..tools.misc import load_pickle_crosscompat
+import pickle
 
 logger = logging.getLogger(__name__)
 
@@ -170,12 +171,12 @@ class MozaikSegment(Segment):
         print("self.full ", self.full)
         if not self.full:
             self.load_full()
-        print("self.analogsignals ", self.analogsignals)
+        # print("self.analogsignals ", self.analogsignals)
         print([a.name for a in self.analogsignals])
         print([a.annotations["source_ids"] for a in self.analogsignals])
         for a in self.analogsignals:
             if a.name == "gsyn_exc":
-                print("gsyn_exc analogsignal ", a)
+                # print("gsyn_exc analogsignal ", a)
                 return a.annotations["source_ids"]
 
     def get_stored_vm_ids(self):
@@ -255,6 +256,9 @@ class PickledDataStoreNeoWrapper(MozaikSegment):
 
     def load_full(self):
         s = load_pickle_crosscompat(self.datastore_path + "/" + self.identifier + ".pickle")
+        f = open(self.datastore_path + '/' + self.identifier + ".pickle", 'rb')
+        s = pickle.load(f)
+        f.close()
         self._spiketrains = s.spiketrains
         self.analogsignals = s.analogsignals
         self.full = True
