@@ -167,9 +167,9 @@ class Sheet(BaseComponent):
             # print(type(l))
             # print(l.shape)
             for var in self.parameters.recorders[k].variables:
-                # print(var)
+                print(var)
                 # print(type(var))
-                print("self.to_record[var] ", self.to_record[var])
+                # print("self.to_record[var] ", self.to_record[var])
                 # print("debug")
                 # print(set(l))
                 # print(set(self.to_record.get(var, [])))
@@ -180,8 +180,8 @@ class Sheet(BaseComponent):
 
         # for k in self.to_record.keys():
         for k in self.to_record:
-            # print(k)
-            print("self.to_record[k] ", self.to_record[k])
+            print(k)
+            # print("self.to_record[k] ", self.to_record[k])
             # idds = self.pop.all_cells.astype(int)
             # idds = numpy.asarray(self.pop.all_cells)
             idds = numpy.array([i.id for i in self.pop.all_cells])
