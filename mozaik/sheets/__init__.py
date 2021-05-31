@@ -133,7 +133,7 @@ class Sheet(BaseComponent):
                 self.parameters.recorders[k].variables = [
                     self.parameters.recorders[k].variables
                 ]
-            # print("l ", l)
+            print("l setup_to_record_list ", l)
             # print("k ", k)
             # print("l[0] ", l[0])
             # print(l[20])
@@ -169,19 +169,19 @@ class Sheet(BaseComponent):
             for var in self.parameters.recorders[k].variables:
                 # print(var)
                 # print(type(var))
-                # print(self.to_record)
+                print("self.to_record[var] ", self.to_record[var])
                 # print("debug")
                 # print(set(l))
                 # print(set(self.to_record.get(var, [])))
                 # print(set(self.to_record.get(var)))
-                # print(list(set(self.to_record.get(var, [])) | set(l)))
+                print("list(set(self.to_record.get(var, [])) | set(l)) ", list(set(self.to_record.get(var, [])) | set(l)))
                 self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
         # print(self.to_record)
 
         # for k in self.to_record.keys():
         for k in self.to_record:
             # print(k)
-            # print(self.to_record[k])
+            print("self.to_record[k] ", self.to_record[k])
             # idds = self.pop.all_cells.astype(int)
             # idds = numpy.asarray(self.pop.all_cells)
             idds = numpy.array([i.id for i in self.pop.all_cells])
@@ -189,7 +189,7 @@ class Sheet(BaseComponent):
             self.to_record[k] = [
                 numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
             ]
-            # print("self.to_record[k] ", self.to_record[k])
+            print("self.to_record[k] ", self.to_record[k])
 
         """
         self.to_record = {}
