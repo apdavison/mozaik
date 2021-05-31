@@ -580,13 +580,13 @@ class PickledDataStore(Hdf5DataStore):
 
     def save(self):
         f = open(self.parameters.root_directory + "/datastore.recordings.pickle", "wb")
-        # pickle.dump(self.block, f)
-        cPickle.dump(self.block, f)
+        pickle.dump(self.block, f)
+        # cPickle.dump(self.block, f)
         f.close()
 
         f = open(self.parameters.root_directory + "/datastore.analysis.pickle", "wb")
-        # pickle.dump(self.analysis_results, f)
-        cPickle.dump(self.analysis_results, f)
+        pickle.dump(self.analysis_results, f)
+        # cPickle.dump(self.analysis_results, f)
         f.close()
 
         f = open(
@@ -595,7 +595,7 @@ class PickledDataStore(Hdf5DataStore):
         pickle.dump(self.sensory_stimulus, f)
         # cPickle.dump(self.sensory_stimulus, f)
         f.close()
-        print("check PickledDataStore save ", [a.annotations["source_ids"] for a in self.block.segments[0].analogsignals])
+        print("check PickledDataStore save ", [a for a in self.block.segments[0].analogsignals if a.name == "gsyn_exc"])
 
 
     def add_recording(self, segments, stimulus):
@@ -623,7 +623,7 @@ class PickledDataStore(Hdf5DataStore):
             # cPickle.dump(s, f)
 
         self.stimulus_dict[str(stimulus)] = True
-        print("check PickledDataStore add recording ", [a.annotations["source_ids"] for a in self.block.segments[0].analogsignals])
+        print("check PickledDataStore add recording ", [a for a in self.block.segments[0].analogsignals if a.name == "gsyn_exc"])
 
     def add_null_recording(self, segments, stimulus):
         """
