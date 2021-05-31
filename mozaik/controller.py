@@ -278,12 +278,17 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
                 {"root_directory": load_from, "store_stimuli": parameters.store_stimuli}
             )
         )
-
+    print("controller model.neuron_ids() ", model.neuron_ids())
     data_store.set_neuron_ids(model.neuron_ids())
     data_store.set_neuron_positions(model.neuron_positions())
+    print("controller model.neuron_annotations() ", model.neuron_annotations())
     data_store.set_neuron_annotations(model.neuron_annotations())
+    print("controller str(parameters) ", str(parameters))
     data_store.set_model_parameters(str(parameters))
+    print("controller str(model.sheet_parameters() ", str(model.sheet_parameters()))
     data_store.set_sheet_parameters(str(model.sheet_parameters()))
+    print("controller [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list] ",
+          [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list])
     data_store.set_experiment_parametrization_list(
         [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list]
     )
