@@ -537,11 +537,12 @@ def perform_analysis_and_visualization(data_store):
 
     if True:
         if l23_flag:
-            analysis(data_store, analog_ids, analog_ids_inh,
-                     analog_ids23, analog_ids_inh23)
+            pass
+            # ZeroDivisionError
+            # analysis(data_store, analog_ids, analog_ids_inh,
+            #         analog_ids23, analog_ids_inh23)
         else:
             analysis(data_store, analog_ids, analog_ids_inh)
-
 
     if True:  # PLOTTING
         activity_plot_param = {
