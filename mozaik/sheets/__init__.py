@@ -410,8 +410,8 @@ class Sheet(BaseComponent):
                 s.analogsignals[i].t_start = 0 * pq.ms
         print("XX self.name ", self.name)
         print("XX spiketrains length ", len(s.spiketrains))
-        print("XX spiketrains ", s.spiketrains)
-        print("XX spiketrains times ", [i.times for i in s.spiketrains])
+        # print("XX spiketrains ", s.spiketrains)
+        # print("XX spiketrains times ", [i.times for i in s.spiketrains])
         return s
 
     def mean_spike_count(self):
