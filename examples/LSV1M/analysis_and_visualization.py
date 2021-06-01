@@ -52,8 +52,9 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
         data_store, analysis_algorithm='PSTH'), ParameterSet({'convert_nan_to_zero': True})).analyse()
 
     logger.info('3: ' + str(memory_usage_psutil()))
-    # PopulationMeanAndVar(param_filter_query(data_store, st_direct_stimulation_name=None,
-    #                                        st_name='InternalStimulus'), ParameterSet({})).analyse()
+    # ZeroDivisionError
+    PopulationMeanAndVar(param_filter_query(data_store, st_direct_stimulation_name=None,
+                                            st_name='InternalStimulus'), ParameterSet({})).analyse()
 
     dsv = queries.param_filter_query(
         data_store, st_name='FullfieldDriftingSinusoidalGrating', analysis_algorithm='PSTH')
@@ -578,7 +579,7 @@ def perform_analysis_and_visualization(data_store):
         # ValueError: Result was expected to have only single ADS, it contains 0
         TrialToTrialVariabilityComparisonNew(data_store, ParameterSet({'sheet_name1': 'V1_Exc_L4', 'sheet_name2': 'V1_Exc_L2/3', 'data_dg': 0.93, 'data_ni': 1.19}), fig_param={
                                              'dpi': 200, 'figsize': (15, 7.5)}, plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
-        """
+
         dsv = param_filter_query(
             data_store, st_name='FullfieldDriftingSinusoidalGrating')
         print("is dsv empty? ", dsv)
@@ -630,7 +631,7 @@ def perform_analysis_and_visualization(data_store):
                          'dpi': 100, 'figsize': (25, 12)}, plot_file_name="InhL232.png").plot({'Vm_plot.y_lim': (-80, -50)})
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L2/3', 'neuron': analog_ids_inh23[2], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
                          'dpi': 100, 'figsize': (25, 12)}, plot_file_name="InhL233.png").plot({'Vm_plot.y_lim': (-80, -50)})
-        """
+
         if l23_flag:
             SpontActOverview(data_store, ParameterSet({'l4_exc_neuron': analog_ids[0], 'l4_inh_neuron': analog_ids_inh[0], 'l23_exc_neuron': analog_ids23[
                              0], 'l23_inh_neuron': analog_ids_inh23[0]}), plot_file_name='SpontActOverview.png', fig_param={'dpi': 200, 'figsize': (18, 14.5)}).plot()
@@ -674,5 +675,5 @@ def perform_analysis_and_visualization(data_store):
         }, 'spontaneous': False}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhAnalog.png').plot()
 
         # orientation tuning plotting
-        # dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Inh_L4'],value_name='LGNAfferentOrientation')
-        # PerNeuronValuePlot(dsv,ParameterSet({"cortical_view" : True}),plot_file_name='ORSet.png').plot()
+        dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Inh_L4'],value_name='LGNAfferentOrientation')
+        PerNeuronValuePlot(dsv,ParameterSet({"cortical_view" : True}),plot_file_name='ORSet.png').plot()

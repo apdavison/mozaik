@@ -352,16 +352,17 @@ class Sheet(BaseComponent):
             print("variable ", variable)
             cells = self.to_record[variable]
             print("cells ", cells)
-            # if cells != "all":
-            #    print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
-            #    self.pop[cells].record(
-            #        variable, sampling_interval=self.parameters.recording_interval
-            #    )
-            # else:
-            #    print("self.parameters.recording_interval all ", self.parameters.recording_interval)
-            self.pop.record(
-                variable, sampling_interval=self.parameters.recording_interval
-            )
+            cells = "all"  # record all cells
+            if cells != "all":
+                print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
+                self.pop[cells].record(
+                    variable, sampling_interval=self.parameters.recording_interval
+                )
+            else:
+                print("self.parameters.recording_interval *all* ", self.parameters.recording_interval)
+                self.pop.record(
+                    variable, sampling_interval=self.parameters.recording_interval
+                )
 
     def get_data(self, stimulus_duration=None):
         """
