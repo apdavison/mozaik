@@ -52,8 +52,8 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
         data_store, analysis_algorithm='PSTH'), ParameterSet({'convert_nan_to_zero': True})).analyse()
 
     logger.info('3: ' + str(memory_usage_psutil()))
-    PopulationMeanAndVar(param_filter_query(data_store, st_direct_stimulation_name=None,
-                                            st_name='InternalStimulus'), ParameterSet({})).analyse()
+    # PopulationMeanAndVar(param_filter_query(data_store, st_direct_stimulation_name=None,
+    #                                        st_name='InternalStimulus'), ParameterSet({})).analyse()
 
     dsv = queries.param_filter_query(
         data_store, st_name='FullfieldDriftingSinusoidalGrating', analysis_algorithm='PSTH')
