@@ -652,3 +652,5 @@ class PickledDataStore(Hdf5DataStore):
             )
             # pickle.dump(s, f)
             cPickle.dump(s, f)
+        print("check PickledDataStore add null recording ",
+              [a for a in self.block.segments[0].analogsignals if a.name == "gsyn_exc"])

@@ -262,6 +262,7 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
     # first lets run all the measurements required by the experiments
     logger.info("Starting Experiemnts")
     if load_from == None:
+        print("load false")
         data_store = PickledDataStore(
             load=False,
             parameters=MozaikExtendedParameterSet(
@@ -272,12 +273,16 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
             )
         )
     else:
+        print("load true")
         data_store = PickledDataStore(
             load=True,
             parameters=MozaikExtendedParameterSet(
                 {"root_directory": load_from, "store_stimuli": parameters.store_stimuli}
             )
         )
+    print("controller data_store get_stored_esyn_ids 1",
+          param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
+
     print("controller model.neuron_ids() ", model.neuron_ids())
     data_store.set_neuron_ids(model.neuron_ids())
     data_store.set_neuron_positions(model.neuron_positions())
@@ -315,7 +320,7 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
         "Mozaik run time: %.0fs (%d%%)"
         % (mozaik_run_time, int(mozaik_run_time / total_run_time * 100))
     )
-    print("controller data_store get_stored_esyn_ids",
+    print("controller data_store get_stored_esyn_ids 2",
           param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
 
     return data_store
