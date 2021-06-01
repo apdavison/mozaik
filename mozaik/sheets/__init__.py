@@ -383,9 +383,9 @@ class Sheet(BaseComponent):
                 ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             )
             # block = self.pop.get_data(["spikes", "v", "u"], clear=True)  # for Izhikevich
-            # print("XXX Sheet gsyn_exc ", [a for a in self.pop.get_data("gsyn_exc").segments[0].analogsignals[0]])
-            x = self.pop.get_data("gsyn_exc")
-            print("x ", x)
+            print("XXX Sheet gsyn_exc ", [a for a in block.segments[0].analogsignals[0] if a.name == "gsyn_exc"])
+            # x = self.pop.get_data("gsyn_exc")
+            # print("x ", x)
             # x = self.pop.get_data("spikes")
         except NothingToWriteError as e:
             logger.debug(e.message)

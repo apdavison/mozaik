@@ -294,12 +294,13 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
     data_store.set_sheet_parameters(str(model.sheet_parameters()))
     print("controller [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list] ",
           [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list])
-    print("controller data_store get_stored_esyn_ids 1",
-          param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
+    # print("controller data_store get_stored_esyn_ids 1",
+    #      param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
     data_store.set_experiment_parametrization_list(
         [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list]
     )
-
+    # print("controller data_store get_stored_esyn_ids 1",
+    #      param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
     t0 = time.time()
     simulation_run_time = 0
     for i, experiment in enumerate(experiment_list):
@@ -309,6 +310,8 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
         logger.info("Running model")
         simulation_run_time += experiment.run(data_store, unpresented_stimuli_indexes)
         logger.info("Experiment %d/%d finished" % (i + 1, len(experiment_list)))
+    print("controller data_store get_stored_esyn_ids 1",
+          param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
     
     total_run_time = time.time() - t0
     mozaik_run_time = total_run_time - simulation_run_time
