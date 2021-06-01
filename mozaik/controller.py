@@ -280,8 +280,8 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
                 {"root_directory": load_from, "store_stimuli": parameters.store_stimuli}
             )
         )
-    print("controller data_store get_stored_esyn_ids 1",
-          param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
+    # print("controller data_store get_stored_esyn_ids 1",
+    #      param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
 
     print("controller model.neuron_ids() ", model.neuron_ids())
     data_store.set_neuron_ids(model.neuron_ids())
@@ -294,6 +294,8 @@ def run_experiments(model,experiment_list,parameters,load_from=None):
     data_store.set_sheet_parameters(str(model.sheet_parameters()))
     print("controller [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list] ",
           [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list])
+    print("controller data_store get_stored_esyn_ids 1",
+          param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
     data_store.set_experiment_parametrization_list(
         [(str(exp.__class__), str(exp.parameters)) for exp in experiment_list]
     )
