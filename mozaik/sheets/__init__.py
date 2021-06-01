@@ -395,6 +395,8 @@ class Sheet(BaseComponent):
             return None
         s = block.segments[-1]
         s.annotations["sheet_name"] = self.name
+        print("conductance ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
+        print("conductance sorted? ", sorted(s.analogsignals, key=lambda a: a.annotations["source_id"]))
 
         # lets sort spike train so that it is ordered by IDs and thus hopefully
         # population indexes
