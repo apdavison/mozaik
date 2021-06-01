@@ -382,7 +382,8 @@ class Sheet(BaseComponent):
             # block = self.pop.get_data(
             #    ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             # )
-            block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"])
+            # block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"])
+            block = self.pop.get_data(variables=["spikes", "v"])
             # print("XXX Sheet gsyn_exc ", block.segments[0].filter(name='gsyn_exc')[0])
             # x = self.pop.get_data("gsyn_exc")
             # print("x ", x)
@@ -395,14 +396,14 @@ class Sheet(BaseComponent):
             return None
         s = block.segments[-1]
         s.annotations["sheet_name"] = self.name
-        print("conductance ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
+        # print("conductance ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
         # print("conductance sorted? ", sorted(s.analogsignals, key=lambda a: a.annotations["source_id"]))
-        print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
+        # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
 
-        block2 = self.pop.get_data(variables=["gsyn_exc"])
-        print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
-        print([a.annotations["source_ids"] for a in block2.segments[-1].analogsignals if a.name == "gsyn_exc"])
-        print("end")
+        # block2 = self.pop.get_data(variables=["gsyn_exc"])
+        # print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
+        # print([a.annotations["source_ids"] for a in block2.segments[-1].analogsignals if a.name == "gsyn_exc"])
+        # print("end")
         # lets sort spike train so that it is ordered by IDs and thus hopefully
         # population indexes
         self.msc = numpy.mean([numpy.sum(st) for st in s.spiketrains])
