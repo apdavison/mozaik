@@ -505,8 +505,8 @@ def perform_analysis_and_visualization(data_store):
     #    print("l4_inh is empty")
     #    l4_inh = []
     # wrong ids
-    # l4_inh = analog_ids_inh[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
-    #    l4_inh_or[0].get_value_by_id(analog_ids_inh), l4_inh_phase[0].get_value_by_id(analog_ids_inh))])]
+    l4_inh = analog_ids_inh[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
+        l4_inh_or[0].get_value_by_id(analog_ids_inh), l4_inh_phase[0].get_value_by_id(analog_ids_inh))])]
     
     l4_exc_or_many = numpy.array(l4_exc_or[0].ids)[numpy.nonzero(numpy.array([circular_dist(
         o, 0, numpy.pi) for (o, p) in zip(l4_exc_or[0].values, l4_exc_phase[0].values)]) < 0.1)[0]]
@@ -522,25 +522,25 @@ def perform_analysis_and_visualization(data_store):
         data_store, st_name='FullfieldDriftingSinusoidalGrating', st_contrast=100).get_stimuli()]))
 
     # wrong ids
-    # l4_exc_or_many_analog = numpy.array(analog_ids)[numpy.nonzero(numpy.array(
-    #    [circular_dist(l4_exc_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids]) < 0.1)[0]]
-    # l4_inh_or_many_analog = numpy.array(analog_ids_inh)[numpy.nonzero(numpy.array(
-    #    [circular_dist(l4_inh_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh]) < 0.15)[0]]
+    l4_exc_or_many_analog = numpy.array(analog_ids)[numpy.nonzero(numpy.array(
+        [circular_dist(l4_exc_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids]) < 0.1)[0]]
+    l4_inh_or_many_analog = numpy.array(analog_ids_inh)[numpy.nonzero(numpy.array(
+        [circular_dist(l4_inh_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh]) < 0.15)[0]]
 
     if l23_flag:
-        pass
+        # pass
         # wrong ids
-        # l23_inh_or_many_analog = numpy.array(analog_ids_inh23)[numpy.nonzero(numpy.array(
-        #    [circular_dist(l23_inh_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh23]) < 0.15)[0]]
-        # l23_exc_or_many_analog = numpy.array(analog_ids23)[numpy.nonzero(numpy.array(
-        #     [circular_dist(l23_exc_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids23]) < 0.1)[0]]
+        l23_inh_or_many_analog = numpy.array(analog_ids_inh23)[numpy.nonzero(numpy.array(
+            [circular_dist(l23_inh_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh23]) < 0.15)[0]]
+        l23_exc_or_many_analog = numpy.array(analog_ids23)[numpy.nonzero(numpy.array(
+             [circular_dist(l23_exc_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids23]) < 0.1)[0]]
 
     if True:
         if l23_flag:
-            pass
+            # pass
             # ZeroDivisionError
-            # analysis(data_store, analog_ids, analog_ids_inh,
-            #         analog_ids23, analog_ids_inh23)
+            analysis(data_store, analog_ids, analog_ids_inh,
+                     analog_ids23, analog_ids_inh23)
         else:
             analysis(data_store, analog_ids, analog_ids_inh)
 
@@ -576,35 +576,34 @@ def perform_analysis_and_visualization(data_store):
                        fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhRasterL23.png').plot({'SpikeRasterPlot.group_trials': True})
 
         # ValueError: Result was expected to have only single ADS, it contains 0
-        # TrialToTrialVariabilityComparisonNew(data_store, ParameterSet({'sheet_name1': 'V1_Exc_L4', 'sheet_name2': 'V1_Exc_L2/3', 'data_dg': 0.93, 'data_ni': 1.19}), fig_param={
-        #                                     'dpi': 200, 'figsize': (15, 7.5)}, plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
+        TrialToTrialVariabilityComparisonNew(data_store, ParameterSet({'sheet_name1': 'V1_Exc_L4', 'sheet_name2': 'V1_Exc_L2/3', 'data_dg': 0.93, 'data_ni': 1.19}), fig_param={
+                                             'dpi': 200, 'figsize': (15, 7.5)}, plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
 
         dsv = param_filter_query(
             data_store, st_name='FullfieldDriftingSinusoidalGrating')
         print("is dsv empty? ", dsv)
         # AssertionError: Error, empty datastore
-        # RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neurons': spike_ids, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
-        #           'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedExcRaster.png').plot({'SpikeRasterPlot.group_trials': True})
-        # RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neurons': spike_ids_inh, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
-        #           'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedInhRaster.png').plot({'SpikeRasterPlot.group_trials': True})
-
+        RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neurons': spike_ids, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
+                   'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedExcRaster.png').plot({'SpikeRasterPlot.group_trials': True})
+        RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neurons': spike_ids_inh, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
+                   'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedInhRaster.png').plot({'SpikeRasterPlot.group_trials': True})
 
         dsv = param_filter_query(
             data_store, st_name='FullfieldDriftingSinusoidalGrating', st_orientation=[0, numpy.pi/2])
         # NameError: name 'l4_exc' is not defined
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc.png").plot({'Vm_plot.y_lim': (-80, -50)})
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Inh.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Inh.png").plot({'Vm_plot.y_lim': (-80, -50)})
 
         # AssertionError: Error, empty datastore
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[0], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc1.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[0], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc1.png").plot({'Vm_plot.y_lim': (-80, -50)})
         # IndexError: list index out of range
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[1], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc2.png").plot({'Vm_plot.y_lim': (-80, -50)})
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[2], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc3.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[1], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc2.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[2], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc3.png").plot({'Vm_plot.y_lim': (-80, -50)})
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[3], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
                      'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc4.png").plot({'Vm_plot.y_lim': (-80, -50)})
 
@@ -657,10 +656,10 @@ def perform_analysis_and_visualization(data_store):
 
         dsv = param_filter_query(
             data_store, st_name='NaturalImageWithEyeMovement')
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
-        #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMInh.png', fig_param={
-        #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
+                     'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMInh.png', fig_param={
+                     'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
 
         TrialCrossCorrelationAnalysis(data_store, ParameterSet({'neurons1': list(analog_ids), 'sheet_name1': 'V1_Exc_L4', 'neurons2': list(
             analog_ids23), 'sheet_name2': 'V1_Exc_L2/3', 'window_length': 250}), fig_param={"dpi": 100, "figsize": (15, 6.5)}, plot_file_name="trial-to-trial-cross-correlation.png").plot({'*.Vm.title': None, '*.fontsize': 19})
