@@ -407,7 +407,7 @@ class Sheet(BaseComponent):
         # print("conductance ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
         # print("conductance sorted? ", sorted(s.analogsignals, key=lambda a: a.annotations["source_id"]))
         # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
-
+        print("sheet name ", self.name)
         block2 = self.pop.get_data(variables=["gsyn_exc"])
         # print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
         print("source ids ", [a.annotations["source_ids"] for a in block2.segments[-1].analogsignals if a.name == "gsyn_exc"])
@@ -424,8 +424,9 @@ class Sheet(BaseComponent):
                 st.t_start = 0 * pq.ms
             for i in range(0, len(s.analogsignals)):
                 s.analogsignals[i].t_start = 0 * pq.ms
-        print("XX self.name ", self.name)
-        print("XX spiketrains length ", len(s.spiketrains))
+        print("analog signal length ", len(s.analogsignals))
+        print("analog signal[0] length ", len(s.analogsignals[0]))
+        print("spiketrains length ", len(s.spiketrains))
         # print("XX spiketrains ", s.spiketrains)
         # print("XX spiketrains times ", [i.times for i in s.spiketrains])
         return s
