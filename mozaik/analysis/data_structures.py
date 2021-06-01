@@ -116,9 +116,9 @@ class PerNeuronValue(AnalysisDataStructure):
         print("self.values ", self.values)
         print("idds ", idds)
         # return all values
-        print(len(self.ids) == len(self.values))
-        return self.values
-        """
+        # print(len(self.ids) == len(self.values))
+        # return self.values
+
         if isinstance(idds, list) or isinstance(idds, numpy.ndarray):
             # return [self.values[list(self.ids).index(i)] for i in self.ids]
             return [self.values[list(self.ids).index(i)] for i in idds]
@@ -138,7 +138,7 @@ class PerNeuronValue(AnalysisDataStructure):
             # else:
             #    print("not in list ", idds)
             #    return numpy.array([])
-        """
+
 
 class PerNeuronPairValue(AnalysisDataStructure):
     """

@@ -349,20 +349,27 @@ class Sheet(BaseComponent):
             variables.append(spike_var)
 
         for variable in variables:
-            print("variable ", variable)
+            # print("variable ", variable)
             cells = self.to_record[variable]
-            print("cells ", cells)
-            cells = "all"  # record all cells
+            print("cells unsorted ", cells)
+            cells.sort()
+            # cells = "all"  # record all cells
             if cells != "all":
-                print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
-                self.pop[cells].record(
-                    variable, sampling_interval=self.parameters.recording_interval
-                )
+                # print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
+                print("recording cells ", cells)
+                print("recording ", variable)
+                self.pop[cells].record(variable)
+                # self.pop[cells].record(
+                #    variable, sampling_interval=self.parameters.recording_interval
+                # )
             else:
-                print("self.parameters.recording_interval *all* ", self.parameters.recording_interval)
-                self.pop.record(
-                    variable, sampling_interval=self.parameters.recording_interval
-                )
+                # print("self.parameters.recording_interval *all* ", self.parameters.recording_interval)
+                print("recording all cells")
+                print("recording ", variable)
+                self.pop.record(variable)
+                # self.pop.record(
+                #    variable, sampling_interval=self.parameters.recording_interval
+                # )
 
     def get_data(self, stimulus_duration=None):
         """
@@ -401,9 +408,9 @@ class Sheet(BaseComponent):
         # print("conductance sorted? ", sorted(s.analogsignals, key=lambda a: a.annotations["source_id"]))
         # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
 
-        # block2 = self.pop.get_data(variables=["gsyn_exc"])
+        block2 = self.pop.get_data(variables=["gsyn_exc"])
         # print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
-        # print([a.annotations["source_ids"] for a in block2.segments[-1].analogsignals if a.name == "gsyn_exc"])
+        print("source ids ", [a.annotations["source_ids"] for a in block2.segments[-1].analogsignals if a.name == "gsyn_exc"])
         # print("end")
         # lets sort spike train so that it is ordered by IDs and thus hopefully
         # population indexes
