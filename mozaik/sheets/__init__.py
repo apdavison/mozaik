@@ -375,15 +375,15 @@ class Sheet(BaseComponent):
         Returns
         -------
         segment : Segment
-                The segment holding all the recorded data. See NEO documentation for detail on the format.
+                The segment holding all the recorded data. See NEO documentation for detail on the format.  
         """
 
         try:
-            block = self.pop.get_data(
-                ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
-            )
-            # block = self.pop.get_data(["spikes", "v", "u"], clear=True)  # for Izhikevich
-            print("XXX Sheet gsyn_exc ", [a for a in block.segments[0].analogsignals[0] if a.name == "gsyn_exc"])
+            # block = self.pop.get_data(
+            #    ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
+            # )
+            block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"])
+            print("XXX Sheet gsyn_exc ", block.segments[0].filter(name='gsyn_exc')[0])
             # x = self.pop.get_data("gsyn_exc")
             # print("x ", x)
             # x = self.pop.get_data("spikes")
