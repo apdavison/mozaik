@@ -383,7 +383,7 @@ class Sheet(BaseComponent):
             #    ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             # )
             block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"])
-            print("XXX Sheet gsyn_exc ", block.segments[0].filter(name='gsyn_exc')[0])
+            # print("XXX Sheet gsyn_exc ", block.segments[0].filter(name='gsyn_exc')[0])
             # x = self.pop.get_data("gsyn_exc")
             # print("x ", x)
             # x = self.pop.get_data("spikes")
@@ -397,6 +397,7 @@ class Sheet(BaseComponent):
         s.annotations["sheet_name"] = self.name
         print("conductance ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
         # print("conductance sorted? ", sorted(s.analogsignals, key=lambda a: a.annotations["source_id"]))
+        print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
 
         block2 = self.pop.get_data(variables=["gsyn_exc"])
         print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
