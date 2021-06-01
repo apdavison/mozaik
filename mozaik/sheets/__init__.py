@@ -352,16 +352,16 @@ class Sheet(BaseComponent):
             print("variable ", variable)
             cells = self.to_record[variable]
             print("cells ", cells)
-            if cells != "all":
-                print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
-                self.pop[cells].record(
-                    variable, sampling_interval=self.parameters.recording_interval
-                )
-            else:
-                print("self.parameters.recording_interval all ", self.parameters.recording_interval)
-                self.pop.record(
-                    variable, sampling_interval=self.parameters.recording_interval
-                )
+            # if cells != "all":
+            #    print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
+            #    self.pop[cells].record(
+            #        variable, sampling_interval=self.parameters.recording_interval
+            #    )
+            # else:
+            #    print("self.parameters.recording_interval all ", self.parameters.recording_interval)
+            self.pop.record(
+                variable, sampling_interval=self.parameters.recording_interval
+            )
 
     def get_data(self, stimulus_duration=None):
         """
@@ -382,8 +382,8 @@ class Sheet(BaseComponent):
             # block = self.pop.get_data(
             #    ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             # )
-            # block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"])
-            block = self.pop.get_data(variables=["spikes", "v"])
+            block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"])
+            # block = self.pop.get_data(variables=["spikes", "v"])
             # print("XXX Sheet gsyn_exc ", block.segments[0].filter(name='gsyn_exc')[0])
             # x = self.pop.get_data("gsyn_exc")
             # print("x ", x)
