@@ -409,17 +409,25 @@ class Sheet(BaseComponent):
         print("signal names ", [a.name for a in s.analogsignals])
         print("signal annotations ", [a.annotations for a in s.analogsignals])
         # workaround for wrond source ids
+        print("workaround start")
         for a in s.analogsignals:
             if a.name == "gsyn_exc":
+                print(a.name)
+                print(a.annotations["source_ids"].sort())
+                print(self.to_record["gsyn_exc"].sort())
+                print(a.annotations["source_ids"].sort() != self.to_record["gsyn_exc"].sort())
                 if a.annotations["source_ids"].sort() != self.to_record["gsyn_exc"].sort():
                     a.annotations["source_ids"] = self.to_record["gsyn_exc"]
+                    print("a.annotations['source_ids'] ", a.annotations["source_ids"])
             elif a.name == "gsyn_inh":
                 if a.annotations["source_ids"].sort() != self.to_record["gsyn_inh"].sort():
                     a.annotations["source_ids"] = self.to_record["gsyn_inh"]
+                    print("a.annotations['source_ids'] ", a.annotations["source_ids"])
             elif a.name == "v":
                 if a.annotations["source_ids"].sort() != self.to_record["v"].sort():
                     a.annotations["source_ids"] = self.to_record["v"]
-
+                    print("a.annotations['source_ids'] ", a.annotations["source_ids"])
+        print("workaround end")
         # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
         # block2 = self.pop.get_data(variables=["gsyn_exc"])
         # print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
