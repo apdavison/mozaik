@@ -540,6 +540,10 @@ def perform_analysis_and_visualization(data_store):
         if l23_flag:
             # pass
             # ZeroDivisionError
+            print("analog_ids ", analog_ids)
+            print("analog_ids_inh ", analog_ids_inh)
+            print("analog_ids23 ", analog_ids23)
+            print("analog_ids_inh23 ", analog_ids_inh23)
             analysis(data_store, analog_ids, analog_ids_inh,
                      analog_ids23, analog_ids_inh23)
         else:
