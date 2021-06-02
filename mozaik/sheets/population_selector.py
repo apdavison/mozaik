@@ -159,6 +159,7 @@ class RCGrid(PopulationSelector):
     })
       
     def generate_idd_list_of_neurons(self):
+        print("Select neurons on a grid RCGrid")
         assert math.fmod(self.parameters.size,self.parameters.spacing) < 0.000000001 , "Error the size has to be multiple of spacing!"
           
         picked = []
@@ -238,6 +239,7 @@ class SimilarAnnotationSelector(PopulationSelector):
         return picked
       
     def generate_idd_list_of_neurons(self):
+        print("Choose neurons based on annotations info SimilarAnnotationSelector ")
         picked = self.pick_close_to_annotation()
         mozaik.rng.shuffle(picked)
         return z[picked[:self.parameters.num_of_cells]]
@@ -282,6 +284,7 @@ class SimilarAnnotationSelectorRegion(SimilarAnnotationSelector):
     })
 
     def generate_idd_list_of_neurons(self):
+        print("Choose neurons based on annotations info SimilarAnnotationSelectorRegion ")
         picked_or = set(self.pick_close_to_annotation())
         # xp = []
         # yp = []

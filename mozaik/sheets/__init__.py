@@ -6,7 +6,7 @@ Module containing the implementation of sheets - one of the basic building block
 from string import Template
 import logging
 logging.basicConfig(filename='mozaik.log', level=logging.DEBUG)
-
+from collections import OrderedDict
 from neo.core.spiketrain import SpikeTrain
 from parameters import ParameterSet, UniformDist
 from pyNN import space
@@ -119,22 +119,15 @@ class Sheet(BaseComponent):
         Set up the recording configuration.
         """
         # source of wrong neuron indexes?
-        self.to_record = {}
-        for k in self.parameters.recorders:
+        self.to_record = OrderedDict()
+        for k in  self.parameters.recorders.keys():
             print("recorder param ", k)
-            recording_configuration = load_component(
-                self.parameters.recorders[k].component
-            )
+            recording_configuration = load_component(self.parameters.recorders[k].component)
             print("self.parameters.recorders[k].params ", self.parameters.recorders[k].params)
-            l = recording_configuration(
-                self, self.parameters.recorders[k].params
-            ).generate_idd_list_of_neurons()
-
+            l = recording_configuration(self, self.parameters.recorders[k].params).generate_idd_list_of_neurons()
 
             if isinstance(self.parameters.recorders[k].variables, str):
-                self.parameters.recorders[k].variables = [
-                    self.parameters.recorders[k].variables
-                ]
+                self.parameters.recorders[k].variables = [self.parameters.recorders[k].variables]
             print("l setup_to_record_list ", l)
             # print("k ", k)
             # print("l[0] ", l[0])
@@ -181,16 +174,14 @@ class Sheet(BaseComponent):
         # print(self.to_record)
 
         # for k in self.to_record.keys():
-        for k in self.to_record:
+        for k in self.to_record.keys():
             print(k)
             # print("self.to_record[k] ", self.to_record[k])
             # idds = self.pop.all_cells.astype(int)
             # idds = numpy.asarray(self.pop.all_cells)
             idds = numpy.array([i.id for i in self.pop.all_cells])
             print("idds setup_to_record_list ", idds)
-            self.to_record[k] = [
-                numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]
-            ]
+            self.to_record[k] = [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]]
             print("numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k] ",
                   [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]])
             print("self.to_record[k] ", self.to_record[k])
@@ -341,6 +332,7 @@ class Sheet(BaseComponent):
         # this should be only called once.
         self.setup_to_record_list()
         if self.to_record is None:
+            print("self.to_record is None !!")
             return
 
         # spikes has no sampling interval, and so must be recorded last
@@ -353,22 +345,24 @@ class Sheet(BaseComponent):
         for variable in variables:
             # print("variable ", variable)
             cells = self.to_record[variable]
-            print("cells unsorted ", cells)
-            cells.sort()
+            # print("cells unsorted ", cells)
+            # cells.sort()
             # cells = "all"  # record all cells
             if cells != "all":
                 # print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
-                print("recording cells ", cells)
                 print("recording ", variable)
-                self.pop[cells].record(variable)
+                print("recording cells ", cells)
+                print("recording population ", self.pop)
+                self.pop[cells].record(variable, self.parameters.recording_interval)
                 # self.pop[cells].record(
                 #    variable, sampling_interval=self.parameters.recording_interval
                 # )
             else:
                 # print("self.parameters.recording_interval *all* ", self.parameters.recording_interval)
-                print("recording all cells")
                 print("recording ", variable)
-                self.pop.record(variable)
+                print("recording all cells")
+                print("recording population ", self.pop)
+                self.pop.record(variable, self.parameters.recording_interval)
                 # self.pop.record(
                 #    variable, sampling_interval=self.parameters.recording_interval
                 # )
