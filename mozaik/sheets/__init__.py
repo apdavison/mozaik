@@ -331,41 +331,41 @@ class Sheet(BaseComponent):
     def record(self):
         # this should be only called once.
         self.setup_to_record_list()
-        if self.to_record is None:
-            print("self.to_record is None !!")
-            return
+        # if self.to_record is None:
+        #    print("self.to_record is None !!")
+        #    return
 
         # spikes has no sampling interval, and so must be recorded last
         # otherwise PyNN throws an error about inconsistent sampling intervals
-        spike_var = "spikes"
-        variables = [k for k in self.to_record if k != spike_var]
-        if spike_var in self.to_record:
-            variables.append(spike_var)
-
-        for variable in variables:
-            # print("variable ", variable)
-            cells = self.to_record[variable]
-            # print("cells unsorted ", cells)
-            # cells.sort()
-            # cells = "all"  # record all cells
-            if cells != "all":
-                # print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
-                print("recording ", variable)
-                print("recording cells ", cells)
-                print("recording population ", self.pop.label)
-                self.pop[cells].record(variable, self.parameters.recording_interval)
-                # self.pop[cells].record(
-                #    variable, sampling_interval=self.parameters.recording_interval
-                # )
-            else:
-                # print("self.parameters.recording_interval *all* ", self.parameters.recording_interval)
-                print("recording ", variable)
-                print("recording all cells")
-                print("recording population ", self.pop.label)
-                self.pop.record(variable, self.parameters.recording_interval)
-                # self.pop.record(
-                #    variable, sampling_interval=self.parameters.recording_interval
-                # )
+        # spike_var = "spikes"
+        # variables = [k for k in self.to_record if k != spike_var]
+        # if spike_var in self.to_record:
+        #     variables.append(spike_var)
+        if self.to_record != None:
+            for variable in self.to_record.keys():
+                # print("variable ", variable)
+                cells = self.to_record[variable]
+                # print("cells unsorted ", cells)
+                # cells.sort()
+                # cells = "all"  # record all cells
+                if cells != "all":
+                    # print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
+                    print("recording ", variable)
+                    print("recording cells ", cells)
+                    print("recording population ", self.pop.label)
+                    self.pop[cells].record(variable, sampling_interval=self.parameters.recording_interval)
+                    # self.pop[cells].record(
+                    #    variable, sampling_interval=self.parameters.recording_interval
+                    # )
+                else:
+                    # print("self.parameters.recording_interval *all* ", self.parameters.recording_interval)
+                    print("recording ", variable)
+                    print("recording all cells")
+                    print("recording population ", self.pop.label)
+                    self.pop.record(variable, sampling_interval=self.parameters.recording_interval)
+                    # self.pop.record(
+                    #    variable, sampling_interval=self.parameters.recording_interval
+                    # )
 
     def get_data(self, stimulus_duration=None):
         """
@@ -386,7 +386,7 @@ class Sheet(BaseComponent):
             # block = self.pop.get_data(
             #    ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             # )
-            block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"])
+            block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True)
             # block = self.pop.get_data(variables=["spikes", "v"])
             # print("XXX Sheet gsyn_exc ", block.segments[0].filter(name='gsyn_exc')[0])
             # x = self.pop.get_data("gsyn_exc")
@@ -413,8 +413,11 @@ class Sheet(BaseComponent):
         # print("end")
         # lets sort spike train so that it is ordered by IDs and thus hopefully
         # population indexes
-        self.msc = numpy.mean([numpy.sum(st) for st in s.spiketrains])
-        s.spiketrains = sorted(s.spiketrains, key=lambda a: a.annotations["source_id"])
+        def key(a):
+            return a.annotations['source_id']
+        self.msc = numpy.mean([numpy.sum(st)/(st.t_stop-st.t_start)/1000 for st in s.spiketrains])
+        s.spiketrains = sorted(s.spiketrains, key=key)
+        
         if stimulus_duration != None:
             for st in s.spiketrains:
                 tstart = st.t_start
