@@ -401,7 +401,11 @@ class Sheet(BaseComponent):
         s = block.segments[-1]
         s.annotations["sheet_name"] = self.name
         print("sheet name ", self.name)
-        print("conductance ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
+        print("source_ids for gsyn_exc ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
+        print("source_ids for gsyn_inh ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_inh"])
+        print("source_ids for v ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "v"])
+        print("neurons recorded for gsyn_exc ", self.to_record["gsyn_exc"])
+        print("neurons recorded for gsyn_exc ", self.to_record["gsyn_inh"])
         print("signal names ", [a.name for a in s.analogsignals])
         print("signal annotations ", [a.annotations for a in s.analogsignals])
         # print("conductance sorted? ", sorted(s.analogsignals, key=lambda a: a.annotations["source_id"]))
@@ -417,7 +421,7 @@ class Sheet(BaseComponent):
             return a.annotations['source_id']
         self.msc = numpy.mean([numpy.sum(st)/(st.t_stop-st.t_start)/1000 for st in s.spiketrains])
         s.spiketrains = sorted(s.spiketrains, key=key)
-        
+
         if stimulus_duration != None:
             for st in s.spiketrains:
                 tstart = st.t_start
