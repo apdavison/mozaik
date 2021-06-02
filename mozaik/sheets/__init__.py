@@ -413,18 +413,20 @@ class Sheet(BaseComponent):
         for a in s.analogsignals:
             if a.name == "gsyn_exc":
                 print(a.name)
-                print(a.annotations["source_ids"].sort())
-                print(self.to_record["gsyn_exc"].sort())
-                print(a.annotations["source_ids"].sort() != self.to_record["gsyn_exc"].sort())
-                if a.annotations["source_ids"].sort() != self.to_record["gsyn_exc"].sort():
+                print(a.annotations["source_ids"])
+                print(type(a.annotations["source_ids"]))
+                print(self.to_record["gsyn_exc"])
+                print(type(self.to_record["gsyn_exc"]))
+                print(set(a.annotations["source_ids"]) != set(self.to_record["gsyn_exc"]))
+                if set(a.annotations["source_ids"]) != set(self.to_record["gsyn_exc"]):
                     a.annotations["source_ids"] = self.to_record["gsyn_exc"]
                     print("a.annotations['source_ids'] ", a.annotations["source_ids"])
             elif a.name == "gsyn_inh":
-                if a.annotations["source_ids"].sort() != self.to_record["gsyn_inh"].sort():
+                if set(a.annotations["source_ids"]) != set(self.to_record["gsyn_inh"]):
                     a.annotations["source_ids"] = self.to_record["gsyn_inh"]
                     print("a.annotations['source_ids'] ", a.annotations["source_ids"])
             elif a.name == "v":
-                if a.annotations["source_ids"].sort() != self.to_record["v"].sort():
+                if set(a.annotations["source_ids"]) != set(self.to_record["v"]):
                     a.annotations["source_ids"] = self.to_record["v"]
                     print("a.annotations['source_ids'] ", a.annotations["source_ids"])
         print("workaround end")
