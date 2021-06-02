@@ -408,9 +408,19 @@ class Sheet(BaseComponent):
         print("neurons recorded for gsyn_exc ", self.to_record["gsyn_inh"])
         print("signal names ", [a.name for a in s.analogsignals])
         print("signal annotations ", [a.annotations for a in s.analogsignals])
-        # print("conductance sorted? ", sorted(s.analogsignals, key=lambda a: a.annotations["source_id"]))
-        # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
+        # workaround for wrond source ids
+        for a in s.analogsignals:
+            if a.name == "gsyn_exc":
+                if a.annotations["source_ids"].sort() != self.to_record["gsyn_exc"].sort():
+                    a.annotations["source_ids"] = self.to_record["gsyn_exc"]
+            elif a.name == "gsyn_inh":
+                if a.annotations["source_ids"].sort() != self.to_record["gsyn_inh"].sort():
+                    a.annotations["source_ids"] = self.to_record["gsyn_inh"]
+            elif a.name == "v":
+                if a.annotations["source_ids"].sort() != self.to_record["v"].sort():
+                    a.annotations["source_ids"] = self.to_record["v"]
 
+        # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
         # block2 = self.pop.get_data(variables=["gsyn_exc"])
         # print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
         # print("source ids ", [a.annotations["source_ids"] for a in block2.segments[-1].analogsignals if a.name == "gsyn_exc"])
