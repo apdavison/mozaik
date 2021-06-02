@@ -352,7 +352,7 @@ class Sheet(BaseComponent):
                 # print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
                 print("recording ", variable)
                 print("recording cells ", cells)
-                print("recording population ", self.pop)
+                print("recording population ", self.pop.label)
                 self.pop[cells].record(variable, self.parameters.recording_interval)
                 # self.pop[cells].record(
                 #    variable, sampling_interval=self.parameters.recording_interval
@@ -361,7 +361,7 @@ class Sheet(BaseComponent):
                 # print("self.parameters.recording_interval *all* ", self.parameters.recording_interval)
                 print("recording ", variable)
                 print("recording all cells")
-                print("recording population ", self.pop)
+                print("recording population ", self.pop.label)
                 self.pop.record(variable, self.parameters.recording_interval)
                 # self.pop.record(
                 #    variable, sampling_interval=self.parameters.recording_interval

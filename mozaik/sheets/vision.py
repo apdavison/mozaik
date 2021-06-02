@@ -171,7 +171,7 @@ class VisualCorticalUniformSheet(SheetWithMagnificationFactor):
 
     def __init__(self, model, parameters):
         # from spynnaker8.extra_models import Izhikevich_cond
-        import spynnaker8.extra_models as models
+        # import spynnaker8.extra_models as models
         SheetWithMagnificationFactor.__init__(self, model, parameters)
         dx, dy = self.cs_2_vf(parameters.sx, parameters.sy)
         rs = space.RandomStructure(boundary=space.Cuboid(dx, dy, 0),
@@ -181,8 +181,8 @@ class VisualCorticalUniformSheet(SheetWithMagnificationFactor):
         # Exponential integrate and fire neuron with spike triggered and sub-threshold adaptation currents
         # must change to Izhikevich model
         self.pop = self.sim.Population(int(parameters.sx*parameters.sy/1000000*parameters.density),
-                                       # getattr(self.model.sim, self.parameters.cell.model),  # no attribute 'EIF_cond_exp_isfa_ista'
-                                       getattr(models, self.parameters.cell.model),
+                                       getattr(self.model.sim, self.parameters.cell.model),  # no attribute 'EIF_cond_exp_isfa_ista'
+                                       # getattr(models, self.parameters.cell.model),
                                        self.parameters.cell.params,
                                        structure=rs,
                                        initial_values=self.parameters.cell.initial_values,

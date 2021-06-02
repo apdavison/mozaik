@@ -128,6 +128,7 @@ class Model(BaseComponent):
         t0 = time.time()
         for sheet in list(self.sheets.values()):
             if self.first_time:
+                print("sheet first time record ", sheet)
                 sheet.record()
         null_segments, sim_run_time = self.reset()
         for sheet in list(self.sheets.values()):
