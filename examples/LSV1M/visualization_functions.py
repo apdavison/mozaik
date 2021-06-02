@@ -964,21 +964,24 @@ class OrientationTuningSummaryAnalogSignals(Plotting):
         plots = {}
         gs = gridspec.GridSpecFromSubplotSpec(24, 35, subplot_spec=subplotspec,
                                               hspace=10.0, wspace=0.5)
-
+        # esyn
         analog_ids1 = sorted(numpy.random.permutation(queries.param_filter_query(
             self.datastore, sheet_name=self.parameters.exc_sheet_name1).get_segments()[0].get_stored_esyn_ids()))
         analog_ids_inh1 = sorted(numpy.random.permutation(queries.param_filter_query(
             self.datastore, sheet_name=self.parameters.inh_sheet_name1).get_segments()[0].get_stored_esyn_ids()))
+
         or_tuning_exc1 = self.datastore.get_analysis_result(
             identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name=self.parameters.exc_sheet_name1)[0]
         or_tuning_inh1 = self.datastore.get_analysis_result(
             identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name=self.parameters.inh_sheet_name1)[0]
 
         if self.parameters.exc_sheet_name2 != 'None':
+            # esyn
             analog_ids2 = sorted(numpy.random.permutation(queries.param_filter_query(
                 self.datastore, sheet_name=self.parameters.exc_sheet_name2).get_segments()[0].get_stored_esyn_ids()))
             analog_ids_inh2 = sorted(numpy.random.permutation(queries.param_filter_query(
                 self.datastore, sheet_name=self.parameters.inh_sheet_name2).get_segments()[0].get_stored_esyn_ids()))
+
             or_tuning_exc2 = self.datastore.get_analysis_result(
                 identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name=self.parameters.exc_sheet_name2)[0]
             or_tuning_inh2 = self.datastore.get_analysis_result(

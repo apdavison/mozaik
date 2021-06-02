@@ -411,8 +411,8 @@ class Sheet(BaseComponent):
         # workaround for wrond source ids
         print("workaround start")
         for a in s.analogsignals:
+            print(a.name)
             if a.name == "gsyn_exc":
-                print(a.name)
                 print(a.annotations["source_ids"])
                 print(type(a.annotations["source_ids"]))
                 print(self.to_record["gsyn_exc"])
@@ -430,6 +430,7 @@ class Sheet(BaseComponent):
                     a.annotations["source_ids"] = self.to_record["v"]
                     print("a.annotations['source_ids'] ", a.annotations["source_ids"])
         print("workaround end")
+        print("signal annotations 2 ", [a.annotations for a in s.analogsignals])
         # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
         # block2 = self.pop.get_data(variables=["gsyn_exc"])
         # print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
