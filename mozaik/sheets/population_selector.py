@@ -71,6 +71,7 @@ class RCRandomN(PopulationSelector):
     })
         
     def generate_idd_list_of_neurons(self):
+        print("Select random neurons RCRandomN")
         # z = self.sheet.pop.all_cells.astype(int)
         if isinstance(self.sheet.pop.all_cells, list):
             # z = numpy.asarray(self.sheet.pop.all_cells, dtype=numpy.int)
@@ -107,6 +108,7 @@ class RCRandomPercentage(PopulationSelector):
     })
         
     def generate_idd_list_of_neurons(self):
+        print("Select random neurons RCRandomPercentage")
         # if isinstance(self.sheet.pop.all_cells, list):
         #    z = numpy.asarray(self.sheet.pop.all_cells, dtype=numpy.int)
         #    z = numpy.asarray(self.sheet.pop.all_cells)

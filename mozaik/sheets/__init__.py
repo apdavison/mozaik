@@ -121,9 +121,11 @@ class Sheet(BaseComponent):
         # source of wrong neuron indexes?
         self.to_record = {}
         for k in self.parameters.recorders:
+            print("recorder param ", k)
             recording_configuration = load_component(
                 self.parameters.recorders[k].component
             )
+            print("self.parameters.recorders[k].params ", self.parameters.recorders[k].params)
             l = recording_configuration(
                 self, self.parameters.recorders[k].params
             ).generate_idd_list_of_neurons()
