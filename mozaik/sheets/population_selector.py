@@ -293,8 +293,8 @@ class SimilarAnnotationSelectorRegion(SimilarAnnotationSelector):
         #    yp = numpy.append(yp, self.sheet.pop.positions[i][1])
         # xx, yy = self.sheet.cs_2_vf(xp, yp)
         # xx, yy = self.sheet.cs_2_vf(self.sheet.pop.positions[0], self.sheet.pop.positions[1])
-        print("sheet positions x ", self.sheet.pop.positions[:, 0])
-        print("sheet positions y ", self.sheet.pop.positions[:, 1])
+        # print("sheet positions x ", self.sheet.pop.positions[:, 0])
+        # print("sheet positions y ", self.sheet.pop.positions[:, 1])
         xx, yy = self.sheet.cs_2_vf(self.sheet.pop.positions[:, 0], self.sheet.pop.positions[:, 1])
         picked_region = set(numpy.arange(0, len(xx))[numpy.logical_and(
             abs(numpy.array(xx - self.parameters.offset_x)) < self.parameters.size/2.0,
