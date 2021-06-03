@@ -461,18 +461,19 @@ class Sheet(BaseComponent):
         print("workaround spikes")
         print("self.to_record ", self.to_record)
         print("self.to_record[spikes] ", self.to_record["spikes"])
-        # n = sorted(self.to_record["spikes"])
-        # print("n sorted ", n)
+        n = sorted(self.to_record["spikes"])
+        print("n sorted ", n)
         print("spiketrains length ", len(s.spiketrains))
         print("spikes length ", len(self.to_record["spikes"]))
+        print([h.annotations["source_id"] for h in s.spiketrains])
         for k in s.spiketrains:
-            print("spike source id ", k.annotations["source_id"])
-        #    for i in n:
-        #        print("spike source id ", k.annotations["source_id"])
-        #        print("i ", i)
-        #        if set(k.annotations["source_id"]) != set(i):
-        #            k.annotations["source_id"] = i
-
+            # print("spike source id ", k.annotations["source_id"])
+            for i in n:
+                print("spike source id ", k.annotations["source_id"])
+                print("i ", i)
+                if set(k.annotations["source_id"]) != set(i):
+                    k.annotations["source_id"] = i
+        print([j.annotations["source_id"] for j in s.spiketrains])
         print("workaround spikes end")
         print("analog signal length ", len(s.analogsignals))
         print("analog signal[0] length ", len(s.analogsignals[0]))
