@@ -225,10 +225,11 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
     dsv = param_filter_query(
         data_store, analysis_algorithm='ActionPotentialRemoval')
     dsv.print_content(full_ADS=True)
-    TrialVariability(dsv, ParameterSet(
-        {'vm': False,  'cond_exc': False, 'cond_inh': False})).analyse()
-    param_filter_query(
-        data_store, analysis_algorithm='TrialVariability').print_content(full_ADS=True)
+    # ValueError: operands could not be broadcast together with shapes (53382,1) (61990,1)
+    # TrialVariability(dsv, ParameterSet(
+    #    {'vm': False,  'cond_exc': False, 'cond_inh': False})).analyse()
+    # param_filter_query(
+    #    data_store, analysis_algorithm='TrialVariability').print_content(full_ADS=True)
 
     logger.info('13: ' + str(memory_usage_psutil()))
     ModulationRatio(param_filter_query(
@@ -581,8 +582,8 @@ def perform_analysis_and_visualization(data_store):
                        fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhRasterL23.png').plot({'SpikeRasterPlot.group_trials': True})
 
         # ValueError: Result was expected to have only single ADS, it contains 0
-        TrialToTrialVariabilityComparisonNew(data_store, ParameterSet({'sheet_name1': 'V1_Exc_L4', 'sheet_name2': 'V1_Exc_L2/3', 'data_dg': 0.93, 'data_ni': 1.19}), fig_param={
-                                             'dpi': 200, 'figsize': (15, 7.5)}, plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
+        # TrialToTrialVariabilityComparisonNew(data_store, ParameterSet({'sheet_name1': 'V1_Exc_L4', 'sheet_name2': 'V1_Exc_L2/3', 'data_dg': 0.93, 'data_ni': 1.19}), fig_param={
+        #                                     'dpi': 200, 'figsize': (15, 7.5)}, plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
 
         dsv = param_filter_query(
             data_store, st_name='FullfieldDriftingSinusoidalGrating')
