@@ -452,10 +452,11 @@ class Sheet(BaseComponent):
             for i in range(0, len(s.analogsignals)):
                 s.analogsignals[i].t_start = 0 * pq.ms
         print("workaround spikes")
-        print("self.to_record] ", self.to_record)
-        print("self.to_record[gsyn_exc] ", self.to_record["spikes"])
-        for s in s.spiketrains:
-            print("spike source id ", s.annotations["source_id"])
+        print("self.to_record ", self.to_record)
+        print("self.to_record[spikes] ", self.to_record["spikes"])
+        for k in s.spiketrains:
+            print("spike source id ", k.annotations["source_id"])
+
         print("workaround spikes end")
         print("analog signal length ", len(s.analogsignals))
         print("analog signal[0] length ", len(s.analogsignals[0]))
