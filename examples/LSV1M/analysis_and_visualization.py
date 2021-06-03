@@ -198,7 +198,7 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
     mozaik.analysis.analysis.TrialToTrialFanoFactorOfAnalogSignal(
         dsv, ParameterSet({})).analyse()
 
-    if True:
+    if False:
         logger.info('10: ' + str(memory_usage_psutil()))
 
         TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store, sheet_name='V1_Exc_L4', st_name="NaturalImageWithEyeMovement",

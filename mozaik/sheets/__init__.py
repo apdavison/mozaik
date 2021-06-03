@@ -274,10 +274,10 @@ class Sheet(BaseComponent):
             #    + " is protected. Annotation not updated"
             # )
         else:
-            print("key ", key)
-            print("neuron_number ", neuron_number)
-            print("value ", value)
-            print("protected ", protected)
+            # print("key ", key)
+            # print("neuron_number ", neuron_number)
+            # print("value ", value)
+            # print("protected ", protected)
             self._neuron_annotations[neuron_number][key] = (protected, value)
 
     def get_neuron_annotation(self, neuron_number, key):
