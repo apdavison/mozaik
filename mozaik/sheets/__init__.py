@@ -470,8 +470,10 @@ class Sheet(BaseComponent):
             # print("spike source id ", k.annotations["source_id"])
             for i in n:
                 print("spike source id ", k.annotations["source_id"])
+                print(type(k.annotations["source_id"]))
                 print("i ", i)
-                if set(k.annotations["source_id"]) != set(i):
+                print(type(i))
+                if k.annotations["source_id"] != i:
                     k.annotations["source_id"] = i
         print([j.annotations["source_id"] for j in s.spiketrains])
         print("workaround spikes end")
