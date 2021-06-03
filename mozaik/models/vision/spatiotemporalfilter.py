@@ -474,7 +474,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
                 if not self.parameters.mpi_reproducible_noise:
-                    print("noisy current created")
+                    # print("noisy current created")
                     ncs = sim.NoisyCurrentSource(**self.parameters.noise)
                 else:
                     ncs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])

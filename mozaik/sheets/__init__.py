@@ -466,15 +466,14 @@ class Sheet(BaseComponent):
         print("spiketrains length ", len(s.spiketrains))
         print("spikes length ", len(self.to_record["spikes"]))
         print([h.annotations["source_id"] for h in s.spiketrains])
-        for k in s.spiketrains:
+        for k, i in zip(s.spiketrains, n):
             # print("spike source id ", k.annotations["source_id"])
-            for i in n:
-                print("spike source id ", k.annotations["source_id"])
-                print(type(k.annotations["source_id"]))
-                print("i ", i)
-                print(type(i))
-                if k.annotations["source_id"] != i:
-                    k.annotations["source_id"] = i
+            # print("spike source id ", k.annotations["source_id"])
+            # print(type(k.annotations["source_id"]))
+            # print("i ", i)
+            # print(type(i))
+            if k.annotations["source_id"] != i:
+                k.annotations["source_id"] = i
         print([j.annotations["source_id"] for j in s.spiketrains])
         print("workaround spikes end")
         print("analog signal length ", len(s.analogsignals))
