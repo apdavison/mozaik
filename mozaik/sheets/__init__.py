@@ -120,10 +120,10 @@ class Sheet(BaseComponent):
         """
         # source of wrong neuron indexes?
         self.to_record = OrderedDict()
-        for k in  self.parameters.recorders.keys():
-            print("recorder param ", k)
+        for k in self.parameters.recorders.keys():
+            # print("recorder param ", k)
             recording_configuration = load_component(self.parameters.recorders[k].component)
-            print("self.parameters.recorders[k].params ", self.parameters.recorders[k].params)
+            # print("self.parameters.recorders[k].params ", self.parameters.recorders[k].params)
             l = recording_configuration(self, self.parameters.recorders[k].params).generate_idd_list_of_neurons()
 
             if isinstance(self.parameters.recorders[k].variables, str):
@@ -163,14 +163,19 @@ class Sheet(BaseComponent):
             # print(l.shape)
             for var in self.parameters.recorders[k].variables:
                 print(var)
+
                 # print(type(var))
                 # print("self.to_record[var] ", self.to_record[var])
                 # print("debug")
                 # print(set(l))
                 # print(set(self.to_record.get(var, [])))
                 # print(set(self.to_record.get(var)))
-                print("list(set(self.to_record.get(var, [])) | set(l)) ", list(set(self.to_record.get(var, [])) | set(l)))
-                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
+                if var == "spikes":  # spinnaker records all spikes in the population
+                    self.to_record[var] = [i.id for i in self.pop.all_cells]
+                    print("list ot record for all spikes ", self.to_record[var])
+                else:
+                    print("list(set(self.to_record.get(var, [])) | set(l)) ", list(set(self.to_record.get(var, [])) | set(l)))
+                    self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
         # print(self.to_record)
 
         # for k in self.to_record.keys():
@@ -438,11 +443,13 @@ class Sheet(BaseComponent):
         # print("end")
         # lets sort spike train so that it is ordered by IDs and thus hopefully
         # population indexes
-        def key(a):
-            return a.annotations['source_id']
+
+        def key(x):
+            return x.annotations['source_id']
         self.msc = numpy.mean([numpy.sum(st)/(st.t_stop-st.t_start)/1000 for st in s.spiketrains])
         s.spiketrains = sorted(s.spiketrains, key=key)
-
+        # self.msc = numpy.mean([numpy.sum(st) for st in s.spiketrains])
+        # s.spiketrains = sorted(s.spiketrains, key=lambda a: a.annotations["source_id"])
         if stimulus_duration != None:
             for st in s.spiketrains:
                 tstart = st.t_start
@@ -454,13 +461,21 @@ class Sheet(BaseComponent):
         print("workaround spikes")
         print("self.to_record ", self.to_record)
         print("self.to_record[spikes] ", self.to_record["spikes"])
+        # n = sorted(self.to_record["spikes"])
+        # print("n sorted ", n)
+        print("spiketrains length ", len(s.spiketrains))
+        print("spikes length ", len(self.to_record["spikes"]))
         for k in s.spiketrains:
             print("spike source id ", k.annotations["source_id"])
+        #    for i in n:
+        #        print("spike source id ", k.annotations["source_id"])
+        #        print("i ", i)
+        #        if set(k.annotations["source_id"]) != set(i):
+        #            k.annotations["source_id"] = i
 
         print("workaround spikes end")
         print("analog signal length ", len(s.analogsignals))
         print("analog signal[0] length ", len(s.analogsignals[0]))
-        print("spiketrains length ", len(s.spiketrains))
         # print("XX spiketrains ", s.spiketrains)
         # print("XX spiketrains times ", [i.times for i in s.spiketrains])
         return s
