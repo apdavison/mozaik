@@ -385,21 +385,33 @@ class SpontStatisticsOverview(Plotting):
 
 
         # center neurons
-        x = self.datastore.get_neuron_postions()['V1_Exc_L4'][0][idx4]
-        y = self.datastore.get_neuron_postions()['V1_Exc_L4'][1][idx4]
-        center4 = spike_ids[numpy.nonzero(numpy.sqrt(numpy.multiply(x,x)+numpy.multiply(y,y)) < 0.5)[0]]
+        print("idx4 ", idx4)
+        # x = self.datastore.get_neuron_postions()['V1_Exc_L4'][0][idx4]
+        x = self.datastore.get_neuron_postions()['V1_Exc_L4'][idx4][0]
+        # y = self.datastore.get_neuron_postions()['V1_Exc_L4'][1][idx4]
+        y = self.datastore.get_neuron_postions()['V1_Exc_L4'][idx4][1]
+        center4 = spike_ids[numpy.nonzero(numpy.sqrt(numpy.multiply(x, x)+numpy.multiply(y, y)) < 0.5)[0]]
 
-        x = self.datastore.get_neuron_postions()['V1_Inh_L4'][0][idx4_inh]
-        y = self.datastore.get_neuron_postions()['V1_Inh_L4'][1][idx4_inh]
+        print("idx4_inh ", idx4_inh)
+        # x = self.datastore.get_neuron_postions()['V1_Inh_L4'][0][idx4_inh]
+        x = self.datastore.get_neuron_postions()['V1_Inh_L4'][idx4_inh][0]
+        # y = self.datastore.get_neuron_postions()['V1_Inh_L4'][1][idx4_inh]
+        y = self.datastore.get_neuron_postions()['V1_Inh_L4'][idx4_inh][1]
         center4_inh = spike_ids_inh[numpy.nonzero(numpy.sqrt(numpy.multiply(x,x)+numpy.multiply(y,y)) < 0.5)[0]]
 
-        x = self.datastore.get_neuron_postions()['V1_Exc_L2/3'][0][idx23]
-        y = self.datastore.get_neuron_postions()['V1_Exc_L2/3'][1][idx23]
-        center23 = spike_ids23[numpy.nonzero(numpy.sqrt(numpy.multiply(x,x)+numpy.multiply(y,y)) < 0.5)[0]]
+        print("idx23 ", idx23)
+        # x = self.datastore.get_neuron_postions()['V1_Exc_L2/3'][0][idx23]
+        x = self.datastore.get_neuron_postions()['V1_Exc_L2/3'][idx23][0]
+        # y = self.datastore.get_neuron_postions()['V1_Exc_L2/3'][1][idx23]
+        y = self.datastore.get_neuron_postions()['V1_Exc_L2/3'][idx23][1]
+        center23 = spike_ids23[numpy.nonzero(numpy.sqrt(numpy.multiply(x, x)+numpy.multiply(y, y)) < 0.5)[0]]
 
-        x = self.datastore.get_neuron_postions()['V1_Inh_L2/3'][0][idx23_inh]
-        y = self.datastore.get_neuron_postions()['V1_Inh_L2/3'][1][idx23_inh]
-        center23_inh = spike_ids_inh23[numpy.nonzero(numpy.sqrt(numpy.multiply(x,x)+numpy.multiply(y,y)) < 0.5)[0]]
+        print("idx23_inh ", idx23_inh)
+        # x = self.datastore.get_neuron_postions()['V1_Inh_L2/3'][0][idx23_inh]
+        x = self.datastore.get_neuron_postions()['V1_Inh_L2/3'][idx23_inh][0]
+        # y = self.datastore.get_neuron_postions()['V1_Inh_L2/3'][1][idx23_inh]
+        y = self.datastore.get_neuron_postions()['V1_Inh_L2/3'][idx23_inh][1]
+        center23_inh = spike_ids_inh23[numpy.nonzero(numpy.sqrt(numpy.multiply(x, x)+numpy.multiply(y, y)) < 0.5)[0]]
 
         
         mean_firing_rate_L4E = param_filter_query(self.datastore,st_direct_stimulation_name=None,st_name='InternalStimulus',analysis_algorithm='PopulationMeanAndVar',sheet_name='V1_Exc_L4',identifier='SingleValue',value_name='Mean(Firing rate)',ads_unique=True).get_analysis_result()[0].value
@@ -445,6 +457,7 @@ class SpontStatisticsOverview(Plotting):
             [numpy.std(isi)/numpy.mean(isi) for isi in isis])[idxs])
         s = queries.param_filter_query(self.datastore, st_name='InternalStimulus', sheet_name='V1_Inh_L4',
                                        value_name='Correlation coefficient(psth (bin=10.0))', ads_unique=True).get_analysis_result()[0]
+        # positions ?
         mean_CC_L4I, std_CC_L4I = mean_and_std(numpy.array(
             s.values)[idxs, :][:, idxs][numpy.triu_indices(sum(idxs == True), 1)])
 
@@ -456,6 +469,7 @@ class SpontStatisticsOverview(Plotting):
             [numpy.std(isi)/numpy.mean(isi) for isi in isis])[idxs])
         s = queries.param_filter_query(self.datastore, st_name='InternalStimulus', sheet_name='V1_Exc_L2/3',
                                        value_name='Correlation coefficient(psth (bin=10.0))', ads_unique=True).get_analysis_result()[0]
+        # positions ?
         mean_CC_L23E, std_CC_L23E = mean_and_std(numpy.array(
             s.values)[idxs, :][:, idxs][numpy.triu_indices(sum(idxs == True), 1)])
 
@@ -467,6 +481,7 @@ class SpontStatisticsOverview(Plotting):
             [numpy.std(isi)/numpy.mean(isi) for isi in isis])[idxs])
         s = queries.param_filter_query(self.datastore, st_name='InternalStimulus', sheet_name='V1_Inh_L2/3',
                                        value_name='Correlation coefficient(psth (bin=10.0))', ads_unique=True).get_analysis_result()[0]
+        # positions ?
         mean_CC_L23I, std_CC_L23I = mean_and_std(numpy.array(
             s.values)[idxs, :][:, idxs][numpy.triu_indices(sum(idxs == True), 1)])
 
@@ -720,23 +735,36 @@ class OrientationTuningSummaryFiringRates(Plotting):
         spike_ids_inh2 = numpy.array(sorted(numpy.random.permutation(queries.param_filter_query(self.datastore,sheet_name=self.parameters.inh_sheet_name2).get_segments()[0].get_stored_spike_train_ids())))
 
         idxs = self.datastore.get_sheet_indexes(sheet_name=self.parameters.exc_sheet_name1,neuron_ids=spike_ids1)
-        x = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name1][0][idxs]
-        y = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name1][1][idxs]
+        print("idxs ", idxs)
+        # x = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name1][0][idxs]
+        x = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name1][idxs][0]
+        # y = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name1][1][idxs]
+        y = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name1][idxs][1]
         spike_ids1 = spike_ids1[numpy.nonzero(numpy.sqrt(numpy.multiply(x,x)+numpy.multiply(y,y)) < 0.9)[0]]
 
         idxs = self.datastore.get_sheet_indexes(sheet_name=self.parameters.exc_sheet_name2,neuron_ids=spike_ids2)
-        x = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name2][0][idxs]
-        y = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name2][1][idxs]
+        print("idxs ", idxs)
+        # x = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name2][0][idxs]
+        x = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name2][idxs][0]
+        # y = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name2][1][idxs]
+        y = self.datastore.get_neuron_postions()[self.parameters.exc_sheet_name2][idxs][1]
+
         spike_ids2 = spike_ids2[numpy.nonzero(numpy.sqrt(numpy.multiply(x,x)+numpy.multiply(y,y)) < 0.9)[0]]
 
         idxs = self.datastore.get_sheet_indexes(sheet_name=self.parameters.inh_sheet_name1,neuron_ids=spike_ids_inh1)
-        x = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name1][0][idxs]
-        y = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name1][1][idxs]
+        print("idxs ", idxs)
+        # x = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name1][0][idxs]
+        x = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name1][idxs][0]
+        # y = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name1][1][idxs]
+        y = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name1][idxs][1]
         spike_ids_inh1 = spike_ids_inh1[numpy.nonzero(numpy.sqrt(numpy.multiply(x,x)+numpy.multiply(y,y)) < 0.9)[0]]
 
         idxs = self.datastore.get_sheet_indexes(sheet_name=self.parameters.inh_sheet_name2,neuron_ids=spike_ids_inh2)
-        x = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name2][0][idxs]
-        y = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name2][1][idxs]
+        print("idxs ", idxs)
+        # x = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name2][0][idxs]
+        x = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name2][idxs][0]
+        # y = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name2][1][idxs]
+        y = self.datastore.get_neuron_postions()[self.parameters.inh_sheet_name2][idxs][1]
         spike_ids_inh2 = spike_ids_inh2[numpy.nonzero(numpy.sqrt(numpy.multiply(x,x)+numpy.multiply(y,y)) < 0.9)[0]]
 
         spont_l4exc_pnv = param_filter_query(self.datastore,st_name='InternalStimulus',analysis_algorithm=['TrialAveragedFiringRate'],sheet_name="V1_Exc_L4").get_analysis_result()[0]
