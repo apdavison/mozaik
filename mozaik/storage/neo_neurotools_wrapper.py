@@ -75,6 +75,8 @@ class MozaikSegment(Segment):
         """
 
         ids = [s.annotations["source_id"] for s in self.spiketrains]
+        print("spike strains source id ", ids)
+        print("spike strains ", neuron_id)
         if isinstance(neuron_id, list) or isinstance(neuron_id, numpy.ndarray):
             return [self.spiketrains[ids.index(i)] for i in neuron_id]
         else:

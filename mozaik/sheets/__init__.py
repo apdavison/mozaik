@@ -261,13 +261,13 @@ class Sheet(BaseComponent):
             and self._neuron_annotations[neuron_number][key][0]
         ):
             pass
-            logger.warning(
-                "The annotation<"
-                + str(key)
-                + "> for neuron "
-                + str(neuron_number)
-                + " is protected. Annotation not updated"
-             )
+            # logger.warning(
+            #    "The annotation<"
+            #    + str(key)
+            #    + "> for neuron "
+            #    + str(neuron_number)
+            #    + " is protected. Annotation not updated"
+            # )
         else:
             print("key ", key)
             print("neuron_number ", neuron_number)
@@ -401,11 +401,11 @@ class Sheet(BaseComponent):
         s = block.segments[-1]
         s.annotations["sheet_name"] = self.name
         print("sheet name ", self.name)
-        print("source_ids for gsyn_exc ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
-        print("source_ids for gsyn_inh ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_inh"])
-        print("source_ids for v ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "v"])
-        print("neurons recorded for gsyn_exc ", self.to_record["gsyn_exc"])
-        print("neurons recorded for gsyn_exc ", self.to_record["gsyn_inh"])
+        # print("source_ids for gsyn_exc ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
+        # print("source_ids for gsyn_inh ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_inh"])
+        # print("source_ids for v ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "v"])
+        # print("neurons recorded for gsyn_exc ", self.to_record["gsyn_exc"])
+        # print("neurons recorded for gsyn_exc ", self.to_record["gsyn_inh"])
         print("signal names ", [a.name for a in s.analogsignals])
         print("signal annotations ", [a.annotations for a in s.analogsignals])
         # workaround for wrond source ids
@@ -413,22 +413,22 @@ class Sheet(BaseComponent):
         for a in s.analogsignals:
             print(a.name)
             if a.name == "gsyn_exc":
-                print(a.annotations["source_ids"])
-                print(type(a.annotations["source_ids"]))
-                print(self.to_record["gsyn_exc"])
-                print(type(self.to_record["gsyn_exc"]))
-                print(set(a.annotations["source_ids"]) != set(self.to_record["gsyn_exc"]))
+                # print(a.annotations["source_ids"])
+                # print(type(a.annotations["source_ids"]))
+                # print(self.to_record["gsyn_exc"])
+                # print(type(self.to_record["gsyn_exc"]))
+                # print(set(a.annotations["source_ids"]) != set(self.to_record["gsyn_exc"]))
                 if set(a.annotations["source_ids"]) != set(self.to_record["gsyn_exc"]):
                     a.annotations["source_ids"] = self.to_record["gsyn_exc"]
-                    print("a.annotations['source_ids'] ", a.annotations["source_ids"])
+                    # print("a.annotations['source_ids'] ", a.annotations["source_ids"])
             elif a.name == "gsyn_inh":
                 if set(a.annotations["source_ids"]) != set(self.to_record["gsyn_inh"]):
                     a.annotations["source_ids"] = self.to_record["gsyn_inh"]
-                    print("a.annotations['source_ids'] ", a.annotations["source_ids"])
+                    # print("a.annotations['source_ids'] ", a.annotations["source_ids"])
             elif a.name == "v":
                 if set(a.annotations["source_ids"]) != set(self.to_record["v"]):
                     a.annotations["source_ids"] = self.to_record["v"]
-                    print("a.annotations['source_ids'] ", a.annotations["source_ids"])
+                    # print("a.annotations['source_ids'] ", a.annotations["source_ids"])
         print("workaround end")
         print("signal annotations 2 ", [a.annotations for a in s.analogsignals])
         # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
@@ -451,6 +451,12 @@ class Sheet(BaseComponent):
                 st.t_start = 0 * pq.ms
             for i in range(0, len(s.analogsignals)):
                 s.analogsignals[i].t_start = 0 * pq.ms
+        print("workaround spikes")
+        print("self.to_record] ", self.to_record)
+        print("self.to_record[gsyn_exc] ", self.to_record["spikes"])
+        for s in s.spiketrains:
+            print("spike source id ", s.annotations["source_id"])
+        print("workaround spikes end")
         print("analog signal length ", len(s.analogsignals))
         print("analog signal[0] length ", len(s.analogsignals[0]))
         print("spiketrains length ", len(s.spiketrains))
