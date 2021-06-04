@@ -386,6 +386,7 @@ class SpontStatisticsOverview(Plotting):
 
         # center neurons
         print("idx4 ", idx4)
+        print("*get_neuron_postions* ", self.datastore.get_neuron_postions()['V1_Exc_L4'])
         # x = self.datastore.get_neuron_postions()['V1_Exc_L4'][0][idx4]
         x = self.datastore.get_neuron_postions()['V1_Exc_L4'][idx4][0]
         print("x ", x)
