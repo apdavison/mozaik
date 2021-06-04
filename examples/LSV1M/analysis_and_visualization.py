@@ -198,7 +198,7 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
     mozaik.analysis.analysis.TrialToTrialFanoFactorOfAnalogSignal(
         dsv, ParameterSet({})).analyse()
 
-    if True:
+    if False:
         logger.info('10: ' + str(memory_usage_psutil()))
 
         TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store, sheet_name='V1_Exc_L4', st_name="NaturalImageWithEyeMovement",
@@ -312,7 +312,7 @@ def perform_analysis_and_visualization_stc(data_store):
         analog_center23 = set(center23).intersection(analog_ids23)
         logger.info(str(analog_center23))
 
-    if True:
+    if False:
         TrialAveragedFiringRate(param_filter_query(data_store, sheet_name=[
                                 'V1_Exc_L4', 'V1_Exc_L2/3'], st_name='DriftingSinusoidalGratingDisk'), ParameterSet({})).analyse()
 
@@ -390,7 +390,7 @@ def perform_analysis_and_visualization_stc(data_store):
         PlotTuningCurve(dsv, ParameterSet({'parameter_name': 'radius', 'neurons': list(center23), 'sheet_name': 'V1_Exc_L2/3', 'centered': False,
                                            'mean': True, 'polar': False, 'pool': False}), plot_file_name='SizeTuningExcL23M.png', fig_param={'dpi': 100, 'figsize': (32, 7)}).plot()
 
-    if True:
+    if False:
         dsv = param_filter_query(data_store, st_name=[
                                  'DriftingSinusoidalGratingDisk'])
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': list(analog_center4)[0], 'sheet_activity': {
@@ -410,7 +410,7 @@ def perform_analysis_and_visualization_stc(data_store):
         SizeTuningOverviewNew(data_store, ParameterSet({'l4_neurons': list(center4), 'l23_neurons': [], 'l4_neurons_analog': list(
             analog_center4), 'l23_neurons_analog': []}), plot_file_name='SizeTuningOverviewNew.png', fig_param={'dpi': 300, 'figsize': (18, 8)}).plot()
 
-    if True:
+    if False:
         dsv = param_filter_query(data_store, st_name=[
                                  'DriftingSinusoidalGratingDisk'], st_size=[5.0])
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': list(analog_center4)[0], 'sheet_activity': {
@@ -682,5 +682,5 @@ def perform_analysis_and_visualization(data_store):
         }, 'spontaneous': False}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhAnalog.png').plot()
 
         # orientation tuning plotting
-        dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Inh_L4'],value_name='LGNAfferentOrientation')
-        PerNeuronValuePlot(dsv,ParameterSet({"cortical_view" : True}),plot_file_name='ORSet.png').plot()
+        # dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Inh_L4'],value_name='LGNAfferentOrientation')
+        # PerNeuronValuePlot(dsv,ParameterSet({"cortical_view" : True}),plot_file_name='ORSet.png').plot()
