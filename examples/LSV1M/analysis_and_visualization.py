@@ -312,7 +312,7 @@ def perform_analysis_and_visualization_stc(data_store):
         analog_center23 = set(center23).intersection(analog_ids23)
         logger.info(str(analog_center23))
 
-    if False:
+    if True:
         TrialAveragedFiringRate(param_filter_query(data_store, sheet_name=[
                                 'V1_Exc_L4', 'V1_Exc_L2/3'], st_name='DriftingSinusoidalGratingDisk'), ParameterSet({})).analyse()
 
@@ -390,7 +390,7 @@ def perform_analysis_and_visualization_stc(data_store):
         PlotTuningCurve(dsv, ParameterSet({'parameter_name': 'radius', 'neurons': list(center23), 'sheet_name': 'V1_Exc_L2/3', 'centered': False,
                                            'mean': True, 'polar': False, 'pool': False}), plot_file_name='SizeTuningExcL23M.png', fig_param={'dpi': 100, 'figsize': (32, 7)}).plot()
 
-    if False:
+    if True:
         dsv = param_filter_query(data_store, st_name=[
                                  'DriftingSinusoidalGratingDisk'])
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': list(analog_center4)[0], 'sheet_activity': {
@@ -410,7 +410,7 @@ def perform_analysis_and_visualization_stc(data_store):
         SizeTuningOverviewNew(data_store, ParameterSet({'l4_neurons': list(center4), 'l23_neurons': [], 'l4_neurons_analog': list(
             analog_center4), 'l23_neurons_analog': []}), plot_file_name='SizeTuningOverviewNew.png', fig_param={'dpi': 300, 'figsize': (18, 8)}).plot()
 
-    if False:
+    if True:
         dsv = param_filter_query(data_store, st_name=[
                                  'DriftingSinusoidalGratingDisk'], st_size=[5.0])
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': list(analog_center4)[0], 'sheet_activity': {
