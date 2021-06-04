@@ -388,8 +388,10 @@ class SpontStatisticsOverview(Plotting):
         print("idx4 ", idx4)
         # x = self.datastore.get_neuron_postions()['V1_Exc_L4'][0][idx4]
         x = self.datastore.get_neuron_postions()['V1_Exc_L4'][idx4][0]
+        print("x ", x)
         # y = self.datastore.get_neuron_postions()['V1_Exc_L4'][1][idx4]
         y = self.datastore.get_neuron_postions()['V1_Exc_L4'][idx4][1]
+        print("y ", )
         center4 = spike_ids[numpy.nonzero(numpy.sqrt(numpy.multiply(x, x)+numpy.multiply(y, y)) < 0.5)[0]]
 
         print("idx4_inh ", idx4_inh)
