@@ -652,8 +652,9 @@ def perform_analysis_and_visualization(data_store):
             # OrientationTuningSummaryAnalogSignals(data_store, ParameterSet({'exc_sheet_name1': 'V1_Exc_L4', 'inh_sheet_name1': 'V1_Inh_L4', 'exc_sheet_name2': 'None', 'inh_sheet_name2': 'None'}), fig_param={
             #                                      'dpi': 200, 'figsize': (18, 12)}, plot_file_name='OrientationTuningSummaryAnalogSignals.png').plot({'*.fontsize': 19, '*.y_lim': (0, None)})
 
-        SpontStatisticsOverview(data_store, ParameterSet({}), fig_param={
-                                'dpi': 200, 'figsize': (18, 12)}, plot_file_name='SpontStatisticsOverview.png').plot()
+        # *Result was expected to have only single ADS, it contains 0*
+        # SpontStatisticsOverview(data_store, ParameterSet({}), fig_param={
+        #                        'dpi': 200, 'figsize': (18, 12)}, plot_file_name='SpontStatisticsOverview.png').plot()
 
         if l23_flag:
             MRfigReal(param_filter_query(data_store, sheet_name=['V1_Exc_L2/3', 'V1_Exc_L4', 'V1_Inh_L2/3', 'V1_Inh_L4'], st_contrast=[100], st_name='FullfieldDriftingSinusoidalGrating'), ParameterSet(
