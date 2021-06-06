@@ -52,7 +52,7 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
         data_store, analysis_algorithm='PSTH'), ParameterSet({'convert_nan_to_zero': True})).analyse()
 
     logger.info('3: ' + str(memory_usage_psutil()))
-    # ZeroDivisionError
+    # 1&3 ZeroDivisionError
     # PopulationMeanAndVar(param_filter_query(data_store, st_direct_stimulation_name=None,
     #                                        st_name='InternalStimulus'), ParameterSet({})).analyse()
 
@@ -225,7 +225,7 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
     dsv = param_filter_query(
         data_store, analysis_algorithm='ActionPotentialRemoval')
     dsv.print_content(full_ADS=True)
-    # ValueError: operands could not be broadcast together with shapes (53382,1) (61990,1)
+    # 1&3 ValueError: operands could not be broadcast together with shapes (53382,1) (61990,1)
     # TrialVariability(dsv, ParameterSet(
     #    {'vm': False,  'cond_exc': False, 'cond_inh': False})).analyse()
     # param_filter_query(
@@ -581,7 +581,7 @@ def perform_analysis_and_visualization(data_store):
             RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L2/3', 'neurons': spike_ids_inh23, 'trial_averaged_histogram': False, 'spontaneous': False}),
                        fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhRasterL23.png').plot({'SpikeRasterPlot.group_trials': True})
 
-        # ValueError: Result was expected to have only single ADS, it contains 0
+        # 1&3 ValueError: Result was expected to have only single ADS, it contains 0
         # TrialToTrialVariabilityComparisonNew(data_store, ParameterSet({'sheet_name1': 'V1_Exc_L4', 'sheet_name2': 'V1_Exc_L2/3', 'data_dg': 0.93, 'data_ni': 1.19}), fig_param={
         #                                     'dpi': 200, 'figsize': (15, 7.5)}, plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
 
@@ -652,7 +652,7 @@ def perform_analysis_and_visualization(data_store):
             # OrientationTuningSummaryAnalogSignals(data_store, ParameterSet({'exc_sheet_name1': 'V1_Exc_L4', 'inh_sheet_name1': 'V1_Inh_L4', 'exc_sheet_name2': 'None', 'inh_sheet_name2': 'None'}), fig_param={
             #                                      'dpi': 200, 'figsize': (18, 12)}, plot_file_name='OrientationTuningSummaryAnalogSignals.png').plot({'*.fontsize': 19, '*.y_lim': (0, None)})
 
-        # *Result was expected to have only single ADS, it contains 0*
+        # 1&3 *Result was expected to have only single ADS, it contains 0*
         # SpontStatisticsOverview(data_store, ParameterSet({}), fig_param={
         #                        'dpi': 200, 'figsize': (18, 12)}, plot_file_name='SpontStatisticsOverview.png').plot()
 
@@ -665,20 +665,21 @@ def perform_analysis_and_visualization(data_store):
 
         dsv = param_filter_query(
             data_store, st_name='NaturalImageWithEyeMovement')
-        # ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
+        # 1&3 ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
         # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
         #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
         #OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMInh.png', fig_param={
         #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
 
-        # ValueError: attempt to get argmin of an empty sequence
+        # 1&3 ValueError: attempt to get argmin of an empty sequence
         # TrialCrossCorrelationAnalysis(data_store, ParameterSet({'neurons1': list(analog_ids), 'sheet_name1': 'V1_Exc_L4', 'neurons2': list(
         #    analog_ids23), 'sheet_name2': 'V1_Exc_L2/3', 'window_length': 250}), fig_param={"dpi": 100, "figsize": (15, 6.5)}, plot_file_name="trial-to-trial-cross-correlation.png").plot({'*.Vm.title': None, '*.fontsize': 19})
 
-        dsv = queries.param_filter_query(data_store, value_name=[
-                                         'orientation HWHH of Firing rate', 'orientation CV(Firing rate)'], sheet_name=["V1_Exc_L2/3"], st_contrast=100)
-        PerNeuronValueScatterPlot(dsv, ParameterSet({'only_matching_units': False, 'ignore_nan': True}), plot_file_name='CVvsHWHH.png').plot(
-            {'*.x_lim': (0, 90), '*.y_lim': (0, 1.0)})
+        # dsv = queries.param_filter_query(data_store, value_name=[
+        #                                 'orientation HWHH of Firing rate', 'orientation CV(Firing rate)'], sheet_name=["V1_Exc_L2/3"], st_contrast=100)
+        # 1&3 AssertionError: Error, not pairs of PerNeuronValue ADS in datastore seem to have the same value_units
+        # PerNeuronValueScatterPlot(dsv, ParameterSet({'only_matching_units': False, 'ignore_nan': True}), plot_file_name='CVvsHWHH.png').plot(
+        #    {'*.x_lim': (0, 90), '*.y_lim': (0, 1.0)})
 
         dsv = param_filter_query(data_store, st_name=['InternalStimulus'])
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': analog_ids_inh[0], 'sheet_activity': {
