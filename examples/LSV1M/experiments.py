@@ -12,8 +12,8 @@ def create_experiments(model):
         # Lets kick the network up into activation
 
         # Spontaneous Activity
-        NoStimulation(model, ParameterSet(
-            {'duration': 3*8*2*5*3*8*7})),
+        # NoStimulation(model, ParameterSet(
+        #    {'duration': 3*8*2*5*3*8*7})),
 
         # Measure orientation tuning with full-filed sinusoidal gratins
         # MeasureOrientationTuningFullfield(model, ParameterSet(
