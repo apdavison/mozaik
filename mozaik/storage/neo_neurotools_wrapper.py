@@ -114,15 +114,15 @@ class MozaikSegment(Segment):
         -------
         A AnalogSignal object if neuron_id is int, or list of AnalogSignal objects if neuron_id is list, the order corresponds to the order in neuron_id argument.
         """
-        print("get_esyn ")
+        # print("get_esyn ")
         if not self.full:
             self.load_full()
         for a in self.analogsignals:
             if a.name == "gsyn_exc":
                 # print("tolist error")
-                print(a.annotations["source_ids"])
-                print(type(a.annotations["source_ids"]))
-                print(a[:, a.annotations["source_ids"].index(neuron_id)])
+                # print(a.annotations["source_ids"])
+                # print(type(a.annotations["source_ids"]))
+                # print(a[:, a.annotations["source_ids"].index(neuron_id)])
                 # print("tolist error end")
                 # return a[:, a.annotations["source_ids"].tolist().index(neuron_id)]
                 return a[:, a.annotations["source_ids"].index(neuron_id)]

@@ -965,8 +965,8 @@ class ConductancesPlot(StandardStyle):
             * abs(t_start - t_stop)
             + t_start
         )
-        print("ConductancesPlot gsyn_es ", self.gsyn_es)
-        print("ConductancesPlot gsyn_is ", self.gsyn_is)
+        # print("ConductancesPlot gsyn_es ", self.gsyn_es)
+        # print("ConductancesPlot gsyn_is ", self.gsyn_is)
         for e, i in zip(self.gsyn_es, self.gsyn_is):
             e = e.rescale(munits.nS)
             i = i.rescale(munits.nS)
