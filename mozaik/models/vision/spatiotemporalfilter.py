@@ -483,15 +483,15 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     self.ncs_rng[rf_type].append(numpy.random.RandomState(seed=seeds[i]))
                     self.scs[rf_type].append(scs)
                     self.ncs[rf_type].append(ncs)
-                # lgn_cell.inject(scs)
-                # lgn_cell.inject(ncs)
+                lgn_cell.inject(scs)
+                lgn_cell.inject(ncs)
 
             # inject currents to populations
             # print("injecting current")
             # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
-            ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+            # ncs = sim.NoisyCurrentSource(**self.parameters.noise)
             # self.sheets[rf_type].pop.inject(scs)
-            self.sheets[rf_type].pop.inject(ncs)
+            # self.sheets[rf_type].pop.inject(ncs)
 
         P_rf = self.parameters.receptive_field
         rf_function = eval(P_rf.func)

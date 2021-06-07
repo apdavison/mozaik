@@ -312,7 +312,7 @@ def perform_analysis_and_visualization_stc(data_store):
         analog_center23 = set(center23).intersection(analog_ids23)
         logger.info(str(analog_center23))
 
-    if True:
+    if False:
         TrialAveragedFiringRate(param_filter_query(data_store, sheet_name=[
                                 'V1_Exc_L4', 'V1_Exc_L2/3'], st_name='DriftingSinusoidalGratingDisk'), ParameterSet({})).analyse()
 
@@ -390,7 +390,7 @@ def perform_analysis_and_visualization_stc(data_store):
         PlotTuningCurve(dsv, ParameterSet({'parameter_name': 'radius', 'neurons': list(center23), 'sheet_name': 'V1_Exc_L2/3', 'centered': False,
                                            'mean': True, 'polar': False, 'pool': False}), plot_file_name='SizeTuningExcL23M.png', fig_param={'dpi': 100, 'figsize': (32, 7)}).plot()
 
-    if True:
+    if False:
         dsv = param_filter_query(data_store, st_name=[
                                  'DriftingSinusoidalGratingDisk'])
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': list(analog_center4)[0], 'sheet_activity': {
@@ -410,7 +410,7 @@ def perform_analysis_and_visualization_stc(data_store):
         SizeTuningOverviewNew(data_store, ParameterSet({'l4_neurons': list(center4), 'l23_neurons': [], 'l4_neurons_analog': list(
             analog_center4), 'l23_neurons_analog': []}), plot_file_name='SizeTuningOverviewNew.png', fig_param={'dpi': 300, 'figsize': (18, 8)}).plot()
 
-    if True:
+    if False:
         dsv = param_filter_query(data_store, st_name=[
                                  'DriftingSinusoidalGratingDisk'], st_size=[5.0])
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': list(analog_center4)[0], 'sheet_activity': {
@@ -559,7 +559,6 @@ def perform_analysis_and_visualization(data_store):
         }
 
         # self sustained plotting
-        """
         dsv = param_filter_query(data_store, st_name=[
                                  'InternalStimulus'], st_direct_stimulation_name=None)
         OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[0], 'sheet_activity': {
@@ -581,16 +580,16 @@ def perform_analysis_and_visualization(data_store):
                        fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSExcRasterL23.png').plot({'SpikeRasterPlot.group_trials': True})
             RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L2/3', 'neurons': spike_ids_inh23, 'trial_averaged_histogram': False, 'spontaneous': False}),
                        fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhRasterL23.png').plot({'SpikeRasterPlot.group_trials': True})
-        """
+
         # 1&3 ValueError: Result was expected to have only single ADS, it contains 0
-        TrialToTrialVariabilityComparisonNew(data_store, ParameterSet({'sheet_name1': 'V1_Exc_L4', 'sheet_name2': 'V1_Exc_L2/3', 'data_dg': 0.93, 'data_ni': 1.19}), fig_param={
-                                             'dpi': 200, 'figsize': (15, 7.5)}, plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
+        # TrialToTrialVariabilityComparisonNew(data_store, ParameterSet({'sheet_name1': 'V1_Exc_L4', 'sheet_name2': 'V1_Exc_L2/3', 'data_dg': 0.93, 'data_ni': 1.19}), fig_param={
+        #                                     'dpi': 200, 'figsize': (15, 7.5)}, plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
 
         dsv = param_filter_query(
             data_store, st_name='FullfieldDriftingSinusoidalGrating')
         print("is dsv empty? ", dsv)
 
-
+        """
         # AssertionError: Error, empty datastore
         RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neurons': spike_ids, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
                    'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedExcRaster.png').plot({'SpikeRasterPlot.group_trials': True})
@@ -639,33 +638,33 @@ def perform_analysis_and_visualization(data_store):
                          'dpi': 100, 'figsize': (25, 12)}, plot_file_name="InhL232.png").plot({'Vm_plot.y_lim': (-80, -50)})
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L2/3', 'neuron': analog_ids_inh23[2], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
                          'dpi': 100, 'figsize': (25, 12)}, plot_file_name="InhL233.png").plot({'Vm_plot.y_lim': (-80, -50)})
-
+        """
         if l23_flag:
             SpontActOverview(data_store, ParameterSet({'l4_exc_neuron': analog_ids[0], 'l4_inh_neuron': analog_ids_inh[0], 'l23_exc_neuron': analog_ids23[
                              0], 'l23_inh_neuron': analog_ids_inh23[0]}), plot_file_name='SpontActOverview.png', fig_param={'dpi': 200, 'figsize': (18, 14.5)}).plot()
-            OrientationTuningSummaryAnalogSignals(data_store, ParameterSet({'exc_sheet_name1': 'V1_Exc_L4', 'inh_sheet_name1': 'V1_Inh_L4', 'exc_sheet_name2': 'V1_Exc_L2/3', 'inh_sheet_name2': 'V1_Inh_L2/3'}), fig_param={
-                                                  'dpi': 200, 'figsize': (18, 12)}, plot_file_name='OrientationTuningSummaryAnalogSignals.png').plot({'*.fontsize': 19, '*.y_lim': (0, None)})
-            OrientationTuningSummaryFiringRates(data_store, ParameterSet({'exc_sheet_name1': 'V1_Exc_L4', 'inh_sheet_name1': 'V1_Inh_L4', 'exc_sheet_name2': 'V1_Exc_L2/3', 'inh_sheet_name2': 'V1_Inh_L2/3'}), fig_param={
-                                            'dpi': 200, 'figsize': (18, 12)}, plot_file_name='OrientationTuningSummary.png').plot({'*.fontsize': 19})
+            # OrientationTuningSummaryAnalogSignals(data_store, ParameterSet({'exc_sheet_name1': 'V1_Exc_L4', 'inh_sheet_name1': 'V1_Inh_L4', 'exc_sheet_name2': 'V1_Exc_L2/3', 'inh_sheet_name2': 'V1_Inh_L2/3'}), fig_param={
+            #                                      'dpi': 200, 'figsize': (18, 12)}, plot_file_name='OrientationTuningSummaryAnalogSignals.png').plot({'*.fontsize': 19, '*.y_lim': (0, None)})
+            # OrientationTuningSummaryFiringRates(data_store, ParameterSet({'exc_sheet_name1': 'V1_Exc_L4', 'inh_sheet_name1': 'V1_Inh_L4', 'exc_sheet_name2': 'V1_Exc_L2/3', 'inh_sheet_name2': 'V1_Inh_L2/3'}), fig_param={
+            #                                    'dpi': 200, 'figsize': (18, 12)}, plot_file_name='OrientationTuningSummary.png').plot({'*.fontsize': 19})
         else:
             SpontActOverview(data_store, ParameterSet({'l4_exc_neuron': analog_ids[0], 'l4_inh_neuron': analog_ids_inh[0], 'l23_exc_neuron': -1,
                                                        'l23_inh_neuron': -1}), plot_file_name='SpontActOverview.png', fig_param={'dpi': 200, 'figsize': (18, 14.5)}).plot()
-            OrientationTuningSummaryAnalogSignals(data_store, ParameterSet({'exc_sheet_name1': 'V1_Exc_L4', 'inh_sheet_name1': 'V1_Inh_L4', 'exc_sheet_name2': 'None', 'inh_sheet_name2': 'None'}), fig_param={
-                                                  'dpi': 200, 'figsize': (18, 12)}, plot_file_name='OrientationTuningSummaryAnalogSignals.png').plot({'*.fontsize': 19, '*.y_lim': (0, None)})
+            # OrientationTuningSummaryAnalogSignals(data_store, ParameterSet({'exc_sheet_name1': 'V1_Exc_L4', 'inh_sheet_name1': 'V1_Inh_L4', 'exc_sheet_name2': 'None', 'inh_sheet_name2': 'None'}), fig_param={
+            #                                      'dpi': 200, 'figsize': (18, 12)}, plot_file_name='OrientationTuningSummaryAnalogSignals.png').plot({'*.fontsize': 19, '*.y_lim': (0, None)})
 
         # 1&3 *Result was expected to have only single ADS, it contains 0*
         # SpontStatisticsOverview(data_store, ParameterSet({}), fig_param={
         #                        'dpi': 200, 'figsize': (18, 12)}, plot_file_name='SpontStatisticsOverview.png').plot()
 
-        if l23_flag:
-            MRfigReal(param_filter_query(data_store, sheet_name=['V1_Exc_L2/3', 'V1_Exc_L4', 'V1_Inh_L2/3', 'V1_Inh_L4'], st_contrast=[100], st_name='FullfieldDriftingSinusoidalGrating'), ParameterSet(
-                {'SimpleSheetName': 'V1_Exc_L4', 'ComplexSheetName': 'V1_Exc_L2/3'}), plot_file_name='MRReal.png', fig_param={'dpi': 100, 'figsize': (19, 12)}).plot()
+        # if l23_flag:
+        #    MRfigReal(param_filter_query(data_store, sheet_name=['V1_Exc_L2/3', 'V1_Exc_L4', 'V1_Inh_L2/3', 'V1_Inh_L4'], st_contrast=[100], st_name='FullfieldDriftingSinusoidalGrating'), ParameterSet(
+        #        {'SimpleSheetName': 'V1_Exc_L4', 'ComplexSheetName': 'V1_Exc_L2/3'}), plot_file_name='MRReal.png', fig_param={'dpi': 100, 'figsize': (19, 12)}).plot()
         # else:
         #    MRfigReal(param_filter_query(data_store, sheet_name=['V1_Exc_L2/3', 'V1_Exc_L4', 'V1_Inh_L2/3', 'V1_Inh_L4'], st_contrast=[100], st_name='FullfieldDriftingSinusoidalGrating'), ParameterSet(
         #        {'SimpleSheetName': 'V1_Exc_L4', 'ComplexSheetName': 'V1_Exc_L2/3'}), plot_file_name='MRReal.png', fig_param={'dpi': 100, 'figsize': (19, 12)}).plot()
 
-        # dsv = param_filter_query(
-        #    data_store, st_name='NaturalImageWithEyeMovement')
+        dsv = param_filter_query(
+            data_store, st_name='NaturalImageWithEyeMovement')
         # 1&3 ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
         # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
         #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
@@ -673,19 +672,19 @@ def perform_analysis_and_visualization(data_store):
         #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
 
         # 1&3 ValueError: attempt to get argmin of an empty sequence
-        TrialCrossCorrelationAnalysis(data_store, ParameterSet({'neurons1': list(analog_ids), 'sheet_name1': 'V1_Exc_L4', 'neurons2': list(
-            analog_ids23), 'sheet_name2': 'V1_Exc_L2/3', 'window_length': 250}), fig_param={"dpi": 100, "figsize": (15, 6.5)}, plot_file_name="trial-to-trial-cross-correlation.png").plot({'*.Vm.title': None, '*.fontsize': 19})
+        # TrialCrossCorrelationAnalysis(data_store, ParameterSet({'neurons1': list(analog_ids), 'sheet_name1': 'V1_Exc_L4', 'neurons2': list(
+        #    analog_ids23), 'sheet_name2': 'V1_Exc_L2/3', 'window_length': 250}), fig_param={"dpi": 100, "figsize": (15, 6.5)}, plot_file_name="trial-to-trial-cross-correlation.png").plot({'*.Vm.title': None, '*.fontsize': 19})
 
-        dsv = queries.param_filter_query(data_store, value_name=[
-                                         'orientation HWHH of Firing rate', 'orientation CV(Firing rate)'], sheet_name=["V1_Exc_L2/3"], st_contrast=100)
+        # dsv = queries.param_filter_query(data_store, value_name=[
+        #                                 'orientation HWHH of Firing rate', 'orientation CV(Firing rate)'], sheet_name=["V1_Exc_L2/3"], st_contrast=100)
         # 1&3 AssertionError: Error, not pairs of PerNeuronValue ADS in datastore seem to have the same value_units
-        PerNeuronValueScatterPlot(dsv, ParameterSet({'only_matching_units': False, 'ignore_nan': True}), plot_file_name='CVvsHWHH.png').plot(
-            {'*.x_lim': (0, 90), '*.y_lim': (0, 1.0)})
+        # PerNeuronValueScatterPlot(dsv, ParameterSet({'only_matching_units': False, 'ignore_nan': True}), plot_file_name='CVvsHWHH.png').plot(
+        #    {'*.x_lim': (0, 90), '*.y_lim': (0, 1.0)})
 
-        # dsv = param_filter_query(data_store, st_name=['InternalStimulus'])
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': analog_ids_inh[0], 'sheet_activity': {
-        # }, 'spontaneous': False}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhAnalog.png').plot()
+        dsv = param_filter_query(data_store, st_name=['InternalStimulus'])
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': analog_ids_inh[0], 'sheet_activity': {
+        }, 'spontaneous': False}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhAnalog.png').plot()
 
         # orientation tuning plotting
-        dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Inh_L4'],value_name='LGNAfferentOrientation')
-        PerNeuronValuePlot(dsv,ParameterSet({"cortical_view" : True}),plot_file_name='ORSet.png').plot()
+        # dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Inh_L4'],value_name='LGNAfferentOrientation')
+        # PerNeuronValuePlot(dsv,ParameterSet({"cortical_view" : True}),plot_file_name='ORSet.png').plot()
