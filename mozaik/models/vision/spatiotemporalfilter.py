@@ -754,7 +754,14 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         self.write_cache(st, input_currents, retinal_input)
         # also save into internal cache
         self.internal_stimulus_cache[str(st)] = (input_currents, retinal_input)
-
+        print("self.scs[X_ON][0]", self.scs["X_ON"][0])
+        print("self.scs[X_ON][1]", self.scs["X_ON"][1])
+        print("self.scs[X_OFF][0]", self.scs["X_OFF"][0])
+        print("self.scs[X_OFF][1]", self.scs["X_OFF"][1])
+        print("self.ncs[X_ON][0]", self.ncs["X_ON"][0])
+        print("self.ncs[X_ON][1]", self.ncs["X_ON"][1])
+        print("self.ncs[X_OFF][0]", self.ncs["X_OFF"][0])
+        print("self.ncs[X_OFF][1]", self.ncs["X_OFF"][1])
         return retinal_input
 
     def process_input2(self, visual_space, stimulus, duration=None, offset=0):
