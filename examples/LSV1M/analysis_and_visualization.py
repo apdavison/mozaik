@@ -596,13 +596,14 @@ def perform_analysis_and_visualization(data_store):
         RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neurons': spike_ids_inh, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
                    'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedInhRaster.png').plot({'SpikeRasterPlot.group_trials': True})
 
-        dsv = param_filter_query(
-            data_store, st_name='FullfieldDriftingSinusoidalGrating', st_orientation=[0, numpy.pi/2])
+        # dsv = param_filter_query(
+        #    data_store, st_name='FullfieldDriftingSinusoidalGrating', st_orientation=[0, numpy.pi/2])
         # NameError: name 'l4_exc' is not defined
-        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc.png").plot({'Vm_plot.y_lim': (-80, -50)})
-        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
-                     'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Inh.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        # 1&2 ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
+        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc.png").plot({'Vm_plot.y_lim': (-80, -50)})
+        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
+        #             'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Inh.png").plot({'Vm_plot.y_lim': (-80, -50)})
 
         # AssertionError: Error, empty datastore
         # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[0], 'sheet_activity': {}, 'spontaneous': True}), fig_param={
