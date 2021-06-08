@@ -537,7 +537,7 @@ def perform_analysis_and_visualization(data_store):
         l23_exc_or_many_analog = numpy.array(analog_ids23)[numpy.nonzero(numpy.array(
              [circular_dist(l23_exc_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids23]) < 0.1)[0]]
 
-    if True:
+    if False:
         if l23_flag:
             # pass
             # ZeroDivisionError
