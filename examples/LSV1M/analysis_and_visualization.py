@@ -198,7 +198,7 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
     mozaik.analysis.analysis.TrialToTrialFanoFactorOfAnalogSignal(
         dsv, ParameterSet({})).analyse()
 
-    if False:
+    if True:
         logger.info('10: ' + str(memory_usage_psutil()))
 
         TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store, sheet_name='V1_Exc_L4', st_name="NaturalImageWithEyeMovement",
@@ -663,13 +663,13 @@ def perform_analysis_and_visualization(data_store):
             MRfigReal(param_filter_query(data_store, sheet_name=['V1_Exc_L2/3', 'V1_Exc_L4', 'V1_Inh_L2/3', 'V1_Inh_L4'], st_contrast=[100], st_name='FullfieldDriftingSinusoidalGrating'), ParameterSet(
                 {'SimpleSheetName': 'V1_Exc_L4', 'ComplexSheetName': 'V1_Exc_L2/3'}), plot_file_name='MRReal.png', fig_param={'dpi': 100, 'figsize': (19, 12)}).plot()
 
-        # dsv = param_filter_query(
-        #    data_store, st_name='NaturalImageWithEyeMovement')
+        dsv = param_filter_query(
+            data_store, st_name='NaturalImageWithEyeMovement')
         # 1&3 ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
-        #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
-        # OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMInh.png', fig_param={
-        #             'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
+                     'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
+        OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMInh.png', fig_param={
+                     'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
 
         # 1&3 ValueError: attempt to get argmin of an empty sequence
         TrialCrossCorrelationAnalysis(data_store, ParameterSet({'neurons1': list(analog_ids), 'sheet_name1': 'V1_Exc_L4', 'neurons2': list(
