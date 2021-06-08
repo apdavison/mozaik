@@ -185,10 +185,10 @@ class Sheet(BaseComponent):
             # idds = self.pop.all_cells.astype(int)
             # idds = numpy.asarray(self.pop.all_cells)
             idds = numpy.array([i.id for i in self.pop.all_cells])
-            print("idds setup_to_record_list ", idds)
+            # print("idds setup_to_record_list ", idds)
             self.to_record[k] = [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]]
-            print("numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k] ",
-                  [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]])
+            # print("numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k] ",
+            #      [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]])
             print("self.to_record[k] ", self.to_record[k])
 
         """
@@ -411,12 +411,12 @@ class Sheet(BaseComponent):
         # print("source_ids for v ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "v"])
         # print("neurons recorded for gsyn_exc ", self.to_record["gsyn_exc"])
         # print("neurons recorded for gsyn_exc ", self.to_record["gsyn_inh"])
-        print("signal names ", [a.name for a in s.analogsignals])
+        # print("signal names ", [a.name for a in s.analogsignals])
         print("signal annotations ", [a.annotations for a in s.analogsignals])
         # workaround for wrond source ids
         print("workaround start")
         for a in s.analogsignals:
-            print(a.name)
+            # print(a.name)
             if a.name == "gsyn_exc":
                 # print(a.annotations["source_ids"])
                 # print(type(a.annotations["source_ids"]))
@@ -460,9 +460,9 @@ class Sheet(BaseComponent):
                 s.analogsignals[i].t_start = 0 * pq.ms
         print("workaround spikes")
         print("self.to_record ", self.to_record)
-        print("self.to_record[spikes] ", self.to_record["spikes"])
+        # print("self.to_record[spikes] ", self.to_record["spikes"])
         n = sorted(self.to_record["spikes"])
-        print("n sorted ", n)
+        # print("n sorted ", n)
         print("spiketrains length ", len(s.spiketrains))
         print("spikes length ", len(self.to_record["spikes"]))
         print([h.annotations["source_id"] for h in s.spiketrains])
@@ -475,6 +475,7 @@ class Sheet(BaseComponent):
             if k.annotations["source_id"] != i:
                 k.annotations["source_id"] = i
         print([j.annotations["source_id"] for j in s.spiketrains])
+        # maybe the spikes array needs to be cut to be the same as selected neurons or it will cause plotting problems
         print("workaround spikes end")
         print("analog signal length ", len(s.analogsignals))
         print("analog signal[0] length ", len(s.analogsignals[0]))
