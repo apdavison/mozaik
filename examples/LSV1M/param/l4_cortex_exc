@@ -7,7 +7,7 @@
                 # 'sx':3000.0,
                 # 'sx':2000.0,
                 # 'sx':400.0,
-                'sx':400.0,
+                'sx':300.0,
                 'sy':ref('sheets.l4_cortex_exc.params.sx'),
                 # 'density': 1500.0,
                 # 'density': 1000.0,
@@ -47,7 +47,7 @@
                             'a': 0.02,
                             'b': 0.2,
                             'c': -65.0,
-                            'd': 2.0,
+                            'd': 8.0,  # 2.0,  # default value
                             'i_offset': 0.0
                         },
                        'initial_values': {

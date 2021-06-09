@@ -12,8 +12,8 @@
                 #        'model': 'EIF_cond_exp_isfa_ista',  # Izhikevich / Izhikevich_cond
                 #        'params': {
                 #            'v_thresh': ref('sheets.l4_cortex_exc.params.cell.params.v_thresh'),
-                #            'v_rest': -70,
-                #            'v_reset': -55.0,
+                #            'v_rest': -70, # same in exc
+                #            'v_reset': -55.0, # same in exc
                 #            'tau_refrac': 0.5,
                 #            'tau_m': 10.0,
                 #            'cm': 0.04,
@@ -36,7 +36,7 @@
                         # 'model': 'IZK_cond_exp',
                         'params': {
                             'a': 0.02,
-                            'b': 0.2,
+                            'b': 0.25,  # 0.2,  # default value
                             'c': -65.0,
                             'd': 2.0,
                             'i_offset': 0.0
