@@ -138,10 +138,10 @@ class Plotting(ParametrizedObject):
 
     def _handle_parameters_and_execute_plots(self, parameters, user_parameters, gs):
         d = self.subplot(gs)
-        print("handle_parameters_and_execute_plots ", parameters)
-        print("handle_parameters_and_execute_plots ", user_parameters)
-        print("handle_parameters_and_execute_plots ", gs)
-        print("handle_parameters_and_execute_plots ", d)
+        # print("handle_parameters_and_execute_plots ", parameters)
+        # print("handle_parameters_and_execute_plots ", user_parameters)
+        # print("handle_parameters_and_execute_plots ", gs)
+        # print("handle_parameters_and_execute_plots ", d)
         for (k, (pl, gs, p)) in d.items():
             p.update(parameters)
             # THIS IS WRONG 'UP' DO NOT WORK
