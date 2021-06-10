@@ -128,7 +128,7 @@ class Sheet(BaseComponent):
 
             if isinstance(self.parameters.recorders[k].variables, str):
                 self.parameters.recorders[k].variables = [self.parameters.recorders[k].variables]
-            print("l setup_to_record_list ", l)
+            # print("l setup_to_record_list ", l)
             # print("k ", k)
             # print("l[0] ", l[0])
             # print(l[20])
@@ -162,7 +162,7 @@ class Sheet(BaseComponent):
             # print(type(l))
             # print(l.shape)
             for var in self.parameters.recorders[k].variables:
-                print(var)
+                # print(var)
 
                 # print(type(var))
                 # print("self.to_record[var] ", self.to_record[var])
@@ -172,15 +172,15 @@ class Sheet(BaseComponent):
                 # print(set(self.to_record.get(var)))
                 if var == "spikes":  # spinnaker records all spikes in the population
                     self.to_record[var] = [i.id for i in self.pop.all_cells]
-                    print("list ot record for all spikes ", self.to_record[var])
+                    # print("list ot record for all spikes ", self.to_record[var])
                 else:
-                    print("list(set(self.to_record.get(var, [])) | set(l)) ", list(set(self.to_record.get(var, [])) | set(l)))
+                    # print("list(set(self.to_record.get(var, [])) | set(l)) ", list(set(self.to_record.get(var, [])) | set(l)))
                     self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
         # print(self.to_record)
 
         # for k in self.to_record.keys():
         for k in self.to_record.keys():
-            print(k)
+            # print(k)
             # print("self.to_record[k] ", self.to_record[k])
             # idds = self.pop.all_cells.astype(int)
             # idds = numpy.asarray(self.pop.all_cells)
@@ -189,7 +189,7 @@ class Sheet(BaseComponent):
             self.to_record[k] = [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]]
             # print("numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k] ",
             #      [numpy.flatnonzero(idds == idd)[0] for idd in self.to_record[k]])
-            print("self.to_record[k] ", self.to_record[k])
+            # print("self.to_record[k] ", self.to_record[k])
 
         """
         self.to_record = {}
@@ -355,18 +355,18 @@ class Sheet(BaseComponent):
                 # cells = "all"  # record all cells
                 if cells != "all":
                     # print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
-                    print("recording ", variable)
-                    print("recording cells ", cells)
-                    print("recording population ", self.pop.label)
+                    # print("recording ", variable)
+                    # print("recording cells ", cells)
+                    # print("recording population ", self.pop.label)
                     self.pop[cells].record(variable, sampling_interval=self.parameters.recording_interval)
                     # self.pop[cells].record(
                     #    variable, sampling_interval=self.parameters.recording_interval
                     # )
                 else:
                     # print("self.parameters.recording_interval *all* ", self.parameters.recording_interval)
-                    print("recording ", variable)
-                    print("recording all cells")
-                    print("recording population ", self.pop.label)
+                    # print("recording ", variable)
+                    # print("recording all cells")
+                    # print("recording population ", self.pop.label)
                     self.pop.record(variable, sampling_interval=self.parameters.recording_interval)
                     # self.pop.record(
                     #    variable, sampling_interval=self.parameters.recording_interval
@@ -405,14 +405,14 @@ class Sheet(BaseComponent):
             return None
         s = block.segments[-1]
         s.annotations["sheet_name"] = self.name
-        print("sheet name ", self.name)
+        # print("sheet name ", self.name)
         # print("source_ids for gsyn_exc ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
         # print("source_ids for gsyn_inh ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_inh"])
         # print("source_ids for v ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "v"])
         # print("neurons recorded for gsyn_exc ", self.to_record["gsyn_exc"])
         # print("neurons recorded for gsyn_exc ", self.to_record["gsyn_inh"])
         # print("signal names ", [a.name for a in s.analogsignals])
-        print("signal annotations ", [a.annotations for a in s.analogsignals])
+        # print("signal annotations ", [a.annotations for a in s.analogsignals])
         # workaround for wrond source ids
         print("workaround start")
         for a in s.analogsignals:
@@ -435,7 +435,7 @@ class Sheet(BaseComponent):
                     a.annotations["source_ids"] = self.to_record["v"]
                     # print("a.annotations['source_ids'] ", a.annotations["source_ids"])
         print("workaround end")
-        print("signal annotations 2 ", [a.annotations for a in s.analogsignals])
+        # print("signal annotations 2 ", [a.annotations for a in s.analogsignals])
         # print("dir(s.analogsignals[0]) ", dir(s.analogsignals[0]))
         # block2 = self.pop.get_data(variables=["gsyn_exc"])
         # print("XXX2 Sheet gsyn_exc ", block2.segments[0].filter(name='gsyn_exc')[0])
@@ -459,13 +459,13 @@ class Sheet(BaseComponent):
             for i in range(0, len(s.analogsignals)):
                 s.analogsignals[i].t_start = 0 * pq.ms
         print("workaround spikes")
-        print("self.to_record ", self.to_record)
+        # print("self.to_record ", self.to_record)
         # print("self.to_record[spikes] ", self.to_record["spikes"])
         n = sorted(self.to_record["spikes"])
         # print("n sorted ", n)
         print("spiketrains length ", len(s.spiketrains))
         print("spikes length ", len(self.to_record["spikes"]))
-        print([h.annotations["source_id"] for h in s.spiketrains])
+        # print([h.annotations["source_id"] for h in s.spiketrains])
         for k, i in zip(s.spiketrains, n):
             # print("spike source id ", k.annotations["source_id"])
             # print("spike source id ", k.annotations["source_id"])
@@ -474,7 +474,7 @@ class Sheet(BaseComponent):
             # print(type(i))
             if k.annotations["source_id"] != i:
                 k.annotations["source_id"] = i
-        print([j.annotations["source_id"] for j in s.spiketrains])
+        # print([j.annotations["source_id"] for j in s.spiketrains])
         # maybe the spikes array needs to be cut to be the same as selected neurons or it will cause plotting problems
         print("workaround spikes end")
         print("analog signal length ", len(s.analogsignals))

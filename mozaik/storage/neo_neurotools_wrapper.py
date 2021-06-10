@@ -75,8 +75,8 @@ class MozaikSegment(Segment):
         """
 
         ids = [s.annotations["source_id"] for s in self.spiketrains]
-        print("spike strains source id ", ids)
-        print("spike strains ", neuron_id)
+        # print("spike strains source id ", ids)
+        # print("spike strains ", neuron_id)
         if isinstance(neuron_id, list) or isinstance(neuron_id, numpy.ndarray):
             return [self.spiketrains[ids.index(i)] for i in neuron_id]
         else:
@@ -170,12 +170,12 @@ class MozaikSegment(Segment):
         Returns ids of neurons for which excitatory conductance is stored in this segment.
         """
         # getting wrong ids here
-        print("self.full ", self.full)
+        # print("self.full ", self.full)
         if not self.full:
             self.load_full()
         # print("self.analogsignals ", self.analogsignals)
-        print([a.name for a in self.analogsignals])
-        print([a.annotations["source_ids"] for a in self.analogsignals])
+        # print([a.name for a in self.analogsignals])
+        # print([a.annotations["source_ids"] for a in self.analogsignals])
         for a in self.analogsignals:
             if a.name == "gsyn_exc":
                 # print("gsyn_exc analogsignal ", a)
