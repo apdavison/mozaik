@@ -3,7 +3,7 @@
     'component': 'mozaik.sheets.vision.VisualCorticalUniformSheet',
     'params':{
                 'name':'V1_Exc_L4',
-                'sx':4000.0,
+                # 'sx':4000.0,
                 'sx':3000.0,
                 # 'sx':2000.0,
                 # 'sx':400.0,
