@@ -132,13 +132,15 @@ class ModularConnector(Connector):
         # print("delays in connectors modular ", delays)
         # for time steps of 0.1ms, the maximum supported delay is 14.4ms for SpiNNaker
         for i, d in enumerate(delays):
-            if d > 14.4:
+            if d > 12.7:
+                # if d > 14.4:
                 # if d > 144:
                 # print("delay larger than 14.4 ", d)
                 # print("i ", i)
                 # print("type d", type(d))
-                delays[i] = 14.4
+                # delays[i] = 14.4
                 # delays[i] = 144
+                delays[i] = 12.7
 
         return delays
 
