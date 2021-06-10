@@ -128,7 +128,7 @@ class Model(BaseComponent):
         t0 = time.time()
         for sheet in list(self.sheets.values()):
             if self.first_time:
-                print("sheet first time record ", sheet)
+                # print("sheet first time record ", sheet)
                 sheet.record()
         null_segments, sim_run_time = self.reset()
         for sheet in list(self.sheets.values()):
@@ -374,6 +374,6 @@ class Model(BaseComponent):
         neuron_annotations = {}
         for s in list(self.sheets.values()):
             neuron_annotations[s.name] = s.get_neuron_annotations()
-        print("neuron_annotations ", neuron_annotations)
+        # print("neuron_annotations ", neuron_annotations)
         return neuron_annotations
 

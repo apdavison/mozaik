@@ -310,6 +310,6 @@ class SimilarAnnotationSelectorRegion(SimilarAnnotationSelector):
                 z = numpy.asarray(self.sheet.pop.all_cells)
         else:
             z = self.sheet.pop.all_cells.astype(int)
-        print("SimilarAnnotationSelectorRegion z ", z)
-        print("SimilarAnnotationSelectorRegion z[] ", z[picked[:self.parameters.num_of_cells]])
+        # print("SimilarAnnotationSelectorRegion z ", z)
+        # print("SimilarAnnotationSelectorRegion z[] ", z[picked[:self.parameters.num_of_cells]])
         return z[picked[:self.parameters.num_of_cells]]
