@@ -1799,11 +1799,11 @@ class PopulationMeanAndVar(Analysis):
         dsv = queries.param_filter_query(
             self.datastore, identifier=["PerNeuronPairValue", "PerNeuronValue"]
         )
-        print("dsv.get_analysis_result() ", dsv.get_analysis_result())
+        # print("dsv.get_analysis_result() ", dsv.get_analysis_result())
         for ads in dsv.get_analysis_result():
-            print("ads ", ads)
+            # print("ads ", ads)
             if ads.period == None:
-                print("ads.values ", ads.values)
+                # print("ads.values ", ads.values)
                 m = numpy.mean(ads.values)
                 v = numpy.var(ads.values)
             else:

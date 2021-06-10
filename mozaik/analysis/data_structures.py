@@ -97,8 +97,8 @@ class PerNeuronValue(AnalysisDataStructure):
         self.value_units = value_units
         self.values = numpy.array(values)
         self.ids = list(idds)
-        print("self.ids PerNeuronValue", self.ids)
-        print("self.values PerNeuronValue", self.values)
+        # print("self.ids PerNeuronValue", self.ids)
+        # print("self.values PerNeuronValue", self.values)
         assert len(values) == len(idds), "%s %s" % (str(values), str(idds))
 
     def get_value_by_id(self, idds):
@@ -112,9 +112,9 @@ class PerNeuronValue(AnalysisDataStructure):
         ids : AnalogSignal or list(AnalogSignal)
             List (or single) of AnalogSignal objects corresponding to ids in `idd`.
         """
-        print("self.ids ", self.ids)
-        print("self.values ", self.values)
-        print("idds ", idds)
+        # print("self.ids ", self.ids)
+        # print("self.values ", self.values)
+        # print("idds ", idds)
         # return all values
         # print(len(self.ids) == len(self.values))
         # return self.values
