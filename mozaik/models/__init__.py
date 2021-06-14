@@ -82,6 +82,8 @@ class Model(BaseComponent):
             # time_scale_factor=15.0
         )  # should have some parameters here
         # workaround for SpiNNaker error: parameter n_neurons of 2048 is too big (maximum 2047)
+        sim.set_number_of_neurons_per_core(sim.Izhikevich, 200)
+        sim.set_number_of_neurons_per_core(sim.IF_cond_exp, 200)
         # sim.set_number_of_neurons_per_core(sim.Izhikevich, 2047)
         # sim.set_number_of_neurons_per_core(sim.IF_cond_exp, 2047)
         # sim.set_number_of_neurons_per_core(sim.Izhikevich, 255)
