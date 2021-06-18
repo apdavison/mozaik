@@ -19,9 +19,9 @@ from mozaik.controller import run_workflow, setup_logging
 import mozaik.controller
 import sys
 # from pyNN import nest
-from pyNN import spiNNaker
+# from pyNN import spiNNaker
+import spynnaker8
 # from pyNN.spiNNaker.extra_models import *
-# import spynnaker8
 # from spynnaker8.extra_models import Izhikevich_cond
 from mozaik.storage.queries import *
 # from mpi4py import MPI
@@ -32,8 +32,6 @@ from mozaik.storage.queries import *
 if True:
     data_store, model = run_workflow(
         'SelfSustainedPushPull', SelfSustainedPushPull, create_experiments)
-    print("run data_store neuron ids", data_store.block.annotations["neuron_ids"])
-    print("run data_store get_stored_esyn_ids",  param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids())
     if False:
         model.connectors['V1AffConnectionOn'].store_connections(data_store)
         model.connectors['V1AffConnectionOff'].store_connections(data_store)
