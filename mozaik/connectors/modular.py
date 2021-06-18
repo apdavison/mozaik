@@ -165,6 +165,9 @@ class ModularConnector(Connector):
             )
 
         self.method = self.sim.FromListConnector(connection_list)
+        print("projection method ", self.method)
+        print("self.source.pop ", self.source.pop)
+        print("self.target.pop ", self.target.pop)
         self.proj = self.sim.Projection(
             self.source.pop,
             self.target.pop,
@@ -224,6 +227,10 @@ class ModularSamplingProbabilisticConnector(ModularConnector):
         # print("weights obtained")
         cl = numpy.hstack(cl).T
         method = self.sim.FromListConnector(cl)
+        print("ModularSamplingProbabilisticConnector")
+        print("projection method ", method)
+        print("self.source.pop ", self.source.pop)
+        print("self.target.pop ", self.target.pop)
 
         logger.warning(
             "%s(%s): %g connections were created, %g per target neuron [%g]"
@@ -300,6 +307,10 @@ class ModularSingleWeightProbabilisticConnector(ModularConnector):
             )
 
         method = self.sim.FromListConnector(cl)
+        print("ModularSingleWeightProbabilisticConnector")
+        print("projection method ", method)
+        print("self.source.pop ", self.source.pop)
+        print("self.target.pop ", self.target.pop)
         logger.warning(
             "%s: %g %g",
             self.name,
@@ -434,6 +445,10 @@ class ModularSamplingProbabilisticConnectorAnnotationSamplesCount(ModularConnect
 
         cl = numpy.hstack(cl).T
         method = self.sim.FromListConnector(cl)
+        print("ModularSamplingProbabilisticConnectorAnnotationSamplesCount")
+        print("projection method ", method)
+        print("self.source.pop ", self.source.pop)
+        print("self.target.pop ", self.target.pop)
 
         logger.warning(
             "%s(%s): %g connections were created, %g per target neuron [%g]"
