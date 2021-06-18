@@ -12,16 +12,16 @@ def create_experiments(model):
         # Lets kick the network up into activation
 
         # Spontaneous Activity
-        NoStimulation(model, ParameterSet(
-            {'duration': 3*8*2*5*3*8*7})),
+        # NoStimulation(model, ParameterSet(
+        #    {'duration': 3*8*2*5*3*8*7})),
 
         # Measure orientation tuning with full-filed sinusoidal gratins
         MeasureOrientationTuningFullfield(model, ParameterSet(
-             {'num_orientations': 10, 'spatial_frequency': 0.8, 'temporal_frequency': 2, 'grating_duration': 2*143*7, 'contrasts': [30, 100], 'num_trials':10})),
+             {'num_orientations': 2, 'spatial_frequency': 0.8, 'temporal_frequency': 2, 'grating_duration': 2*143*7, 'contrasts': [30, 100], 'num_trials':10})),
         # 'num_orientations': 10
         # Measure response to natural image with simulated eye movement
-        MeasureNaturalImagesWithEyeMovement(model, ParameterSet(
-            {'stimulus_duration': 2*143*7, 'num_trials': 10})),
+        # MeasureNaturalImagesWithEyeMovement(model, ParameterSet(
+        #    {'stimulus_duration': 2*143*7, 'num_trials': 10})),
     ]
 
 
