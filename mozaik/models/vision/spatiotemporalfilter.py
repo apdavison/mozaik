@@ -742,9 +742,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #    break
                 assert isinstance(input_current, dict)
                 t = input_current['times'] + offset
+                t2 = t[::2]  # take every other step
                 a = self.parameters.linear_scaler * input_current['amplitudes']
+                a2 = a[::2]  # take every other step
                 # scs.set_parameters(times=t, amplitudes=a, copy=False)
-                scs.set_parameters(times=t, amplitudes=a)
+                scs.set_parameters(times=t2, amplitudes=a2)
+                # scs.set_parameters(times=t, amplitudes=a)
                 # if self.parameters.mpi_reproducible_noise:
                 #    print("noisy current modified in process input")
                 #    t = numpy.arange(0, duration, ts) + offset
