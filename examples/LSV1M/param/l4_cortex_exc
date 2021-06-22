@@ -9,7 +9,8 @@
                 # 'sx':400.0,
                 # 'sx':300.0,
                 'sy':ref('sheets.l4_cortex_exc.params.sx'),
-                'density': 1500.0,
+                # 'density': 1500.0,
+                'density': 750.0,  # to make v1 populations half size 12000,3000
                 # 'density': 1000.0,
                 # 'density': 500.0,
                 # 'density': 100.0,

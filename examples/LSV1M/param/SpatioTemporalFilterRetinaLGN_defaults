@@ -1,7 +1,8 @@
 {
     'component': 'mozaik.models.vision.spatiotemporalfilter.SpatioTemporalFilterRetinaLGN',
     'params': {
-        'density': 100, # neurons per degree squared
+        # 'density': 100, # neurons per degree squared
+        'density': 50,  # to make lgn populations half size 1250
         # 'density': 70,
         # 'density': 1,
         # 'density': 20,
