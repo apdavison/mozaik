@@ -4,6 +4,9 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.storage.queries import *
 from mozaik.visualization.plotting import *
 import numpy
+from elephant import statistics
+import quantities as pq
+from pyNN.utility.plotting import Figure, Panel
 
 
 def perform_analysis_and_visualization(data_store):
@@ -128,3 +131,23 @@ def perform_analysis_and_visualization(data_store):
             fig_param={"dpi": 100, "figsize": (17, 5)},
             plot_file_name="InhRaster.png",
         ).plot({"SpikeRasterPlot.group_trials": True})
+
+    # plot population firing rate histogram
+    # exc layer
+    histex = statistics.time_histogram(spike_ids, bin_size=1 * pq.s)
+    print("histex ", histex)
+    Figure(
+        Panel(histex[0],
+            ylabel="Membrane potential (mV)",
+            xticks=True,
+            xlabel="Time (ms)", yticks=True),
+    ).save("histex.png")
+    # inh layer
+    histin = statistics.time_histogram(spike_ids, bin_size=1 * pq.s)
+    print("histin ", histin)
+    Figure(
+        Panel(histin[0],
+            ylabel="Membrane potential (mV)",
+            xticks=True,
+            xlabel="Time (ms)", yticks=True),
+    ).save("histin.png")
