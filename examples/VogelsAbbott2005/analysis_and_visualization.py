@@ -5,6 +5,7 @@ from mozaik.storage.queries import *
 from mozaik.visualization.plotting import *
 import numpy
 from elephant import statistics
+from viziphant.statistics import plot_time_histogram
 import quantities as pq
 from pyNN.utility.plotting import Figure, Panel
 
@@ -134,20 +135,24 @@ def perform_analysis_and_visualization(data_store):
 
     # plot population firing rate histogram
     # exc layer
-    histex = statistics.time_histogram(spike_ids, bin_size=1 * pq.s)
+    histex = statistics.time_histogram(param_filter_query(data_store, sheet_name="Inh_Layer").get_segments()[0].spiketrains, bin_size=1 * pq.s)
     print("histex ", histex)
-    Figure(
-        Panel(histex[0],
-            ylabel="Membrane potential (mV)",
-            xticks=True,
-            xlabel="Time (ms)", yticks=True),
-    ).save("histex.png")
+    # Figure(
+    #    Panel(histex[0],
+    #        ylabel="Membrane potential (mV)",
+    #        xticks=True,
+    #        xlabel="Time (ms)", yticks=True),
+    # ).save("histex.png")
     # inh layer
-    histin = statistics.time_histogram(spike_ids, bin_size=1 * pq.s)
+    plot_time_histogram(histex, units='s')
+    plt.show()
+    histin = statistics.time_histogram(param_filter_query(data_store, sheet_name="Exc_Layer").get_segments()[0].spiketrains, bin_size=1 * pq.s)
     print("histin ", histin)
-    Figure(
-        Panel(histin[0],
-            ylabel="Membrane potential (mV)",
-            xticks=True,
-            xlabel="Time (ms)", yticks=True),
-    ).save("histin.png")
+    # Figure(
+    #    Panel(histin[0],
+    #        ylabel="Membrane potential (mV)",
+    #        xticks=True,
+    #        xlabel="Time (ms)", yticks=True),
+    # ).save("histin.png")
+    plot_time_histogram(histin, units='s')
+    plt.show()
