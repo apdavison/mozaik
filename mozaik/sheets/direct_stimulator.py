@@ -250,7 +250,7 @@ class Kick(DirectStimulator):
         # d = dict((i, j) for i, j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))  # spinnaker abbott
         # d = dict((j, i) for i, j in enumerate(self.sheet.pop.all_cells))  # spinnaker abbott
         # print("self.ids ", self.ids)
-        print("d ", d)
+        # print("d ", d)
         # self.to_stimulate_indexes = [d[i.id] for i in self.ids]
         self.to_stimulate_indexes = [d[str(i)] for i in self.ids]  # str because there is an object
 
