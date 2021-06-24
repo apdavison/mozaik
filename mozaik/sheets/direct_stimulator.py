@@ -246,10 +246,10 @@ class Kick(DirectStimulator):
         self.ids = population_selector(sheet,self.parameters.population_selector.params).generate_idd_list_of_neurons()
         # print(self.ids[0].id)  # 1901
         # d = dict((j, i) for i, j in enumerate(self.sheet.pop.all_cells))  # nest
-        d = dict((str(j), i) for i, j in enumerate(self.sheet.pop.all_cells))  # spinnaker
-        # d = dict((i, j) for i, j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))  # spinnaker
-        print("self.ids ", self.ids)
-        print("d ", d)
+        # d = dict((str(j), i) for i, j in enumerate(self.sheet.pop.all_cells))  # spinnaker
+        d = dict((i, j) for i, j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))  # spinnaker abbott
+        # print("self.ids ", self.ids)
+        # print("d ", d)
         # self.to_stimulate_indexes = [d[i.id] for i in self.ids]
         self.to_stimulate_indexes = [d[str(i)] for i in self.ids]  # str because there is an object
 
