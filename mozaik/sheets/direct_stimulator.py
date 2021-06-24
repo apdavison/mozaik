@@ -248,12 +248,10 @@ class Kick(DirectStimulator):
         # d = dict((j, i) for i, j in enumerate(self.sheet.pop.all_cells))  # nest
         d = dict((str(j), i) for i, j in enumerate(self.sheet.pop.all_cells))  # spinnaker
         # d = dict((i, j) for i, j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))  # spinnaker
-        # print(d)
+        print("self.ids ", self.ids)
+        print("d ", d)
         # self.to_stimulate_indexes = [d[i.id] for i in self.ids]
-        try:
-            self.to_stimulate_indexes = [d[str(i)] for i in self.ids]  # str because there is an object
-        except KeyError:
-            self.to_stimulate_indexes = [d[i.id] for i in self.ids]  # for abbott only?
+        self.to_stimulate_indexes = [d[str(i)] for i in self.ids]  # str because there is an object
 
         exc_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.exc_weight,delay=self.sheet.model.parameters.min_delay)
         if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
