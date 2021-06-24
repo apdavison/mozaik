@@ -4,10 +4,11 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.storage.queries import *
 from mozaik.visualization.plotting import *
 import numpy
-from elephant import statistics
-from viziphant.statistics import plot_time_histogram
+# from elephant import statistics
+# from viziphant.statistics import plot_time_histogram
 import quantities as pq
 from pyNN.utility.plotting import Figure, Panel
+from matplotlib import pyplot as plt
 
 
 def perform_analysis_and_visualization(data_store):
@@ -134,25 +135,37 @@ def perform_analysis_and_visualization(data_store):
         ).plot({"SpikeRasterPlot.group_trials": True})
 
     # plot population firing rate histogram
-    # exc layer
-    histex = statistics.time_histogram(param_filter_query(data_store, sheet_name="Inh_Layer").get_segments()[0].spiketrains, bin_size=1 * pq.s)
-    print("histex ", histex)
-    # Figure(
-    #    Panel(histex[0],
-    #        ylabel="Membrane potential (mV)",
-    #        xticks=True,
-    #        xlabel="Time (ms)", yticks=True),
-    # ).save("histex.png")
-    # inh layer
-    plot_time_histogram(histex, units='s')
+    sc = []
+    print(len(param_filter_query(data_store, sheet_name="Exc_Layer").get_segments()[0].spiketrains))
+    # print(len(param_filter_query(data_store, sheet_name="Inh_Layer").get_segments()[0].spiketrains))
+    for s in param_filter_query(data_store, sheet_name="Exc_Layer").get_segments()[0].spiketrains:
+        sc.append(len(s))
+    # for k in param_filter_query(data_store, sheet_name="Inh_Layer").get_segments()[0].spiketrains:
+    #    sc.append(len(k))
+    # print(sc)
+    print(len(sc))
+    # h = histogram(sc, bins=50)
+    # print(h)
+    plt.figure()
+    plt.hist(sc, bins=50)
+    # plt.xlabel("Number of Spikes")
+    # plt.ylabel("Count")
+    # plt.title("Histogram of Spike Counts")
     plt.show()
-    histin = statistics.time_histogram(param_filter_query(data_store, sheet_name="Exc_Layer").get_segments()[0].spiketrains, bin_size=1 * pq.s)
-    print("histin ", histin)
-    # Figure(
-    #    Panel(histin[0],
-    #        ylabel="Membrane potential (mV)",
-    #        xticks=True,
-    #        xlabel="Time (ms)", yticks=True),
-    # ).save("histin.png")
-    plot_time_histogram(histin, units='s')
+    plt.savefig("histogramalle.png")
+    sci = []
+    print(len(param_filter_query(data_store, sheet_name="Inh_Layer").get_segments()[0].spiketrains))
+    for k in param_filter_query(data_store, sheet_name="Inh_Layer").get_segments()[0].spiketrains:
+        sci.append(len(k))
+    # print(sc)
+    print(len(sc))
+    # h = histogram(sc, bins=50)
+    # print(h)
+    # sci = []
+    plt.figure()
+    plt.hist(sci, bins=50)
+    # plt.xlabel("Number of Spikes")
+    # plt.ylabel("Count")
+    # plt.title("histogram of spike counts")
     plt.show()
+    plt.savefig("histogramalli.png")
