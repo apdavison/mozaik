@@ -347,7 +347,7 @@ class DataStore(DataStoreView):
 
     def set_neuron_ids(self, neuron_ids):
         self.block.annotations["neuron_ids"] = neuron_ids
-        print("neuron ids datastore set ", neuron_ids)
+        # print("neuron ids datastore set ", neuron_ids)
 
     def set_model_parameters(self, parameters):
         self.block.annotations["model_parameters"] = parameters
