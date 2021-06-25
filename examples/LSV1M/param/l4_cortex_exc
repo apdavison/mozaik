@@ -12,7 +12,7 @@
                 # 'density': 1500.0,
                 # 'density': 750.0,  # to make v1 populations half size 12000,3000
                 # 'density': 375,
-                'density': 187.5/4,
+                'density': 187.5/8,
                 # 'density': 1000.0,
                 # 'density': 500.0,
                 # 'density': 100.0,

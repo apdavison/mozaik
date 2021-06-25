@@ -4,7 +4,7 @@
         # 'density': 100, # neurons per degree squared
         # 'density': 50,  # to make lgn populations half size 1250
         # 'density': 25,
-        'density': 12.5/4,
+        'density': 12.5/8,
         # 'density': 70,
         # 'density': 1,
         # 'density': 20,
