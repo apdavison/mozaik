@@ -12,6 +12,11 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.controller import Global
 from visualization_functions import *
 from parameters import ParameterSet
+# from elephant.spike_train_dissimilarity import victor_purpura_distance, van_rossum_distance
+import quantities as pq
+from matplotlib import pyplot as plt
+from elephant import statistics
+from viziphant.statistics import plot_time_histogram
 
 # logger = mozaik.getMozaikLogger()
 logger = logging.getLogger(__name__)
@@ -620,6 +625,71 @@ def perform_analysis_and_visualization(data_store):
             'scatter':  True,
             'resolution': 0
         }
+        # spike count histogram
+        try:
+            sc = []
+            for s in param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist4exc.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist4excel.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(data_store, sheet_name="V1_Inh_L4").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist4inh.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(data_store, sheet_name="V1_Inh_L4").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist4inhel.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(data_store, sheet_name="V1_Exc_L2/3").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist23exc.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(data_store, sheet_name="V1_Exc_L2/3").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist23excel.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(data_store, sheet_name="V1_Inh_L2/3").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist23inh.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(data_store, sheet_name="V1_Inh_L2/3").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist23inhel.png")
+        except Exception as e:
+            print(e)
 
         # self sustained plotting
 
