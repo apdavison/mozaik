@@ -733,6 +733,72 @@ def perform_analysis_and_visualization(data_store):
         except Exception as e:
             print(e)
 
+        # spike count histogram
+        try:
+            sc = []
+            for s in param_filter_query(dsv, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist4exc2.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(dsv, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist4excel2.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(dsv, sheet_name="V1_Inh_L4").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist4inh2.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(dsv, sheet_name="V1_Inh_L4").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist4inhel2.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(dsv, sheet_name="V1_Exc_L2/3").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist23exc2.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(dsv, sheet_name="V1_Exc_L2/3").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist23excel2.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(dsv, sheet_name="V1_Inh_L2/3").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist23inh2.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(dsv, sheet_name="V1_Inh_L2/3").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist23inhel2.png")
+        except Exception as e:
+            print(e)
+
         dsv = param_filter_query(
             data_store, st_name='FullfieldDriftingSinusoidalGrating', st_orientation=[0, numpy.pi/2])
         # NameError: name 'l4_exc' is not defined
@@ -792,6 +858,73 @@ def perform_analysis_and_visualization(data_store):
                              'dpi': 100, 'figsize': (25, 12)}, plot_file_name="InhL233.png").plot({'Vm_plot.y_lim': (-80, -50)})
             except Exception as e:
                 print(e)
+
+        # spike count histogram
+        try:
+            sc = []
+            for s in param_filter_query(dsv, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist4exc3.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(dsv, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist4excel3.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(dsv, sheet_name="V1_Inh_L4").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist4inh3.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(dsv, sheet_name="V1_Inh_L4").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist4inhel3.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(dsv, sheet_name="V1_Exc_L2/3").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist23exc3.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(dsv, sheet_name="V1_Exc_L2/3").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist23excel3.png")
+        except Exception as e:
+            print(e)
+        try:
+            sc = []
+            for s in param_filter_query(dsv, sheet_name="V1_Inh_L2/3").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("hist23inh3.png")
+        except Exception as e:
+            print(e)
+        try:
+            histogram = statistics.time_histogram(param_filter_query(dsv, sheet_name="V1_Inh_L2/3").get_segments()[0].spiketrains, bin_size=5*pq.ms)
+            plot_time_histogram(histogram, units='s')
+            plt.savefig("hist23inhel3.png")
+        except Exception as e:
+            print(e)
+
         if l23_flag:
             try:
                 SpontActOverview(data_store, ParameterSet({'l4_exc_neuron': analog_ids[0], 'l4_inh_neuron': analog_ids_inh[0], 'l23_exc_neuron': analog_ids23[
