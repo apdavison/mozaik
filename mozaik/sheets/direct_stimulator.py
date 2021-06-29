@@ -252,9 +252,9 @@ class Kick(DirectStimulator):
         # print("self.ids ", self.ids)
         # print("d ", d)
         # self.to_stimulate_indexes = [d[i.id] for i in self.ids]
-        # self.to_stimulate_indexes = [d[str(i)] for i in self.ids]  # str because there is an object
+        self.to_stimulate_indexes = [d[str(i)] for i in self.ids]  # str because there is an object
         # workaround
-        self.to_stimulate_indexes = [k.item() for k in self.ids]  # spinnaker abbott
+        # self.to_stimulate_indexes = [k.item() for k in self.ids]  # spinnaker abbott
 
         exc_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.exc_weight,delay=self.sheet.model.parameters.min_delay)
         if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
