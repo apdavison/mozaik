@@ -1,7 +1,8 @@
 {
     "1" : {
       'component' :  'mozaik.sheets.population_selector.RCRandomN',
-      'variables' : ("spikes","v","gsyn_exc" , "gsyn_inh"),
+      # 'variables' : ("spikes","v","gsyn_exc" , "gsyn_inh"),
+      'variables' : ("spikes"),
       'params' :  {
                     'num_of_cells' : 5,
                   }
