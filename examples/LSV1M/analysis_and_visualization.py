@@ -533,23 +533,29 @@ def perform_analysis_and_visualization(data_store):
     exc_sheets = list(set(data_store.sheets()) &
                       set(['V1_Exc_L4', 'V1_Exc_L2/3']))
     l23_flag = 'V1_Exc_L2/3' in set(sheets)
+    try:
+        NeuronAnnotationsToPerNeuronValues(data_store, ParameterSet({})).analyse()
+    except Exception as e:
+        print(e)
 
-    NeuronAnnotationsToPerNeuronValues(data_store, ParameterSet({})).analyse()
-
-    analog_ids = param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[
-        0].get_stored_esyn_ids()
-    analog_ids_inh = param_filter_query(
-        data_store, sheet_name="V1_Inh_L4").get_segments()[0].get_stored_esyn_ids()
+    # analog_ids = param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[
+    #    0].get_stored_esyn_ids()
+    analog_ids = None
+    # analog_ids_inh = param_filter_query(
+    #    data_store, sheet_name="V1_Inh_L4").get_segments()[0].get_stored_esyn_ids()
+    analog_ids_inh = None
     spike_ids = param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[
         0].get_stored_spike_train_ids()
     spike_ids_inh = param_filter_query(data_store, sheet_name="V1_Inh_L4").get_segments()[
         0].get_stored_spike_train_ids()
 
     if l23_flag:
-        analog_ids23 = param_filter_query(
-            data_store, sheet_name="V1_Exc_L2/3").get_segments()[0].get_stored_esyn_ids()
-        analog_ids_inh23 = param_filter_query(
-            data_store, sheet_name="V1_Inh_L2/3").get_segments()[0].get_stored_esyn_ids()
+        # analog_ids23 = param_filter_query(
+        #    data_store, sheet_name="V1_Exc_L2/3").get_segments()[0].get_stored_esyn_ids()
+        analog_ids23 = None
+        # analog_ids_inh23 = param_filter_query(
+        #    data_store, sheet_name="V1_Inh_L2/3").get_segments()[0].get_stored_esyn_ids()
+        analog_ids_inh23 = None
         spike_ids23 = param_filter_query(
             data_store, sheet_name="V1_Exc_L2/3").get_segments()[0].get_stored_spike_train_ids()
         spike_ids_inh23 = param_filter_query(
@@ -559,48 +565,68 @@ def perform_analysis_and_visualization(data_store):
         analog_ids_inh23 = None
 
     if l23_flag:
-        l23_exc_or = data_store.get_analysis_result(
-            identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Exc_L2/3')[0]
-        l23_inh_or = data_store.get_analysis_result(
-            identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Inh_L2/3')[0]
-
-    l4_exc_or = data_store.get_analysis_result(
-        identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Exc_L4')
-    l4_exc_phase = data_store.get_analysis_result(
-        identifier='PerNeuronValue', value_name='LGNAfferentPhase', sheet_name='V1_Exc_L4')
-    l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
-        l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
-    l4_inh_or = data_store.get_analysis_result(
-        identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Inh_L4')
-    l4_inh_phase = data_store.get_analysis_result(
-        identifier='PerNeuronValue', value_name='LGNAfferentPhase', sheet_name='V1_Inh_L4')
-    l4_inh = analog_ids_inh[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
-        l4_inh_or[0].get_value_by_id(analog_ids_inh), l4_inh_phase[0].get_value_by_id(analog_ids_inh))])]
-    l4_exc_or_many = numpy.array(l4_exc_or[0].ids)[numpy.nonzero(numpy.array([circular_dist(
-        o, 0, numpy.pi) for (o, p) in zip(l4_exc_or[0].values, l4_exc_phase[0].values)]) < 0.1)[0]]
-
-    l4_exc_or_many = list(set(l4_exc_or_many) & set(spike_ids))
+        try:
+            l23_exc_or = data_store.get_analysis_result(
+                identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Exc_L2/3')[0]
+            l23_inh_or = data_store.get_analysis_result(
+                identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Inh_L2/3')[0]
+        except Exception as e:
+            print(e)
+    try:
+        l4_exc_or = data_store.get_analysis_result(
+            identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Exc_L4')
+        l4_exc_phase = data_store.get_analysis_result(
+            identifier='PerNeuronValue', value_name='LGNAfferentPhase', sheet_name='V1_Exc_L4')
+    except Exception as e:
+        print(e)
+    # l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
+    #    l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
+    try:
+        l4_inh_or = data_store.get_analysis_result(
+            identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Inh_L4')
+        l4_inh_phase = data_store.get_analysis_result(
+            identifier='PerNeuronValue', value_name='LGNAfferentPhase', sheet_name='V1_Inh_L4')
+    except Exception as e:
+        print(e)
+    # l4_inh = analog_ids_inh[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
+    #    l4_inh_or[0].get_value_by_id(analog_ids_inh), l4_inh_phase[0].get_value_by_id(analog_ids_inh))])]
+    try:
+        l4_exc_or_many = numpy.array(l4_exc_or[0].ids)[numpy.nonzero(numpy.array([circular_dist(
+            o, 0, numpy.pi) for (o, p) in zip(l4_exc_or[0].values, l4_exc_phase[0].values)]) < 0.1)[0]]
+    except Exception as e:
+        print(e)
+    try:
+        l4_exc_or_many = list(set(l4_exc_or_many) & set(spike_ids))
+    except Exception as e:
+        print(e)
 
     if l23_flag:
-        l23_exc_or_many = numpy.array(l23_exc_or.ids)[numpy.nonzero(numpy.array(
-            [circular_dist(o, 0, numpy.pi) for o in l23_exc_or.values]) < 0.1)[0]]
-        l23_exc_or_many = list(set(l23_exc_or_many) & set(spike_ids23))
-
-    orr = list(set([MozaikParametrized.idd(s).orientation for s in queries.param_filter_query(
-        data_store, st_name='FullfieldDriftingSinusoidalGrating', st_contrast=100).get_stimuli()]))
-
-    l4_exc_or_many_analog = numpy.array(analog_ids)[numpy.nonzero(numpy.array(
-        [circular_dist(l4_exc_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids]) < 0.1)[0]]
-    l4_inh_or_many_analog = numpy.array(analog_ids_inh)[numpy.nonzero(numpy.array(
-        [circular_dist(l4_inh_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh]) < 0.15)[0]]
+        try:
+            l23_exc_or_many = numpy.array(l23_exc_or.ids)[numpy.nonzero(numpy.array(
+                [circular_dist(o, 0, numpy.pi) for o in l23_exc_or.values]) < 0.1)[0]]
+            l23_exc_or_many = list(set(l23_exc_or_many) & set(spike_ids23))
+        except Exception as e:
+            print(e)
+    try:
+        orr = list(set([MozaikParametrized.idd(s).orientation for s in queries.param_filter_query(
+            data_store, st_name='FullfieldDriftingSinusoidalGrating', st_contrast=100).get_stimuli()]))
+    except Exception as e:
+        print(e)
+    # l4_exc_or_many_analog = numpy.array(analog_ids)[numpy.nonzero(numpy.array(
+    #    [circular_dist(l4_exc_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids]) < 0.1)[0]]
+    # l4_inh_or_many_analog = numpy.array(analog_ids_inh)[numpy.nonzero(numpy.array(
+    #    [circular_dist(l4_inh_or[0].get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh]) < 0.15)[0]]
 
     if l23_flag:
-        # pass
+        pass
         # wrong ids
-        l23_inh_or_many_analog = numpy.array(analog_ids_inh23)[numpy.nonzero(numpy.array(
-            [circular_dist(l23_inh_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh23]) < 0.15)[0]]
-        l23_exc_or_many_analog = numpy.array(analog_ids23)[numpy.nonzero(numpy.array(
-            [circular_dist(l23_exc_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids23]) < 0.1)[0]]
+        # try:
+        #    l23_inh_or_many_analog = numpy.array(analog_ids_inh23)[numpy.nonzero(numpy.array(
+        #        [circular_dist(l23_inh_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids_inh23]) < 0.15)[0]]
+        #    l23_exc_or_many_analog = numpy.array(analog_ids23)[numpy.nonzero(numpy.array(
+        #        [circular_dist(l23_exc_or.get_value_by_id(i), 0, numpy.pi) for i in analog_ids23]) < 0.1)[0]]
+        # except Exception as e:
+        #    print(e)
 
     if True:
         if l23_flag:
@@ -616,7 +642,10 @@ def perform_analysis_and_visualization(data_store):
             except Exception as e:
                 print(e)
         else:
-            analysis(data_store, analog_ids, analog_ids_inh)
+            try:
+                analysis(data_store, analog_ids, analog_ids_inh)
+            except Exception as e:
+                print(e)
 
     if True:  # PLOTTING
         activity_plot_param = {
@@ -693,27 +722,33 @@ def perform_analysis_and_visualization(data_store):
 
         # self sustained plotting
 
-        dsv = param_filter_query(data_store, st_name=[
-                                 'InternalStimulus'], st_direct_stimulation_name=None)
+
         try:
+            dsv = param_filter_query(data_store, st_name=[
+                'InternalStimulus'], st_direct_stimulation_name=None)
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[0], 'sheet_activity': {
             }, 'spontaneous': True}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSExcAnalog.png').plot()
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': analog_ids_inh[0], 'sheet_activity': {
             }, 'spontaneous': True}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhAnalog.png').plot()
-
+        except Exception as e:
+            print(e)
+        try:
             RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neurons': spike_ids, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
                    'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSExcRasterL4.png').plot({'SpikeRasterPlot.group_trials': True})
             RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neurons': spike_ids_inh, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
                    'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhRasterL4.png').plot({'SpikeRasterPlot.group_trials': True})
         except Exception as e:
             print(e)
+
         if l23_flag:
             try:
                 OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L2/3', 'neuron': analog_ids23[0], 'sheet_activity': {
                 }, 'spontaneous': True}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSExcAnalog23.png').plot()
                 OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L2/3', 'neuron': analog_ids_inh23[0], 'sheet_activity': {
                 }, 'spontaneous': True}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhAnalog23.png').plot()
-
+            except Exception as e:
+                print(e)
+            try:
                 RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L2/3', 'neurons': spike_ids23, 'trial_averaged_histogram': False, 'spontaneous': False}),
                            fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSExcRasterL23.png').plot({'SpikeRasterPlot.group_trials': True})
                 RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L2/3', 'neurons': spike_ids_inh23, 'trial_averaged_histogram': False, 'spontaneous': False}),
@@ -721,10 +756,10 @@ def perform_analysis_and_visualization(data_store):
             except Exception as e:
                 print(e)
 
-        dsv = param_filter_query(
-            data_store, st_name='FullfieldDriftingSinusoidalGrating')
-        # print("is dsv empty? ", dsv)
         try:
+            dsv = param_filter_query(
+                data_store, st_name='FullfieldDriftingSinusoidalGrating')
+            # print("is dsv empty? ", dsv)
             # AssertionError: Error, empty datastore
             RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neurons': spike_ids, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
                        'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedExcRaster.png').plot({'SpikeRasterPlot.group_trials': True})
@@ -799,11 +834,11 @@ def perform_analysis_and_visualization(data_store):
         except Exception as e:
             print(e)
 
-        dsv = param_filter_query(
-            data_store, st_name='FullfieldDriftingSinusoidalGrating', st_orientation=[0, numpy.pi/2])
-        # NameError: name 'l4_exc' is not defined
-        # 1&2 ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
         try:
+            dsv = param_filter_query(
+                data_store, st_name='FullfieldDriftingSinusoidalGrating', st_orientation=[0, numpy.pi / 2])
+            # NameError: name 'l4_exc' is not defined
+            # 1&2 ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
                          'dpi': 100, 'figsize': (25, 12)}, plot_file_name="Exc.png").plot({'Vm_plot.y_lim': (-80, -50)})
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': l4_inh, 'sheet_activity': {}, 'spontaneous': True}), fig_param={
@@ -973,10 +1008,10 @@ def perform_analysis_and_visualization(data_store):
             except Exception as e:
                 print(e)
 
-        dsv = param_filter_query(
-            data_store, st_name='NaturalImageWithEyeMovement')
-        # 1&3 ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
         try:
+            dsv = param_filter_query(
+                data_store, st_name='NaturalImageWithEyeMovement')
+            # 1&3 ValueError: x and y must have same first dimension, but have shapes (83242,) and (87546, 1)
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': l4_exc, 'sheet_activity': {}, 'spontaneous': True}), plot_file_name='NMExc.png', fig_param={
                          'dpi': 100, 'figsize': (28, 12)}).plot({'Vm_plot.y_lim': (-70, -50), 'Conductance_plot.y_lim': (0, 50.0)})
         except Exception as e:
@@ -992,17 +1027,19 @@ def perform_analysis_and_visualization(data_store):
                 analog_ids23), 'sheet_name2': 'V1_Exc_L2/3', 'window_length': 250}), fig_param={"dpi": 100, "figsize": (15, 6.5)}, plot_file_name="trial-to-trial-cross-correlation.png").plot({'*.Vm.title': None, '*.fontsize': 19})
         except Exception as e:
             print(e)
-        dsv = queries.param_filter_query(data_store, value_name=[
-                                         'orientation HWHH of Firing rate', 'orientation CV(Firing rate)'], sheet_name=["V1_Exc_L2/3"], st_contrast=100)
-        # 1&3 AssertionError: Error, not pairs of PerNeuronValue ADS in datastore seem to have the same value_units
+
         try:
+            dsv = queries.param_filter_query(data_store, value_name=[
+                'orientation HWHH of Firing rate', 'orientation CV(Firing rate)'], sheet_name=["V1_Exc_L2/3"],
+                                             st_contrast=100)
+            # 1&3 AssertionError: Error, not pairs of PerNeuronValue ADS in datastore seem to have the same value_units
             PerNeuronValueScatterPlot(dsv, ParameterSet({'only_matching_units': False, 'ignore_nan': True, 'lexicographic_order': False}), plot_file_name='CVvsHWHH.png').plot(
                 {'*.x_lim': (0, 90), '*.y_lim': (0, 1.0)})
         except Exception as e:
             print(e)
 
-        dsv = param_filter_query(data_store, st_name=['InternalStimulus'])
         try:
+            dsv = param_filter_query(data_store, st_name=['InternalStimulus'])
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': analog_ids_inh[0], 'sheet_activity': {
             }, 'spontaneous': False}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhAnalog.png').plot()
         except Exception as e:
