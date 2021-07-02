@@ -19,8 +19,8 @@ from mozaik.controller import run_workflow, setup_logging
 import mozaik.controller
 import sys
 # from pyNN import nest
-# from pyNN import spiNNaker
-import spynnaker8
+from pyNN import spiNNaker
+# import spynnaker8
 # from pyNN.spiNNaker.extra_models import *
 # from spynnaker8.extra_models import Izhikevich_cond
 from mozaik.storage.queries import *
