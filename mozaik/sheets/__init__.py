@@ -170,13 +170,13 @@ class Sheet(BaseComponent):
                 # print(set(l))
                 # print(set(self.to_record.get(var, [])))
                 # print(set(self.to_record.get(var)))
-                self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))
-                # if var == "spikes":  # spinnaker records all spikes in the population
-                #    self.to_record[var] = [i.id for i in self.pop.all_cells]
-                #    # print("list ot record for all spikes ", self.to_record[var])
-                # else:
-                #    # print("list(set(self.to_record.get(var, [])) | set(l)) ", list(set(self.to_record.get(var, [])) | set(l)))
-                #    self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
+                # self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))
+                if var == "spikes":  # spinnaker records all spikes in the population
+                    self.to_record[var] = [i.id for i in self.pop.all_cells]
+                    # print("list ot record for all spikes ", self.to_record[var])
+                else:
+                    # print("list(set(self.to_record.get(var, [])) | set(l)) ", list(set(self.to_record.get(var, [])) | set(l)))
+                    self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))  # unhashabse type: 'IDMixin'
         # print(self.to_record)
 
         # for k in self.to_record.keys():
@@ -478,7 +478,7 @@ class Sheet(BaseComponent):
             # print("i ", i)
             # print(type(i))
             if len(k.times) > 0:
-                print("spikes ", k.times)
+                print("spikes more than zero ", k.times)
             if k.annotations["source_id"] != i:
                 k.annotations["source_id"] = i
         # print([j.annotations["source_id"] for j in s.spiketrains])
