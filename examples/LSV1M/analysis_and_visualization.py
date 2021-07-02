@@ -45,18 +45,29 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
                                                    st_name='FullfieldDriftingSinusoidalGrating'), ParameterSet({})).analyse()
     except Exception as e:
         print(e)
-    TrialAveragedFiringRate(param_filter_query(
-        data_store, st_direct_stimulation_name=None, st_name='InternalStimulus'), ParameterSet({})).analyse()
+    try:
+        TrialAveragedFiringRate(param_filter_query(
+            data_store, st_direct_stimulation_name=None, st_name='InternalStimulus'), ParameterSet({})).analyse()
+    except Exception as e:
+        print(e)
     logger.info('1: ' + str(memory_usage_psutil()))
-    Irregularity(param_filter_query(data_store, st_direct_stimulation_name=None,
-                                    st_name='InternalStimulus'), ParameterSet({})).analyse()
-
-    PSTH(param_filter_query(data_store),
-         ParameterSet({'bin_length': 10.0})).analyse()
+    try:
+        Irregularity(param_filter_query(data_store, st_direct_stimulation_name=None,
+                                        st_name='InternalStimulus'), ParameterSet({})).analyse()
+    except Exception as e:
+        print(e)
+    try:
+        PSTH(param_filter_query(data_store),
+             ParameterSet({'bin_length': 10.0})).analyse()
+    except Exception as e:
+        print(e)
 
     logger.info('2: ' + str(memory_usage_psutil()))
-    NeuronToNeuronAnalogSignalCorrelations(param_filter_query(
-        data_store, analysis_algorithm='PSTH'), ParameterSet({'convert_nan_to_zero': True})).analyse()
+    try:
+        NeuronToNeuronAnalogSignalCorrelations(param_filter_query(
+            data_store, analysis_algorithm='PSTH'), ParameterSet({'convert_nan_to_zero': True})).analyse()
+    except Exception as e:
+        print(e)
 
     logger.info('3: ' + str(memory_usage_psutil()))
     # 1&3 ZeroDivisionError
@@ -66,47 +77,51 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
     except Exception as e:
         print(e)
 
-    dsv = queries.param_filter_query(
-        data_store, st_name='FullfieldDriftingSinusoidalGrating', analysis_algorithm='PSTH')
     try:
+        dsv = queries.param_filter_query(
+            data_store, st_name='FullfieldDriftingSinusoidalGrating', analysis_algorithm='PSTH')
         TrialMean(dsv, ParameterSet(
             {'cond_exc': False, 'vm': True, 'cond_inh': False})).analyse()
     except Exception as e:
         print(e)
 
-    dsv = param_filter_query(data_store, st_name='FullfieldDriftingSinusoidalGrating',
-                             analysis_algorithm='TrialAveragedFiringRate', value_name='Firing rate', sheet_name=sheets)
     try:
+        dsv = param_filter_query(data_store, st_name='FullfieldDriftingSinusoidalGrating',
+                                 analysis_algorithm='TrialAveragedFiringRate', value_name='Firing rate',
+                                 sheet_name=sheets)
         GaussianTuningCurveFit(dsv, ParameterSet(
             {'parameter_name': 'orientation'})).analyse()
     except Exception as e:
         print(e)
-    dsv = param_filter_query(
-        data_store, st_name='FullfieldDriftingSinusoidalGrating', sheet_name=sheets)
     try:
+        dsv = param_filter_query(
+            data_store, st_name='FullfieldDriftingSinusoidalGrating', sheet_name=sheets)
         Analog_F0andF1(dsv, ParameterSet({})).analyse()
     except Exception as e:
         print(e)
 
-    dsv = param_filter_query(data_store, st_name='FullfieldDriftingSinusoidalGrating',
-                             analysis_algorithm='TrialAveragedFiringRate', value_name='Firing rate', sheet_name=sheets)
     try:
+        dsv = param_filter_query(data_store, st_name='FullfieldDriftingSinusoidalGrating',
+                                 analysis_algorithm='TrialAveragedFiringRate', value_name='Firing rate',
+                                 sheet_name=sheets)
         PeriodicTuningCurvePreferenceAndSelectivity_VectorAverage(
             dsv, ParameterSet({'parameter_name': 'orientation'})).analyse()
     except Exception as e:
         print(e)
 
     logger.info('4: ' + str(memory_usage_psutil()))
-
-    dsv = param_filter_query(data_store, sheet_name=exc_sheets)
-    ActionPotentialRemoval(dsv, ParameterSet({'window_length': 5.0})).analyse()
+    try:
+        dsv = param_filter_query(data_store, sheet_name=exc_sheets)
+        ActionPotentialRemoval(dsv, ParameterSet({'window_length': 5.0})).analyse()
+    except Exception as e:
+        print(e)
 
     logger.info('5: ' + str(memory_usage_psutil()))
 
 
-    dsv = param_filter_query(
-        data_store, st_name='InternalStimulus', st_direct_stimulation_name=None)
     try:
+        dsv = param_filter_query(
+            data_store, st_name='InternalStimulus', st_direct_stimulation_name=None)
         Analog_MeanSTDAndFanoFactor(dsv, ParameterSet({})).analyse()
     except Exception as e:
         print(e)
@@ -332,9 +347,9 @@ def analysis(data_store, analog_ids, analog_ids_inh, analog_ids23=None, analog_i
     except Exception as e:
         print(e)
 
-    dsv = param_filter_query(data_store, st_name='FullfieldDriftingSinusoidalGrating', value_name=[
-                             'F0(psth (bin=10.0) trial-to-trial mean)'], analysis_algorithm='Analog_F0andF1', sheet_name=sheets)
     try:
+        dsv = param_filter_query(data_store, st_name='FullfieldDriftingSinusoidalGrating', value_name=[
+            'F0(psth (bin=10.0) trial-to-trial mean)'], analysis_algorithm='Analog_F0andF1', sheet_name=sheets)
         GaussianTuningCurveFit(dsv, ParameterSet(
             {'parameter_name': 'orientation'})).analyse()
         CircularVarianceOfTuningCurve(dsv, ParameterSet(
