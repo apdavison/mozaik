@@ -353,7 +353,7 @@ class Sheet(BaseComponent):
                 cells = self.to_record[variable]
                 # print("cells unsorted ", cells)
                 # cells.sort()
-                # cells = "all"  # record all cells
+                cells = "all"  # record all cells
                 if cells != "all":
                     # print("self.parameters.recording_interval not all ", self.parameters.recording_interval)
                     # print("recording ", variable)
