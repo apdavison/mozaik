@@ -468,6 +468,7 @@ class Sheet(BaseComponent):
         # print("n sorted ", n)
         print("spiketrains length ", len(s.spiketrains))
         print("spikes length ", len(self.to_record["spikes"]))
+        print("times of first ", s.spiketrains[0].times)
         # print([h.annotations["source_id"] for h in s.spiketrains])
         for k, i in zip(s.spiketrains, n):
             # print("spike source id ", k.annotations["source_id"])
@@ -475,6 +476,8 @@ class Sheet(BaseComponent):
             # print(type(k.annotations["source_id"]))
             # print("i ", i)
             # print(type(i))
+            if len(k.times) > 0:
+                print("spikes ", k.times)
             if k.annotations["source_id"] != i:
                 k.annotations["source_id"] = i
         # print([j.annotations["source_id"] for j in s.spiketrains])
