@@ -713,6 +713,30 @@ def perform_analysis_and_visualization(data_store):
         except Exception as e:
             print(e)
         try:
+            sc = []
+            print("lgn on spiketrains ", param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].spiketrains)
+            for s in param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("histon.png")
+        except Exception as e:
+            print("lgn on error")
+            print(e)
+        try:
+            sc = []
+            print("lgn off spiketrains ", param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].spiketrains)
+            for s in param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].spiketrains:
+                sc.append(len(s))
+            print(len(sc))
+            plt.figure()
+            plt.hist(sc, bins=50)
+            plt.savefig("histoff.png")
+        except Exception as e:
+            print("lgn off error")
+            print(e)
+        try:
             histogram = statistics.time_histogram(param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains, bin_size=5*pq.ms)
             plot_time_histogram(histogram, units='s')
             plt.savefig("hist4excel.png")
