@@ -669,6 +669,38 @@ def perform_analysis_and_visualization(data_store):
             'scatter':  True,
             'resolution': 0
         }
+        # raster plots
+        try:
+            RasterPlot(
+                data_store,
+                ParameterSet(
+                    {
+                        "sheet_name": "V1_Exc_L4",
+                        "neurons": spike_ids,
+                        "trial_averaged_histogram": False,
+                        "spontaneous": False,
+                    }
+                ),
+                fig_param={"dpi": 100, "figsize": (17, 5)},
+                plot_file_name="ExcRasterV1_Exc_L4.png",
+            ).plot({"SpikeRasterPlot.group_trials": True})
+            RasterPlot(
+                data_store,
+                ParameterSet(
+                    {
+                        "sheet_name": "V1_Inh_L4",
+                        "neurons": spike_ids_inh,
+                        "trial_averaged_histogram": False,
+                        "spontaneous": False,
+                    }
+                ),
+                fig_param={"dpi": 100, "figsize": (17, 5)},
+                plot_file_name="InhRasterV1_Inh_L4.png",
+            ).plot({"SpikeRasterPlot.group_trials": True})
+        except Exception as e:
+            print("rasterplot error")
+            print(e)
+
         # spike count histogram
         try:
             sc = []
@@ -770,10 +802,9 @@ def perform_analysis_and_visualization(data_store):
                            fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSInhRasterL23.png').plot({'SpikeRasterPlot.group_trials': True})
             except Exception as e:
                 print(e)
-
+        dsv = param_filter_query(
+            data_store, st_name='FullfieldDriftingSinusoidalGrating')
         try:
-            dsv = param_filter_query(
-                data_store, st_name='FullfieldDriftingSinusoidalGrating')
             # print("is dsv empty? ", dsv)
             # AssertionError: Error, empty datastore
             RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neurons': spike_ids, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
@@ -781,6 +812,37 @@ def perform_analysis_and_visualization(data_store):
             RasterPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neurons': spike_ids_inh, 'trial_averaged_histogram': False, 'spontaneous': False}), fig_param={
                        'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedInhRaster.png').plot({'SpikeRasterPlot.group_trials': True})
         except Exception as e:
+            print(e)
+
+        try:
+            RasterPlot(
+                dsv,
+                ParameterSet(
+                    {
+                        "sheet_name": "V1_Exc_L4",
+                        "neurons": spike_ids,
+                        "trial_averaged_histogram": False,
+                        "spontaneous": False,
+                    }
+                ),
+                fig_param={"dpi": 100, "figsize": (17, 5)},
+                plot_file_name="ExcRasterV1_Exc_L4x.png",
+            ).plot({"SpikeRasterPlot.group_trials": True})
+            RasterPlot(
+                dsv,
+                ParameterSet(
+                    {
+                        "sheet_name": "V1_Inh_L4",
+                        "neurons": spike_ids_inh,
+                        "trial_averaged_histogram": False,
+                        "spontaneous": False,
+                    }
+                ),
+                fig_param={"dpi": 100, "figsize": (17, 5)},
+                plot_file_name="InhRasterV1_Inh_L4x.png",
+            ).plot({"SpikeRasterPlot.group_trials": True})
+        except Exception as e:
+            print("rasterplot error")
             print(e)
 
         # spike count histogram

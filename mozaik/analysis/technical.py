@@ -46,11 +46,11 @@ class NeuronAnnotationsToPerNeuronValues(Analysis):
             for k in keys:
                 # first check if the key is defined for all neurons
                 key_ok = True
-                print("k NeuronAnnotationsToPerNeuronValues ", k)
+                # print("k NeuronAnnotationsToPerNeuronValues ", k)
 
                 for n in range(0, len(anns[sheet])):
                     if not k in anns[sheet][n]:
-                        print("not k in anns[sheet][n] ", n)
+                        # print("not k in anns[sheet][n] ", n)
                         key_ok = False
                         break
 
@@ -64,9 +64,9 @@ class NeuronAnnotationsToPerNeuronValues(Analysis):
                         period = numpy.pi
                     if k == "LGNAfferentPhase":
                         period = 2 * numpy.pi
-                    print("values NeuronAnnotationsToPerNeuronValues ", values)
-                    print("self.tags ", self.tags)
-                    print("sheet ", sheet)
+                    # print("values NeuronAnnotationsToPerNeuronValues ", values)
+                    # print("self.tags ", self.tags)
+                    # print("sheet ", sheet)
                     self.datastore.full_datastore.add_analysis_result(
                         PerNeuronValue(
                             values,
