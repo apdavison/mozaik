@@ -14,6 +14,7 @@ from visualization_functions import *
 from parameters import ParameterSet
 # from elephant.spike_train_dissimilarity import victor_purpura_distance, van_rossum_distance
 import quantities as pq
+from quantities import Hz, s, ms
 from matplotlib import pyplot as plt
 from elephant import statistics
 from viziphant.statistics import plot_time_histogram
@@ -594,8 +595,11 @@ def perform_analysis_and_visualization(data_store):
             identifier='PerNeuronValue', value_name='LGNAfferentPhase', sheet_name='V1_Exc_L4')
     except Exception as e:
         print(e)
-    # l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
-    #    l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
+    try:
+        l4_exc = analog_ids[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
+            l4_exc_or[0].get_value_by_id(analog_ids), l4_exc_phase[0].get_value_by_id(analog_ids))])]
+    except Exception as e:
+        print(e)
     try:
         l4_inh_or = data_store.get_analysis_result(
             identifier='PerNeuronValue', value_name='LGNAfferentOrientation', sheet_name='V1_Inh_L4')
@@ -603,8 +607,11 @@ def perform_analysis_and_visualization(data_store):
             identifier='PerNeuronValue', value_name='LGNAfferentPhase', sheet_name='V1_Inh_L4')
     except Exception as e:
         print(e)
-    # l4_inh = analog_ids_inh[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
-    #    l4_inh_or[0].get_value_by_id(analog_ids_inh), l4_inh_phase[0].get_value_by_id(analog_ids_inh))])]
+    try:
+        l4_inh = analog_ids_inh[numpy.argmin([circular_dist(o, 0, numpy.pi) for (o, p) in zip(
+            l4_inh_or[0].get_value_by_id(analog_ids_inh), l4_inh_phase[0].get_value_by_id(analog_ids_inh))])]
+    except Exception as e:
+        print(e)
     try:
         l4_exc_or_many = numpy.array(l4_exc_or[0].ids)[numpy.nonzero(numpy.array([circular_dist(
             o, 0, numpy.pi) for (o, p) in zip(l4_exc_or[0].values, l4_exc_phase[0].values)]) < 0.1)[0]]
@@ -671,32 +678,25 @@ def perform_analysis_and_visualization(data_store):
         }
         # raster plots
         try:
-            RasterPlot(
-                data_store,
-                ParameterSet(
-                    {
-                        "sheet_name": "V1_Exc_L4",
-                        "neurons": spike_ids,
-                        "trial_averaged_histogram": False,
-                        "spontaneous": False,
-                    }
-                ),
-                fig_param={"dpi": 100, "figsize": (17, 5)},
-                plot_file_name="ExcRasterV1_Exc_L4.png",
-            ).plot({"SpikeRasterPlot.group_trials": True})
-            RasterPlot(
-                data_store,
-                ParameterSet(
-                    {
-                        "sheet_name": "V1_Inh_L4",
-                        "neurons": spike_ids_inh,
-                        "trial_averaged_histogram": False,
-                        "spontaneous": False,
-                    }
-                ),
-                fig_param={"dpi": 100, "figsize": (17, 5)},
-                plot_file_name="InhRasterV1_Inh_L4.png",
-            ).plot({"SpikeRasterPlot.group_trials": True})
+            for i, spiketrain in enumerate(param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains):
+                t = spiketrain.rescale(ms)
+                plt.plot(t, i * numpy.ones_like(t), 'k.', markersize=2)
+            plt.axis('tight')
+            # plt.xlim(0, 1000)
+            plt.xlabel('Time (ms)', fontsize=16)
+            plt.ylabel('Spike Train Index', fontsize=16)
+            plt.gca().tick_params(axis='both', which='major', labelsize=14)
+            plt.savefig("raster4exc.png")
+
+            for i, spiketrain in enumerate(param_filter_query(data_store, sheet_name="V1_Inh_L4").get_segments()[0].spiketrains):
+                t = spiketrain.rescale(ms)
+                plt.plot(t, i * numpy.ones_like(t), 'k.', markersize=2)
+            plt.axis('tight')
+            # plt.xlim(0, 1000)
+            plt.xlabel('Time (ms)', fontsize=16)
+            plt.ylabel('Spike Train Index', fontsize=16)
+            plt.gca().tick_params(axis='both', which='major', labelsize=14)
+            plt.savefig("raster4inh.png")
         except Exception as e:
             print("rasterplot error")
             print(e)
@@ -768,11 +768,10 @@ def perform_analysis_and_visualization(data_store):
             print(e)
 
         # self sustained plotting
-
-
-        try:
-            dsv = param_filter_query(data_store, st_name=[
+        dsv = param_filter_query(data_store, st_name=[
                 'InternalStimulus'], st_direct_stimulation_name=None)
+        try:
+
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Exc_L4', 'neuron': analog_ids[0], 'sheet_activity': {
             }, 'spontaneous': True}), fig_param={'dpi': 100, 'figsize': (28, 12)}, plot_file_name='SSExcAnalog.png').plot()
             OverviewPlot(dsv, ParameterSet({'sheet_name': 'V1_Inh_L4', 'neuron': analog_ids_inh[0], 'sheet_activity': {
@@ -815,32 +814,27 @@ def perform_analysis_and_visualization(data_store):
             print(e)
 
         try:
-            RasterPlot(
-                dsv,
-                ParameterSet(
-                    {
-                        "sheet_name": "V1_Exc_L4",
-                        "neurons": spike_ids,
-                        "trial_averaged_histogram": False,
-                        "spontaneous": False,
-                    }
-                ),
-                fig_param={"dpi": 100, "figsize": (17, 5)},
-                plot_file_name="ExcRasterV1_Exc_L4x.png",
-            ).plot({"SpikeRasterPlot.group_trials": True})
-            RasterPlot(
-                dsv,
-                ParameterSet(
-                    {
-                        "sheet_name": "V1_Inh_L4",
-                        "neurons": spike_ids_inh,
-                        "trial_averaged_histogram": False,
-                        "spontaneous": False,
-                    }
-                ),
-                fig_param={"dpi": 100, "figsize": (17, 5)},
-                plot_file_name="InhRasterV1_Inh_L4x.png",
-            ).plot({"SpikeRasterPlot.group_trials": True})
+            for i, spiketrain in enumerate(
+                    param_filter_query(dsv, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains):
+                t = spiketrain.rescale(ms)
+                plt.plot(t, i * numpy.ones_like(t), 'k.', markersize=2)
+            plt.axis('tight')
+            # plt.xlim(0, 1000)
+            plt.xlabel('Time (ms)', fontsize=16)
+            plt.ylabel('Spike Train Index', fontsize=16)
+            plt.gca().tick_params(axis='both', which='major', labelsize=14)
+            plt.savefig("raster4exc2.png")
+
+            for i, spiketrain in enumerate(
+                    param_filter_query(dsv, sheet_name="V1_Inh_L4").get_segments()[0].spiketrains):
+                t = spiketrain.rescale(ms)
+                plt.plot(t, i * numpy.ones_like(t), 'k.', markersize=2)
+            plt.axis('tight')
+            # plt.xlim(0, 1000)
+            plt.xlabel('Time (ms)', fontsize=16)
+            plt.ylabel('Spike Train Index', fontsize=16)
+            plt.gca().tick_params(axis='both', which='major', labelsize=14)
+            plt.savefig("raster4inh2.png")
         except Exception as e:
             print("rasterplot error")
             print(e)
