@@ -489,9 +489,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             # inject noisy current to populations
             # print("injecting current")
             # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
-            # ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+            ncs = sim.NoisyCurrentSource(**self.parameters.noise)
             # self.sheets[rf_type].pop.inject(scs)
-            # self.sheets[rf_type].pop.inject(ncs)
+            self.sheets[rf_type].pop.inject(ncs)
 
         P_rf = self.parameters.receptive_field
         rf_function = eval(P_rf.func)
@@ -742,12 +742,15 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #    break
                 assert isinstance(input_current, dict)
                 t = input_current['times'] + offset
-                t2 = t[::2]  # take every other step
+                # t2 = t[::2]  # take every other step
                 a = self.parameters.linear_scaler * input_current['amplitudes']
-                a2 = a[::2]  # take every other step
+                # a2 = a[::2]  # take every other step
                 # scs.set_parameters(times=t, amplitudes=a, copy=False)
-                scs.set_parameters(times=t2, amplitudes=a2)
-                # scs.set_parameters(times=t, amplitudes=a)
+                # scs.set_parameters(times=t2, amplitudes=a2)
+                if i == 0:
+                    print("amplitudes for first ", a)
+                    print("times for first", t)
+                scs.set_parameters(times=t, amplitudes=a)
                 # if self.parameters.mpi_reproducible_noise:
                 #    print("noisy current modified in process input")
                 #    t = numpy.arange(0, duration, ts) + offset
@@ -761,6 +764,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         self.write_cache(st, input_currents, retinal_input)
         # also save into internal cache
         self.internal_stimulus_cache[str(st)] = (input_currents, retinal_input)
+        print("scs in on pop ", self.scs["X_ON"][1])
         return retinal_input
 
     def process_input2(self, visual_space, stimulus, duration=None, offset=0):
