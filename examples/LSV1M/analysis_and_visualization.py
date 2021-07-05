@@ -677,6 +677,7 @@ def perform_analysis_and_visualization(data_store):
             'resolution': 0
         }
         # raster plots
+        """
         try:
             for i, spiketrain in enumerate(param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains):
                 t = spiketrain.rescale(ms)
@@ -700,7 +701,7 @@ def perform_analysis_and_visualization(data_store):
         except Exception as e:
             print("rasterplot error")
             print(e)
-
+        """
         # spike count histogram
         try:
             sc = []
@@ -836,7 +837,7 @@ def perform_analysis_and_visualization(data_store):
                        'dpi': 100, 'figsize': (28, 12)}, plot_file_name='EvokedInhRaster.png').plot({'SpikeRasterPlot.group_trials': True})
         except Exception as e:
             print(e)
-
+        """
         try:
             for i, spiketrain in enumerate(
                     param_filter_query(dsv, sheet_name="V1_Exc_L4").get_segments()[0].spiketrains):
@@ -862,7 +863,7 @@ def perform_analysis_and_visualization(data_store):
         except Exception as e:
             print("rasterplot error")
             print(e)
-
+        """
         # spike count histogram
         try:
             sc = []
