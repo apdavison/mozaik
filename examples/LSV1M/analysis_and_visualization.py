@@ -18,6 +18,7 @@ from quantities import Hz, s, ms
 from matplotlib import pyplot as plt
 from elephant import statistics
 from viziphant.statistics import plot_time_histogram
+from pyNN.utility.plotting import Figure, Panel
 
 # logger = mozaik.getMozaikLogger()
 logger = logging.getLogger(__name__)
@@ -715,6 +716,31 @@ def perform_analysis_and_visualization(data_store):
             print("rasterplot error")
             print(e)
         """
+        # analogsignals in on and off pop.
+        try:
+            print("number of analogsignals in x off ",
+                  len(param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].analogsignals))
+            a = param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].analogsignals[0]
+            Figure(
+                Panel(a,
+                    ylabel="Membrane potential (mV)",
+                    xticks=True,
+                    xlabel="Time (ms)", yticks=True),
+            ).save("signalinoff.png")
+        except Exception as e:
+            print(e)
+        try:
+            print("number of analogsignals in x on ",
+                  len(param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].analogsignals))
+            b = param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].analogsignals[0]
+            Figure(
+                Panel(b,
+                    ylabel="Membrane potential (mV)",
+                    xticks=True,
+                    xlabel="Time (ms)", yticks=True),
+            ).save("signalinon.png")
+        except Exception as e:
+            print(e)
         # spike count histogram
         try:
             sc = []
