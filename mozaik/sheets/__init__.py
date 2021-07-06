@@ -171,7 +171,7 @@ class Sheet(BaseComponent):
                 # print(set(self.to_record.get(var, [])))
                 # print(set(self.to_record.get(var)))
                 # self.to_record[var] = list(set(self.to_record.get(var, [])) | set(l))
-                if var == "spikes":  # spinnaker records all spikes in the population
+                if var == "spikes" or var == "v":  # spinnaker records all spikes in the population
                     self.to_record[var] = [i.id for i in self.pop.all_cells]
                     # print("list ot record for all spikes ", self.to_record[var])
                 else:

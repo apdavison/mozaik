@@ -750,7 +750,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 if i == 0:
                     print("amplitudes for first ", a)
                     print("times for first", t)
-                scs.set_parameters(times=t, amplitudes=a * 10)
+                scs.set_parameters(times=t, amplitudes=a * 1000)
                 # if self.parameters.mpi_reproducible_noise:
                 #    print("noisy current modified in process input")
                 #    t = numpy.arange(0, duration, ts) + offset
