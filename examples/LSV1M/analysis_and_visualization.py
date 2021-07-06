@@ -543,11 +543,18 @@ def perform_analysis_and_visualization_stc(data_store):
 
 
 def perform_analysis_and_visualization(data_store):
+    try:
+        sheets = list(set(data_store.sheets()) & set(
+            ['V1_Exc_L4', 'V1_Inh_L4', 'V1_Exc_L2/3', 'V1_Inh_L2/3']))
+    except Exception as e:
+        print(e)
+        sheets = ["X_ON", "X_OFF"]
+    try:
+        exc_sheets = list(set(data_store.sheets()) &
+                          set(['V1_Exc_L4', 'V1_Exc_L2/3']))
+    except Exception as e:
+        print(e)
 
-    sheets = list(set(data_store.sheets()) & set(
-        ['V1_Exc_L4', 'V1_Inh_L4', 'V1_Exc_L2/3', 'V1_Inh_L2/3']))
-    exc_sheets = list(set(data_store.sheets()) &
-                      set(['V1_Exc_L4', 'V1_Exc_L2/3']))
     l23_flag = 'V1_Exc_L2/3' in set(sheets)
     try:
         NeuronAnnotationsToPerNeuronValues(data_store, ParameterSet({})).analyse()
@@ -560,10 +567,16 @@ def perform_analysis_and_visualization(data_store):
     # analog_ids_inh = param_filter_query(
     #    data_store, sheet_name="V1_Inh_L4").get_segments()[0].get_stored_esyn_ids()
     analog_ids_inh = None
-    spike_ids = param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[
-        0].get_stored_spike_train_ids()
-    spike_ids_inh = param_filter_query(data_store, sheet_name="V1_Inh_L4").get_segments()[
-        0].get_stored_spike_train_ids()
+    try:
+        spike_ids = param_filter_query(data_store, sheet_name="V1_Exc_L4").get_segments()[
+            0].get_stored_spike_train_ids()
+    except:
+        spike_ids = None
+    try:
+        spike_ids_inh = param_filter_query(data_store, sheet_name="V1_Inh_L4").get_segments()[
+            0].get_stored_spike_train_ids()
+    except:
+        spike_ids_inh = None
 
     if l23_flag:
         # analog_ids23 = param_filter_query(

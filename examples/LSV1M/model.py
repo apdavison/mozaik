@@ -26,10 +26,10 @@ class SelfSustainedPushPull(Model):
     def __init__(self, sim, num_threads, parameters):
         Model.__init__(self, sim, num_threads, parameters)
         # Load components
-        CortexExcL4 = load_component(
-            self.parameters.sheets.l4_cortex_exc.component)
-        CortexInhL4 = load_component(
-            self.parameters.sheets.l4_cortex_inh.component)
+        # CortexExcL4 = load_component(
+        #    self.parameters.sheets.l4_cortex_exc.component)
+        # CortexInhL4 = load_component(
+        #    self.parameters.sheets.l4_cortex_inh.component)
 
         if not self.parameters.only_afferent and self.parameters.l23:
             CortexExcL23 = load_component(
@@ -46,11 +46,11 @@ class SelfSustainedPushPull(Model):
         self.input_layer = RetinaLGN(
             self, self.parameters.sheets.retina_lgn.params)  # 'pyNN.spiNNaker' has no attribute 'StepCurrentSource'
 
-        cortex_exc_l4 = CortexExcL4(
-            self, self.parameters.sheets.l4_cortex_exc.params)  # spiNNaker has no attribute EIF_cond_exp_isfa_ista ->Iz
+        # cortex_exc_l4 = CortexExcL4(
+        #    self, self.parameters.sheets.l4_cortex_exc.params)  # spiNNaker has no attribute EIF_cond_exp_isfa_ista ->Iz
 
-        cortex_inh_l4 = CortexInhL4(
-            self, self.parameters.sheets.l4_cortex_inh.params)
+        # cortex_inh_l4 = CortexInhL4(
+        #    self, self.parameters.sheets.l4_cortex_inh.params)
 
         if not self.parameters.only_afferent and self.parameters.l23:
             cortex_exc_l23 = CortexExcL23(
@@ -59,10 +59,10 @@ class SelfSustainedPushPull(Model):
                 self, self.parameters.sheets.l23_cortex_inh.params)
 
         # initialize afferent layer 4 projections
-        GaborConnector(self, self.input_layer.sheets['X_ON'], self.input_layer.sheets['X_OFF'],
-                       cortex_exc_l4, self.parameters.sheets.l4_cortex_exc.AfferentConnection, 'V1AffConnection')
-        GaborConnector(self, self.input_layer.sheets['X_ON'], self.input_layer.sheets['X_OFF'],
-                       cortex_inh_l4, self.parameters.sheets.l4_cortex_inh.AfferentConnection, 'V1AffInhConnection')
+        # GaborConnector(self, self.input_layer.sheets['X_ON'], self.input_layer.sheets['X_OFF'],
+        #                cortex_exc_l4, self.parameters.sheets.l4_cortex_exc.AfferentConnection, 'V1AffConnection')
+        # GaborConnector(self, self.input_layer.sheets['X_ON'], self.input_layer.sheets['X_OFF'],
+        #               cortex_inh_l4, self.parameters.sheets.l4_cortex_inh.AfferentConnection, 'V1AffInhConnection')
 
         # initialize lateral layer 4 projections
         if not self.parameters.only_afferent:
