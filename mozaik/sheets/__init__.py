@@ -419,6 +419,8 @@ class Sheet(BaseComponent):
         # print("workaround start")
         for a in s.analogsignals:
             if a.name == "v":
+                print("signal source ids ", a.annotations["source_ids"])
+                print("to record v ", self.to_record["v"])
                 if set(a.annotations["source_ids"]) != set(self.to_record["v"]):
                     a.annotations["source_ids"] = self.to_record["v"]
         """
