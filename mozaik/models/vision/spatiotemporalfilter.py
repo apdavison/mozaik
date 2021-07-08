@@ -469,8 +469,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs_rng[rf_type] = []
             seeds = mozaik.get_seeds((self.sheets[rf_type].pop.size,))
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
-                # if i == 0:
-                #    break
+                if i == 0:
+                    break
                 scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
                 # if not self.parameters.mpi_reproducible_noise:
@@ -751,6 +751,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     print("amplitudes for first ", a)
                     print("times for first", t)
                 # scs.set_parameters(times=t, amplitudes=a)
+                scs = self.model.sim.StepCurrentSource(times=t, amplitudes=a)
+                lgn_cell.inject(scs)
                 # if self.parameters.mpi_reproducible_noise:
                 #    print("noisy current modified in process input")
                 #    t = numpy.arange(0, duration, ts) + offset
@@ -759,8 +761,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #                  * self.ncs_rng[rf_type][i].randn(len(t)))
                 #    # ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
                 #    ncs.set_parameters(times=t, amplitudes=amplitudes)
-            scs = self.model.sim.StepCurrentSource(times=t[0], amplitudes=[5.0])
-            self.sheets[rf_type].pop.inject(scs)
+            # scs = self.model.sim.StepCurrentSource(times=t[0], amplitudes=[5.0])
+            # self.sheets[rf_type].pop.inject(scs)
 
         self._built = True
         self.write_cache(st, input_currents, retinal_input)
