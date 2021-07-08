@@ -741,6 +741,32 @@ def perform_analysis_and_visualization(data_store):
             ).save("signalinon.png")
         except Exception as e:
             print(e)
+        try:
+            Figure(
+                # raster plot of the postsynaptic neuron spike times
+                Panel(param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].spiketrains,
+                      yticks=True, markersize=0.75, xlim=(0, 10000)),
+                Panel(param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].filter(name='v')[0],
+                      xlabel="Time (ms)", xticks=True,
+                      ylabel="gsyn inhibitory (mV)",
+                      data_labels=["X_ON"], yticks=True, xlim=(0, 10000)),
+                title="Current Source testing on",
+            ).save("spikesnon.png")
+        except Exception as e:
+            print(e)
+        try:
+            Figure(
+                # raster plot of the postsynaptic neuron spike times
+                Panel(param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].spiketrains,
+                      yticks=True, markersize=0.75, xlim=(0, 10000)),
+                Panel(param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].filter(name='v')[0],
+                      xlabel="Time (ms)", xticks=True,
+                      ylabel="gsyn inhibitory (mV)",
+                      data_labels=["X_OFF"], yticks=True, xlim=(0, 10000)),
+                title="Current Source testing off",
+            ).save("spikesnoff.png")
+        except Exception as e:
+            print(e)
         # spike count histogram
         try:
             sc = []
