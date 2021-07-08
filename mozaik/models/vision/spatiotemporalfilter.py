@@ -759,7 +759,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #                  * self.ncs_rng[rf_type][i].randn(len(t)))
                 #    # ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
                 #    ncs.set_parameters(times=t, amplitudes=amplitudes)
-            scs = self.model.sim.StepCurrentSource(times=offset, amplitudes=[5.0])
+            scs = self.model.sim.StepCurrentSource(times=t[0], amplitudes=[5.0])
             self.sheets[rf_type].pop.inject(scs)
 
         self._built = True
