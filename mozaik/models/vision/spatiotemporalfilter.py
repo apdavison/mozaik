@@ -469,8 +469,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs_rng[rf_type] = []
             seeds = mozaik.get_seeds((self.sheets[rf_type].pop.size,))
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
-                # if i == 0:
-                #    break
+                if i == 0:
+                    break
                 scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
                 # if not self.parameters.mpi_reproducible_noise:
@@ -489,8 +489,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
             # inject noisy current to populations
             # print("injecting current")
-            # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
-            # self.sheets[rf_type].pop.inject(scs)
+            scs = sim.StepCurrentSource(times=[0.0], amplitudes=[10.0])
+            self.sheets[rf_type].pop.inject(scs)
             ncs = sim.NoisyCurrentSource(**self.parameters.noise)
             # self.sheets[rf_type].pop.inject(ncs)
             ncs.inject_into(self.sheets[rf_type].pop)
@@ -961,7 +961,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
 
         for rf_type in self.rf_types:
-            # break
+            break
             if self.parameters.gain_control.non_linear_gain != None:
                 amplitude = self.parameters.linear_scaler * self.parameters.gain_control.non_linear_gain.luminance_gain * numpy.sum(
                     input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance / (
@@ -1175,7 +1175,6 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     cell.view()
             print("self.model.parameters.store_stimuli ", self.model.parameters.store_stimuli)
             print(self.rf["X_ON"].spatial_resolution)
-            print("visual_region ", visual_region)
             if self.model.parameters.store_stimuli == True:
                 visual_region = VisualRegion(
                     location_x=0,
