@@ -712,18 +712,23 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         st.trial = None  # to avoid recalculating RFs response to multiple trials of the same stimulus
 
         cached = self.get_cache(st)
-
+        print("str(st) ", str(st))
+        print("cached ", cached)
+        print("cached == None ", cached == None)
         if cached == None:
+            print("Generating output spikes...")
             logger.debug("Generating output spikes...")
             # Even if we didn't find the stimulus in cache, we still check if we haven't already presented it during this simulation run.
             # This is mainly to avoid regenerating stimuli for multiple trials.
 
             if str(st) in self.internal_stimulus_cache:
+                print("str(st) in self.internal_stimulus_cache ", str(st) in self.internal_stimulus_cache)
                 (input_currents, retinal_input) = self.internal_stimulus_cache[str(st)]
             else:
                 (input_currents, retinal_input) = self._calculate_input_currents(visual_space,
                                                                                  duration)
         else:
+            print("Retrieved spikes from cache...")
             logger.debug("Retrieved spikes from cache...")
             (input_currents, retinal_input) = cached
 
@@ -776,6 +781,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         self.internal_stimulus_cache[str(st)] = (input_currents, retinal_input)
         # print("scs amplitudes in on pop ", self.scs["X_ON"][1])
         print("retinal_input ", retinal_input)
+        print("retinal_input is None ", retinal_input is None)
         return retinal_input
 
     def process_input2(self, visual_space, stimulus, duration=None, offset=0):
@@ -1110,6 +1116,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # create population of CellWithReceptiveFields, setting the receptive
         # field centres based on the size/location of self
         logger.debug("Creating population of `CellWithReceptiveField`s")
+        print("Creating population of `CellWithReceptiveField`s")
         input_cells = {}
         # effective_visual_field_width, effective_visual_field_height = self.parameters.size
         # x_values = numpy.linspace(-effective_visual_field_width/2.0, effective_visual_field_width/2.0, self.shape[0])
@@ -1120,8 +1127,12 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 indices = numpy.nonzero(self.sheets[rf_type].pop._mask_local)[0]
             else:
                 indices = numpy.arange(self.sheets[rf_type].pop.size)
+            print("indices ", indices)
             for i in indices:
                 # for i in range(0,len(self.sheets[rf_type].pop.positions[0])):
+                print(self.sheets[rf_type].pop.positions[i][0])
+                print(self.sheets[rf_type].pop.positions[i][1])
+                print()
                 cell = CellWithReceptiveField(
                     # self.sheets[rf_type].pop.positions[0][i],
                     self.sheets[rf_type].pop.positions[i][0],
@@ -1153,7 +1164,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                         # cell.view()
                     for t in threads:
                         t.join()
-
+        print("duration ", duration)
+        print("t ", t)
         while t < duration:
             t = visual_space.update()
             for rf_type in self.rf_types:
@@ -1179,4 +1191,5 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             input_currents[rf_type] = [
                 cell.response_current() for cell in input_cells[rf_type]
             ]
+        print("retinal_input ", retinal_input)
         return (input_currents, retinal_input)
