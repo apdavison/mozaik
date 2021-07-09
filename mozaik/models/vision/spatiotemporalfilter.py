@@ -469,8 +469,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs_rng[rf_type] = []
             seeds = mozaik.get_seeds((self.sheets[rf_type].pop.size,))
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
-                if i == 0:
-                    break
+                # if i == 0:
+                #   break
                 scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
 
                 # if not self.parameters.mpi_reproducible_noise:
