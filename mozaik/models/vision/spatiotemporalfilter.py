@@ -752,8 +752,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             for i, (lgn_cell, input_current) in enumerate(
                         zip(self.sheets[rf_type].pop,
                             input_currents[rf_type])):
-                if i == 0:
-                    break
+                # if i == 0:
+                #    break
                 assert isinstance(input_current, dict)
                 t = input_current['times'] + offset
                 # t2 = t[::2]  # take every other step
@@ -766,6 +766,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     print("times for first", t)
                 # scs.set_parameters(times=t, amplitudes=a)
                 # lgn_cell.inject(scs)
+                t = t[::8]
+                t = t[::8]
                 scs = self.model.sim.StepCurrentSource(times=t, amplitudes=a)
                 lgn_cell.inject(scs)
                 # if self.parameters.mpi_reproducible_noise:
