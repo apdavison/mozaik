@@ -752,8 +752,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             for i, (lgn_cell, input_current) in enumerate(
                         zip(self.sheets[rf_type].pop,
                             input_currents[rf_type])):
-                # if i == 0:
-                #    break
+                if i == 0:
+                    break
                 assert isinstance(input_current, dict)
                 t = input_current['times'] + offset
                 # t2 = t[::2]  # take every other step
