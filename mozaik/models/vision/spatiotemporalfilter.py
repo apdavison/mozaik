@@ -735,6 +735,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         ts = self.model.sim.get_time_step()
         # print("input_currents ", input_currents)
         for rf_type in self.rf_types:
+            break
             print("length of scs ", len(self.scs[rf_type]))
             print("first scs ", self.scs[rf_type][0].get_parameters)
             assert isinstance(input_currents[rf_type], list)
