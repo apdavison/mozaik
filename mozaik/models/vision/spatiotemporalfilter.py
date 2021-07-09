@@ -736,8 +736,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # print("input_currents ", input_currents)
         for rf_type in self.rf_types:
             # break
-            print("length of scs ", len(self.scs[rf_type]))
-            print("first scs ", self.scs[rf_type][0].get_parameters)
+            # print("length of scs ", len(self.scs[rf_type]))
+            # print("first scs ", self.scs[rf_type][0].get_parameters)
             assert isinstance(input_currents[rf_type], list)
             # for i, (lgn_cell, input_current, scs, ncs) in enumerate(
             #        zip(self.sheets[rf_type].pop,
@@ -776,7 +776,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 #                  * self.ncs_rng[rf_type][i].randn(len(t)))
                 #    # ncs.set_parameters(times=t, amplitudes=amplitudes, copy=False)
                 #    ncs.set_parameters(times=t, amplitudes=amplitudes)
-            print("first scs 2 ", self.scs[rf_type][0].get_parameters)
+            # print("first scs 2 ", self.scs[rf_type][0].get_parameters)
             # scs = self.model.sim.StepCurrentSource(times=t[0], amplitudes=[5.0])
             # self.sheets[rf_type].pop.inject(scs)
 
