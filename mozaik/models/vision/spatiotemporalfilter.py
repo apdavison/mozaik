@@ -483,7 +483,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     # self.ncs_rng[rf_type].append(numpy.random.RandomState(seed=seeds[i]))
                     self.scs[rf_type].append(scs)
                     # self.ncs[rf_type].append(ncs)
-                lgn_cell.inject(scs)
+                # lgn_cell.inject(scs)
+                scs.inject_into(lgn_cell)
                 # lgn_cell.inject(ncs)
 
             # inject noisy current to populations
@@ -491,7 +492,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
             # self.sheets[rf_type].pop.inject(scs)
             ncs = sim.NoisyCurrentSource(**self.parameters.noise)
-            self.sheets[rf_type].pop.inject(ncs)
+            # self.sheets[rf_type].pop.inject(ncs)
+            ncs.inject_into(self.sheets[rf_type].pop)
 
         P_rf = self.parameters.receptive_field
         rf_function = eval(P_rf.func)
@@ -773,6 +775,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # also save into internal cache
         self.internal_stimulus_cache[str(st)] = (input_currents, retinal_input)
         # print("scs amplitudes in on pop ", self.scs["X_ON"][1])
+        print("retinal_input ", retinal_input)
         return retinal_input
 
     def process_input2(self, visual_space, stimulus, duration=None, offset=0):
@@ -952,7 +955,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
 
         for rf_type in self.rf_types:
-            break
+            # break
             if self.parameters.gain_control.non_linear_gain != None:
                 amplitude = self.parameters.linear_scaler * self.parameters.gain_control.non_linear_gain.luminance_gain * numpy.sum(
                     input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance / (
