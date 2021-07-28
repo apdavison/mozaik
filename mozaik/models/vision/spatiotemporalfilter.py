@@ -469,8 +469,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             self.ncs_rng[rf_type] = []
             seeds = mozaik.get_seeds((self.sheets[rf_type].pop.size,))
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
-                if i == 0:
-                   break
+                # if i == 0:
+                #   break
                 # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
                 scs = {}
 
@@ -492,8 +492,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             # print("injecting current")
             # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[10.0])
             # self.sheets[rf_type].pop.inject(scs)
-            # ncs = sim.NoisyCurrentSource(**self.parameters.noise)
-            # self.sheets[rf_type].pop.inject(ncs)
+            ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+            self.sheets[rf_type].pop.inject(ncs)
             # ncs.inject_into(self.sheets[rf_type].pop)
 
         P_rf = self.parameters.receptive_field
