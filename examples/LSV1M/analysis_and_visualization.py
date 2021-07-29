@@ -781,6 +781,7 @@ def perform_analysis_and_visualization(data_store):
         try:
             sc = []
             print("lgn on spiketrains ", param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].spiketrains)
+            print("lgn on spiketrains times ", param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].spiketrains[0].times)
             for s in param_filter_query(data_store, sheet_name="X_ON").get_segments()[0].spiketrains:
                 sc.append(len(s))
             print(len(sc))
@@ -793,6 +794,7 @@ def perform_analysis_and_visualization(data_store):
         try:
             sc = []
             print("lgn off spiketrains ", param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].spiketrains)
+            print("lgn off spiketrains times ", param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].spiketrains[0].times)
             for s in param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].spiketrains:
                 sc.append(len(s))
             print(len(sc))
