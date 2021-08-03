@@ -490,10 +490,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
             # inject noisy current to populations
             # print("injecting current")
-            # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[10.0])
-            # self.sheets[rf_type].pop.inject(scs)
-            # ncs = sim.NoisyCurrentSource(**self.parameters.noise)
-            # self.sheets[rf_type].pop.inject(ncs)
+            scs = sim.StepCurrentSource(times=[0.0], amplitudes=[10.0])
+            self.sheets[rf_type].pop.inject(scs)
+            ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+            self.sheets[rf_type].pop.inject(ncs)
             # ncs.inject_into(self.sheets[rf_type].pop)
 
         P_rf = self.parameters.receptive_field
