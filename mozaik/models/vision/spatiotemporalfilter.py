@@ -471,8 +471,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
                 # if i == 0:
                 #   break
-                scs = sim.StepCurrentSource(times=[0.0], amplitudes=[10.0])
-                # scs = {}
+                # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[10.0])
+                scs = {}
 
                 # if not self.parameters.mpi_reproducible_noise:
                     # print("noisy current created")
@@ -484,7 +484,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     # self.ncs_rng[rf_type].append(numpy.random.RandomState(seed=seeds[i]))
                     self.scs[rf_type].append(scs)
                     # self.ncs[rf_type].append(ncs)
-                lgn_cell.inject(scs)
+                # lgn_cell.inject(scs)
                 # scs.inject_into(lgn_cell)
                 # lgn_cell.inject(ncs)
 
