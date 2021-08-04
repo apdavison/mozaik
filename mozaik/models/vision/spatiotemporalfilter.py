@@ -645,15 +645,15 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             #            self.scs[rf_type],
             #            self.ncs[rf_type])):
 
-            # for i, (lgn_cell, input_current, scs) in enumerate(
-            #        zip(self.sheets[rf_type].pop,
-            #            input_currents[rf_type],
-            #            self.scs[rf_type])):
-            for i, (lgn_cell, input_current) in enumerate(
-                        zip(self.sheets[rf_type].pop,
-                            input_currents[rf_type])):
-                if i == 0:
-                    break
+            for i, (lgn_cell, input_current, scs) in enumerate(
+                    zip(self.sheets[rf_type].pop,
+                        input_currents[rf_type],
+                            self.scs[rf_type])):
+                # for i, (lgn_cell, input_current) in enumerate(
+                #            zip(self.sheets[rf_type].pop,
+                #                input_currents[rf_type])):
+                # if i == 0:
+                #    break
                 assert isinstance(input_current, dict)
                 t = input_current['times'] + offset
                 # t2 = t[::2]  # take every other step
@@ -668,8 +668,10 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 # lgn_cell.inject(scs)
                 t = t[::8]
                 a = a[::8]
-                scs = self.model.sim.StepCurrentSource(times=t, amplitudes=a)
-                lgn_cell.inject(scs)
+                # scs = self.model.sim.StepCurrentSource(times=t, amplitudes=a)
+                # lgn_cell.inject(scs)
+                scs.set_parameters(times=t, amplitudes=a)
+
                 # if self.parameters.mpi_reproducible_noise:
                 #    print("noisy current modified in process input")
                 #    t = numpy.arange(0, duration, ts) + offset
@@ -729,7 +731,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
 
         for rf_type in self.rf_types:
-            break
+            # break
             if self.parameters.gain_control.non_linear_gain != None:
                 amplitude = self.parameters.linear_scaler * self.parameters.gain_control.non_linear_gain.luminance_gain * numpy.sum(
                     input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance / (
