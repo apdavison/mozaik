@@ -471,7 +471,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             for i, lgn_cell in enumerate(self.sheets[rf_type].pop.all_cells):
                 # if i == 0:
                 #   break
-                scs = sim.StepCurrentSource(times=[0.0], amplitudes=[1.0])
+                scs = sim.StepCurrentSource()
                 # scs = {}
 
                 # if not self.parameters.mpi_reproducible_noise:
@@ -484,7 +484,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     # self.ncs_rng[rf_type].append(numpy.random.RandomState(seed=seeds[i]))
                     self.scs[rf_type].append(scs)
                     # self.ncs[rf_type].append(ncs)
-                # lgn_cell.inject(scs)
+                lgn_cell.inject(scs)
                 # scs.inject_into(lgn_cell)
                 # lgn_cell.inject(ncs)
 
@@ -492,8 +492,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             # print("injecting current")
             # scs = sim.StepCurrentSource(times=[0.0], amplitudes=[10.0])
             # self.sheets[rf_type].pop.inject(scs)
-            ncs = sim.NoisyCurrentSource(**self.parameters.noise)
-            self.sheets[rf_type].pop.inject(ncs)
+            # ncs = sim.NoisyCurrentSource(**self.parameters.noise)
+            # self.sheets[rf_type].pop.inject(ncs)
             # ncs.inject_into(self.sheets[rf_type].pop)
 
         P_rf = self.parameters.receptive_field
@@ -671,7 +671,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 # scs = self.model.sim.StepCurrentSource(times=t, amplitudes=a)
                 # lgn_cell.inject(scs)
                 scs.set_parameters(times=t, amplitudes=a)
-                lgn_cell.inject(scs)
+                # lgn_cell.inject(scs)
 
                 # if self.parameters.mpi_reproducible_noise:
                 #    print("noisy current modified in process input")
@@ -750,7 +750,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 # scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)
                 scs.set_parameters(times=times, amplitudes=zers + amplitude)
                 # scs = self.model.sim.StepCurrentSource(times=times, amplitudes=zers + amplitude)
-                lgn_cell.inject(scs)
+                # lgn_cell.inject(scs)
                 # if self.parameters.mpi_reproducible_noise:
                 #    print("noisy current modified in null input")
                 #    t = numpy.arange(0, duration, ts) + offset
