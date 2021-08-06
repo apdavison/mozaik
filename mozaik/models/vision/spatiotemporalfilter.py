@@ -637,7 +637,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         self.scs = {}
         for rf_type in self.rf_types:
             self.scs[rf_type] = []
-            # break
+            break
             # print("length of scs ", len(self.scs[rf_type]))
             # print("first scs ", self.scs[rf_type][0].get_parameters)
             assert isinstance(input_currents[rf_type], list)
