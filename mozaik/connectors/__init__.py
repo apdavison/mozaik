@@ -205,6 +205,9 @@ class SpecificArborization(Connector):
             if c > (z / 100.0)
         ]
         method = self.sim.FromListConnector(self.connection_list)
+        print("connectors init SpecificArborization ", method)
+        print("connectors init SpecificArborization ", self.source.pop)
+        print("connectors init SpecificArborization ", self.target.pop)
         self.proj = self.sim.Projection(
             self.source.pop,
             self.target.pop,
@@ -273,6 +276,10 @@ class SpecificProbabilisticArborization(Connector):
             )
 
         method = self.sim.FromListConnector(cl)
+
+        print("connectors init SpecificProbabilisticArborization ", method)
+        print("connectors init SpecificProbabilisticArborization ", self.source.pop)
+        print("connectors init SpecificProbabilisticArborization ", self.target.pop)
 
         self.proj = self.sim.Projection(
             self.source.pop,

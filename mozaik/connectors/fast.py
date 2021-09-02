@@ -65,6 +65,9 @@ class DistanceDependentProbabilisticArborization(Connector):
             n_connections=None,
             rng=mozaik.pynn_rng
         )
+        print("connectors fast DistanceDependentProbabilisticArborization ", method)
+        print("connectors fast DistanceDependentProbabilisticArborization ", self.source.pop)
+        print("connectors fast DistanceDependentProbabilisticArborization ", self.target.pop)
 
         self.proj = self.sim.Projection(
             self.source.pop,
@@ -125,6 +128,10 @@ class UniformProbabilisticArborization(Connector):
             rng=mozaik.pynn_rng
         )
 
+        print("connectors fast UniformProbabilisticArborization ", method)
+        print("connectors fast UniformProbabilisticArborization ", self.source.pop)
+        print("connectors fast UniformProbabilisticArborization ", self.target.pop)
+
         self.proj = self.sim.Projection(
             self.source.pop,
             self.target.pop,
@@ -159,6 +166,10 @@ class FixedKConnector(Connector):
             safe=True,
             rng=mozaik.pynn_rng
         )
+
+        print("connectors fast FixedKConnector ", method)
+        print("connectors fast FixedKConnector ", self.source.pop)
+        print("connectors fast FixedKConnector ", self.target.pop)
 
         self.proj = self.sim.Projection(
             self.source.pop,
