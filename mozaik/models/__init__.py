@@ -234,7 +234,8 @@ class Model(BaseComponent):
         """
         for s in list(self.sheets.values()):
             print("Projection info for sheet (run)", s.sim.Projection)
-            print("Projection info for sheet (reset)", s.pop.Projection)
+            print(self.sim.Network.projections)
+            # print("Projection info for sheet (reset)", s.pop.Projection)
             # print("Projection info for sheet (reset)", s.Projection)
             # print("Projection info for sheet (reset)", s.sim.Projection.get("connections"))
 
@@ -255,7 +256,8 @@ class Model(BaseComponent):
         """
         for s in list(self.sheets.values()):
             print("Projection info for sheet (reset)", s.sim.Projection)
-            print("Projection info for sheet (reset)", s.pop.Projection)
+            print(self.sim.Network.projections)
+            # print("Projection info for sheet (reset)", s.pop.Projection)
             # print("Projection info for sheet (reset)", s.Projection)
             # print("Projection info for sheet (reset)", s.sim.Projection.get("connections"))
 
