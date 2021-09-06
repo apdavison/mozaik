@@ -234,7 +234,8 @@ class Model(BaseComponent):
         """
         for s in list(self.sheets.values()):
             print("Projection info for sheet (run)", s.sim.Projection)
-            print("Projection info for sheet (reset)", s.sim.Projection.get("connections"))
+            print("Projection info for sheet (reset)", s.Projection)
+            # print("Projection info for sheet (reset)", s.sim.Projection.get("connections"))
 
         t0 = time.time()
         logger.info("Simulating the network for %s ms" % tstop)
@@ -253,7 +254,8 @@ class Model(BaseComponent):
         """
         for s in list(self.sheets.values()):
             print("Projection info for sheet (reset)", s.sim.Projection)
-            print("Projection info for sheet (reset)", s.sim.Projection.get("connections"))
+            print("Projection info for sheet (reset)", s.Projection)
+            # print("Projection info for sheet (reset)", s.sim.Projection.get("connections"))
 
         logger.debug("Resetting the network")
         t0 = time.time()
