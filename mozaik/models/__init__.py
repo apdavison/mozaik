@@ -234,6 +234,7 @@ class Model(BaseComponent):
         """
         for s in list(self.sheets.values()):
             print("Projection info for sheet (run)", s.sim.Projection)
+            print("Projection info for sheet (run)", dir(s.sim.Projection))
             # print("Projection info for sheet (reset)", s.sim.Projection.get("delay"))
             print("Connectors ", self.connectors)
             # print(dir(self.sim))
@@ -262,6 +263,7 @@ class Model(BaseComponent):
         """
         for s in list(self.sheets.values()):
             print("Projection info for sheet (reset)", s.sim.Projection)
+            print("Projection info for sheet (run)", dir(s.sim.Projection))
             # print("Projection info for sheet (reset)", s.sim.Projection.get("delay"))
             print("Connectors ", self.connectors)
             # print(self.sim.get_projections_data(s.sim.Projection))
