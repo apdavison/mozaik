@@ -158,7 +158,7 @@ class BackgroundActivityBombardment(DirectStimulator):
                         self.stgene = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in indices]
                         print("BackgroundActivityBombardment ", self.ssae)
                         print("BackgroundActivityBombardment ", self.sheet.pop)
-                        self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory')
+                        self.p = self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory')
 
             if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
                         self.ssai = self.sheet.sim.Population(self.sheet.pop.size,self.sheet.sim.SpikeSourceArray())
@@ -166,7 +166,7 @@ class BackgroundActivityBombardment(DirectStimulator):
                         self.stgeni = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in indices]
                         print("BackgroundActivityBombardment 2 ", self.ssae)
                         print("BackgroundActivityBombardment 2 ", self.sheet.pop)
-                        self.sheet.sim.Projection(self.ssai, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=inh_syn,receptor_type='inhibitory')
+                        self.p = self.sheet.sim.Projection(self.ssai, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=inh_syn,receptor_type='inhibitory')
 
     def prepare_stimulation(self, duration, offset):
         if hasattr(self.sheet.pop, "_mask_local"):
@@ -267,7 +267,7 @@ class Kick(DirectStimulator):
             self.stgene = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in self.to_stimulate_indexes]
             print("sheet Kick projection ", self.ssae)
             print("sheet Kick projection ", self.sheet.pop)
-            self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory') 
+            self.p = self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory')
 
     def prepare_stimulation(self,duration,offset):
         if (self.parameters.exc_firing_rate != 0 and self.parameters.exc_weight != 0):
