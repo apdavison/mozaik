@@ -329,7 +329,8 @@ class Model(BaseComponent):
         """
         This functions has to called to add a new connector to the model.
         """
-
+        print("register_connector ", connector)
+        print("register_connector name ", connector.name)
         if connector.name in self.connectors:
             raise ValueError("ERROR: Connector %s already registerd" % connector.name)
         self.connectors[connector.name] = connector
