@@ -753,9 +753,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 # break
                 # scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)
                 # scs.set_parameters(times=times, amplitudes=zers + amplitude)
-                times = times[0]
-                scs = self.model.sim.StepCurrentSource(times=times, amplitudes=amplitude)
-                # scs = self.model.sim.StepCurrentSource(times=times, amplitudes=zers + amplitude)
+                # times = times[0]
+                # scs = self.model.sim.StepCurrentSource(times=times, amplitudes=amplitude)
+                scs = self.model.sim.StepCurrentSource(times=times, amplitudes=zers + amplitude)
                 # self.scs[rf_type].append(scs)
                 lgn_cell.inject(scs)
                 # if self.parameters.mpi_reproducible_noise:
