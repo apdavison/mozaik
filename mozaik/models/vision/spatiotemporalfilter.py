@@ -668,7 +668,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     print("times for first", t)
                 # scs.set_parameters(times=t, amplitudes=a)
                 # lgn_cell.inject(scs)
-                t = [5000]
+                t = [10000]
                 a = [10]
                 scs = self.model.sim.StepCurrentSource(times=t, amplitudes=a)
                 # self.scs[rf_type].append(scs)
