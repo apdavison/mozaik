@@ -634,9 +634,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
 
         ts = self.model.sim.get_time_step()
         # print("input_currents ", input_currents)
-        self.scs = {}
+        # self.scs = {}
         for rf_type in self.rf_types:
-            self.scs[rf_type] = []
+            # self.scs[rf_type] = []
             # break
             # print("length of scs ", len(self.scs[rf_type]))
             # print("first scs ", self.scs[rf_type][0].get_parameters)
@@ -733,9 +733,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                                                           self.rf[rf_type],
                                                           self.parameters.gain_control, visual_space)
             input_cells[rf_type].initialize(visual_space.background_luminance, duration)
-        self.scs = {}
+        # self.scs = {}
         for rf_type in self.rf_types:
-            self.scs[rf_type] = []
+            # self.scs[rf_type] = []
             # break
             if self.parameters.gain_control.non_linear_gain != None:
                 amplitude = self.parameters.linear_scaler * self.parameters.gain_control.non_linear_gain.luminance_gain * numpy.sum(
