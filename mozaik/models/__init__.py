@@ -170,6 +170,7 @@ class Model(BaseComponent):
                 self.input_layer.provide_null_input(
                     self.input_space, stimulus.duration, self.simulator_time
                 )
+                print("provide null input in present_stimulus_and_record")
                 sensory_input = None
         else:
             sensory_input = None
@@ -299,6 +300,7 @@ class Model(BaseComponent):
                         "Simulated the network for %s ms with blank stimulus"
                         % self.parameters.null_stimulus_period
                     )
+                    print("provide null input in reset")
                     # for current sources
                     # else:
                     # logger.info(
@@ -311,6 +313,8 @@ class Model(BaseComponent):
                 # for current sources
                 self.sim.run(self.parameters.null_stimulus_period)
                 self.simulator_time += self.parameters.null_stimulus_period
+                # test reset
+                self.sim.reset()
                 for sheet in list(self.sheets.values()):
                     if sheet.to_record != None:
                         s = sheet.get_data(self.parameters.null_stimulus_period)
