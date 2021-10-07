@@ -21,7 +21,7 @@
     'l23' : False,
     'results_dir': '',
     'name' : 'SelfSustainedPushPullV1',
-    'reset' : True,
+    'reset' : False,
     'feedback' :  True,
     # 'null_stimulus_period' : 100.0,
     'null_stimulus_period' : 150.0,
