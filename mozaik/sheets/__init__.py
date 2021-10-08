@@ -405,9 +405,9 @@ class Sheet(BaseComponent):
         if (mozaik.mpi_comm) and (mozaik.mpi_comm.rank != mozaik.MPI_ROOT):
             print("XXX return non in get_data XXX")
             return None
-        s = block.segments[-1]
+        # s = block.segments[-1]
         # take second segment because of reset
-        # s = block.segments[1]
+        s = block.segments[1]
         s.annotations["sheet_name"] = self.name
         # print("sheet name ", self.name)
         # print("source_ids for gsyn_exc ", [a.annotations["source_ids"] for a in s.analogsignals if a.name == "gsyn_exc"])
