@@ -725,6 +725,14 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         zers = times * 0
         ts = self.model.sim.get_time_step()
 
+        # workaround
+        print("length of times array 1 ", len(times))
+        k = 100000
+        while len(times) < 287:
+            numpy.append(times, k)
+            k = k + 1
+        print("length of times array 2 ", len(times))
+
         input_cells = OrderedDict()
         for rf_type in self.rf_types:
             input_cells[rf_type] = CellWithReceptiveField(  # self.sheets[rf_type].pop.positions[0][0],
@@ -747,6 +755,13 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 amplitude = self.parameters.linear_scaler * self.parameters.gain_control.gain * numpy.sum(
                     input_cells[rf_type].receptive_field.kernel.flatten()) * visual_space.background_luminance
 
+            x = zers + amplitude
+            print("zers + amplitude ", zers + amplitude)
+            print("length of amplitude array 1 ", len(x))
+            while len(x) < 287:
+                numpy.append(x, 0.0)
+            print("length of amplitude array 2 ", len(x))
+
             # for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
             for i, scs in enumerate(self.scs[rf_type]):
                 # for i, (lgn_cell, scs) in enumerate(
@@ -756,7 +771,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 # scs.set_parameters(times=times, amplitudes=zers + amplitude, copy=False)
                 # print("scs ", scs)
                 # print("pop ", self.sheets[rf_type].pop)
-                scs.set_parameters(times=times, amplitudes=zers + amplitude)
+                # scs.set_parameters(times=times, amplitudes=zers + amplitude)
+                scs.set_parameters(times=times, amplitudes=x)
                 # times = times[0]
                 # scs = self.model.sim.StepCurrentSource(times=times, amplitudes=amplitude)
                 # scs = self.model.sim.StepCurrentSource(times=times, amplitudes=zers + amplitude)

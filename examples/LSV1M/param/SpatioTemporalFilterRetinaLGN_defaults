@@ -54,7 +54,7 @@
         'cell': {
             'model': 'IF_cond_exp',
             'params': {
-                'v_thresh': -60.0, # -65.0, # -57.0,
+                'v_thresh': -57.0, # -65.0,
                 'v_rest': -70.0,
                 'v_reset': -70.0,
                 'tau_refrac': 2.0,

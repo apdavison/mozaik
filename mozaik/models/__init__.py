@@ -314,7 +314,7 @@ class Model(BaseComponent):
                 self.sim.run(self.parameters.null_stimulus_period)
                 self.simulator_time += self.parameters.null_stimulus_period
                 # test reset
-                self.sim.reset()
+                # self.sim.reset()
                 for sheet in list(self.sheets.values()):
                     if sheet.to_record != None:
                         s = sheet.get_data(self.parameters.null_stimulus_period)
