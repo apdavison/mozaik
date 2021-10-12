@@ -665,8 +665,11 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 # scs.set_parameters(times=t, amplitudes=a, copy=False)
                 # scs.set_parameters(times=t2, amplitudes=a2)
                 if i == 0:
+                    print("xxx process input xxx")
                     print("amplitudes for first ", a)
+                    print("amplitudes length for first ", len(a))
                     print("times for first", t)
+                    print("times length for first", len(t))
                 scs.set_parameters(times=t, amplitudes=a)
                 # lgn_cell.inject(scs)
                 # t = [10000]
