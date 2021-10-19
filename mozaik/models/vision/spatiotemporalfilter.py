@@ -729,12 +729,14 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         ts = self.model.sim.get_time_step()
 
         # workaround
+        print("show times array 1", times)
         print("length of times array 1 ", len(times))
         k = 100000
         while len(times) < 286:
             times = numpy.append(times, k)
             k = k + 1
         print("length of times array 2 ", len(times))
+        print("show times array 2", times)
 
         input_cells = OrderedDict()
         for rf_type in self.rf_types:
@@ -764,6 +766,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             while len(x) < 286:
                 x = numpy.append(x, 0.0)
             print("length of amplitude array 2 ", len(x))
+            print("show amplitudes array", x)
 
             # for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
             for i, scs in enumerate(self.scs[rf_type]):
