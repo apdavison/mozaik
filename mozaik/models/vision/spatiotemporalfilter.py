@@ -731,7 +731,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # workaround
         print("length of times array 1 ", len(times))
         k = 100000
-        while len(times) < 287:
+        while len(times) < 286:
             times = numpy.append(times, k)
             k = k + 1
         print("length of times array 2 ", len(times))
@@ -761,7 +761,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             x = zers + amplitude
             print("zers + amplitude ", zers + amplitude)
             print("length of amplitude array 1 ", len(x))
-            while len(x) < 287:
+            while len(x) < 286:
                 x = numpy.append(x, 0.0)
             print("length of amplitude array 2 ", len(x))
 
