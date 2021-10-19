@@ -732,7 +732,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         print("length of times array 1 ", len(times))
         k = 100000
         while len(times) < 287:
-            numpy.append(times, k)
+            times = numpy.append(times, k)
             k = k + 1
         print("length of times array 2 ", len(times))
 
@@ -762,7 +762,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
             print("zers + amplitude ", zers + amplitude)
             print("length of amplitude array 1 ", len(x))
             while len(x) < 287:
-                numpy.append(x, 0.0)
+                x = numpy.append(x, 0.0)
             print("length of amplitude array 2 ", len(x))
 
             # for i, (scs, ncs) in enumerate(zip(self.scs[rf_type], self.ncs[rf_type])):
@@ -801,7 +801,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
         # create population of CellWithReceptiveFields, setting the receptive
         # field centres based on the size/location of self
         logger.debug("Creating population of `CellWithReceptiveField`s")
-        print("Creating population of `CellWithReceptiveField`s")
+        # print("Creating population of `CellWithReceptiveField`s")
         input_cells = {}
         # effective_visual_field_width, effective_visual_field_height = self.parameters.size
         # x_values = numpy.linspace(-effective_visual_field_width/2.0, effective_visual_field_width/2.0, self.shape[0])
@@ -812,8 +812,8 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                 indices = numpy.nonzero(self.sheets[rf_type].pop._mask_local)[0]
             else:
                 indices = numpy.arange(self.sheets[rf_type].pop.size)
-            print("indices ", indices)
-            print("visual_space ", visual_space)
+            # print("indices ", indices)
+            # print("visual_space ", visual_space)
             for i in indices:
                 # for i in range(0,len(self.sheets[rf_type].pop.positions[0])):
                 print(self.sheets[rf_type].pop.positions[i][0])
@@ -828,7 +828,7 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     self.parameters.gain_control,
                     visual_space
                 )
-                print("CellWithReceptiveField ", cell)
+                # print("CellWithReceptiveField ", cell)
                 cell.initialize(visual_space.background_luminance, duration)
                 input_cells[rf_type].append(cell)
 
@@ -851,15 +851,15 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                         # cell.view()
                     for t in threads:
                         t.join()
-        print("duration ", duration)
-        print("t ", t)
+        # print("duration ", duration)
+        # print("t ", t)
         while t < duration:
             t = visual_space.update()
             for rf_type in self.rf_types:
                 for cell in input_cells[rf_type]:
                     cell.view()
-            print("self.model.parameters.store_stimuli ", self.model.parameters.store_stimuli)
-            print(self.rf["X_ON"].spatial_resolution)
+            # print("self.model.parameters.store_stimuli ", self.model.parameters.store_stimuli)
+            # print(self.rf["X_ON"].spatial_resolution)
             if self.model.parameters.store_stimuli == True:
                 visual_region = VisualRegion(
                     location_x=0,
@@ -871,9 +871,9 @@ class SpatioTemporalFilterRetinaLGN(SensoryInputComponent):
                     visual_region, pixel_size=self.rf["X_ON"].spatial_resolution
                 )
             else:
-                print("im = None")
+                # print("im = None")
                 im = None
-            print("im ", im)
+            # print("im ", im)
             retinal_input.append(im)
 
         input_currents = {}
