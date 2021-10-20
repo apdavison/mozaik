@@ -485,8 +485,8 @@ class Sheet(BaseComponent):
             # print(type(k.annotations["source_id"]))
             # print("i ", i)
             # print(type(i))
-            if len(k.times) > 0:
-                print("spikes more than zero ", k.times)
+            # if len(k.times) > 0:
+            #    print("spikes more than zero ", k.times)
             if k.annotations["source_id"] != i:
                 k.annotations["source_id"] = i
         # print([j.annotations["source_id"] for j in s.spiketrains])
