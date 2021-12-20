@@ -717,6 +717,7 @@ def perform_analysis_and_visualization(data_store):
             print(e)
         """
         # analogsignals in on and off pop.
+        """
         try:
             print("number of analogsignals in x off ",
                   len(param_filter_query(data_store, sheet_name="X_OFF").get_segments()[0].analogsignals))
@@ -741,6 +742,7 @@ def perform_analysis_and_visualization(data_store):
             ).save("signalinon.png")
         except Exception as e:
             print(e)
+        """
         try:
             Figure(
                 # raster plot of the postsynaptic neuron spike times

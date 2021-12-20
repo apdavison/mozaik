@@ -394,8 +394,8 @@ class Sheet(BaseComponent):
             #    ["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True
             # )
             # block = self.pop.get_data(variables=["spikes", "v", "gsyn_exc", "gsyn_inh"], clear=True)
-            # block = self.pop.get_data(variables=["spikes"], clear=True)
-            block = self.pop.get_data(variables=["spikes", "v"])
+            block = self.pop.get_data(variables=["spikes"], clear=True)
+            # block = self.pop.get_data(variables=["spikes", "v"])
             # print("XXX Sheet gsyn_exc ", block.segments[0].filter(name='gsyn_exc')[0])
             # x = self.pop.get_data("gsyn_exc")
             # print("x ", x)
@@ -420,12 +420,14 @@ class Sheet(BaseComponent):
         # print("signal annotations ", [a.annotations for a in s.analogsignals])
         # workaround for wrond source ids
         # print("workaround start")
+        """
         for a in s.analogsignals:
             if a.name == "v":
                 # print("signal source ids ", a.annotations["source_ids"])
                 # print("to record v ", self.to_record["v"])
                 if set(a.annotations["source_ids"]) != set(self.to_record["v"]):
                     a.annotations["source_ids"] = self.to_record["v"]
+        """
         """
         for a in s.analogsignals:
             # print(a.name)
@@ -469,8 +471,8 @@ class Sheet(BaseComponent):
                 st -= tstart
                 st.t_stop -= tstart
                 st.t_start = 0 * pq.ms
-            for i in range(0, len(s.analogsignals)):
-                s.analogsignals[i].t_start = 0 * pq.ms
+            # for i in range(0, len(s.analogsignals)):
+            #    s.analogsignals[i].t_start = 0 * pq.ms
         # print("workaround spikes")
         # print("self.to_record ", self.to_record)
         # print("self.to_record[spikes] ", self.to_record["spikes"])
