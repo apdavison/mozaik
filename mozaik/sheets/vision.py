@@ -3,6 +3,7 @@
 This module contains implementation of vision related sheets.
 """
 
+import logging
 import numpy
 import mozaik
 from parameters import ParameterSet
@@ -10,7 +11,8 @@ from pyNN import space
 from pyNN.errors import NothingToWriteError
 from mozaik.sheets import Sheet
         
-logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
+
 
 class RetinalUniformSheet(Sheet):
     """
@@ -36,19 +38,20 @@ class RetinalUniformSheet(Sheet):
     })
     
     def __init__(self, model, parameters):
-        Sheet.__init__(self, model,parameters.sx, parameters.sy, parameters)
-        logger.info("Creating %s with %d neurons." % (self.__class__.__name__, int(parameters.sx * parameters.sy * parameters.density)))
+        Sheet.__init__(self, model, parameters.sx, parameters.sy, parameters)
+        logger.info("Creating *LGN* %s with %d neurons." % (self.__class__.__name__, int(parameters.sx * parameters.sy * parameters.density)))
         rs = space.RandomStructure(boundary=space.Cuboid(self.size_x,self.size_y, 0),
                                    origin=(0.0, 0.0, 0.0),
                                    rng=mozaik.pynn_rng)
-        
+        print("* getattr(self.model.sim, self.parameters.cell.model) ", getattr(self.model.sim, self.parameters.cell.model))
         #rs = space.Grid2D(aspect_ratio=1, dx=parameters.sx/parameters.density, dy=parameters.sy/parameters.density, x0=-parameters.sx/2,y0=-parameters.sy/2,z=0.0)
         self.pop = self.sim.Population(int(parameters.sx * parameters.sy * parameters.density),
-                                           getattr(self.model.sim, self.parameters.cell.model),
-                                           self.parameters.cell.params,
-                                           structure=rs,
-                                           initial_values=self.parameters.cell.initial_values,
-                                           label=self.name)
+                                       getattr(self.model.sim, self.parameters.cell.model),  # replace with SpikeSourceArray
+                                       self.parameters.cell.params,
+                                       structure=rs,
+                                       initial_values=self.parameters.cell.initial_values,
+                                       # cellclass = self.sim.SpikeSourceArray(spike_times=[])) # spike times from nest/lgn output
+                                       label=self.name)
 
     def size_in_degrees(self):
         return (self.parameters.sx, self.parameters.sy)
@@ -167,14 +170,19 @@ class VisualCorticalUniformSheet(SheetWithMagnificationFactor):
     })
 
     def __init__(self, model, parameters):
+        # from spynnaker8.extra_models import Izhikevich_cond
+        # import spynnaker8.extra_models as models
         SheetWithMagnificationFactor.__init__(self, model, parameters)
         dx, dy = self.cs_2_vf(parameters.sx, parameters.sy)
         rs = space.RandomStructure(boundary=space.Cuboid(dx, dy, 0),
                                    origin=(0.0, 0.0, 0.0),
                                    rng=mozaik.pynn_rng)
-
+        # l4_cortex_inh, l4_cortex_exc: model: EIF_cond_exp_isfa_ista
+        # Exponential integrate and fire neuron with spike triggered and sub-threshold adaptation currents
+        # must change to Izhikevich model
         self.pop = self.sim.Population(int(parameters.sx*parameters.sy/1000000*parameters.density),
-                                       getattr(self.model.sim, self.parameters.cell.model),
+                                       getattr(self.model.sim, self.parameters.cell.model),  # no attribute 'EIF_cond_exp_isfa_ista'
+                                       # getattr(models, self.parameters.cell.model),
                                        self.parameters.cell.params,
                                        structure=rs,
                                        initial_values=self.parameters.cell.initial_values,

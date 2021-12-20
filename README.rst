@@ -1,3 +1,37 @@
+This version of mozaik (with models LSV1M and VogelsAbbott) is modified to run on the SpiNNaker Neuromorphic Platform.
+
+In a Collab of the HBP Neuromorphic Computing Platform, for running the V1 model, sending a job requires:
+
+Code (url to repository):
+
+https://github.com/aopy/mozaik
+
+Command:
+
+examples/LSV1M/run.py spiNNaker 2 examples/LSV1M/param/defaults 'test'
+
+Hardware Config:
+
+{
+  "extra_git_repositories": [
+    "https://github.com/aopy/imagen"
+  ],
+  "extra_pip_installs": [
+    "numpy",
+    "scipy",
+    "parameters",
+    "param==1.9.3",
+    "quantities",
+    "psutil"
+  ],
+  "extra_python_setups": [
+    ".",
+    "imagen"
+  ],
+  "spynnaker_version": "master"
+}
+
+========================
 Installation intructions
 ========================
 

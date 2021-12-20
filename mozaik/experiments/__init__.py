@@ -1,6 +1,7 @@
 """
 Module containing the experiment API.
 """
+import logging
 import numpy
 import resource
 import mozaik
@@ -9,7 +10,7 @@ from parameters import ParameterSet
 from mozaik.core import ParametrizedObject
 from mozaik.tools.distribution_parametrization import ParameterWithUnitsAndPeriod, MozaikExtendedParameterSet
 
-logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
 
 
 class Experiment(ParametrizedObject):
@@ -83,6 +84,10 @@ class Experiment(ParametrizedObject):
         the list of stimuli which to present to prevent repetitions, and lets this function know via the stimuli argument which stimuli to actually present.
         """
         srtsum = 0
+        # print("list of stimulus")
+        # print(stimulus_indexes)
+        # print(self.stimuli)
+        # print("end list of stimulus")
         for i in stimulus_indexes:
             s = self.stimuli[i]
             logger.debug('Presenting stimulus: ' + str(s) + '\n')
@@ -148,31 +153,27 @@ class PoissonNetworkKick(Experiment):
             'weight_list' : list,
     })
 
-    
     def __init__(self,model,parameters):
-            Experiment.__init__(self, model,parameters)
-            from mozaik.sheets.direct_stimulator import Kick
+        Experiment.__init__(self, model,parameters)
+        from mozaik.sheets.direct_stimulator import Kick
 
-            d  = {}
-            for i,sheet in enumerate(self.parameters.sheet_list):
-                p = MozaikExtendedParameterSet({'exc_firing_rate' : self.parameters.lambda_list[i],
+        d  = {}
+        for i,sheet in enumerate(self.parameters.sheet_list):
+            p = MozaikExtendedParameterSet({'exc_firing_rate' : self.parameters.lambda_list[i],
                                                       'exc_weight' : self.parameters.weight_list[i],
                                                       'drive_period' : self.parameters.drive_period,
                                                       'population_selector' : self.parameters.stimulation_configuration})
 
-                d[sheet] = [Kick(model.sheets[sheet],p)]
+            d[sheet] = [Kick(model.sheets[sheet],p)]
             
-            self.direct_stimulation = [d]
-	    self.stimuli.append(
-                        InternalStimulus(   
-                                            frame_duration=self.parameters.duration, 
-                                            duration=self.parameters.duration,
-                                            trial=0,
-                                            direct_stimulation_name='Kick',
-                                            direct_stimulation_parameters = p
-                                         )
-                                )
-        
+        self.direct_stimulation = [d]
+        self.stimuli.append(InternalStimulus(frame_duration=self.parameters.duration,
+                                             duration=self.parameters.duration,
+                                             trial=0,
+                                             direct_stimulation_name='Kick',
+                                             direct_stimulation_parameters=p))
+
+
 class NoStimulation(Experiment):
     """ 
     This is a special experiment that does not show any stimulus for the duration of the experiment. 
@@ -188,14 +189,20 @@ class NoStimulation(Experiment):
                                         'duration': float,
                                        })
 
-    def __init__(self,model,parameters):
-        Experiment.__init__(self, model,parameters)
-        self.stimuli.append(
-                        InternalStimulus(   
-                                            frame_duration=self.parameters.duration, 
-                                            duration=self.parameters.duration,
-                                            trial=0,
-                                         )
-                                )
-
-
+    def __init__(self, model, parameters):
+        Experiment.__init__(self, model, parameters)
+        # print("No stimulation 0 XX")
+        # print(parameters)
+        # print(self.stimuli)
+        # x = InternalStimulus(frame_duration=self.parameters.duration,
+        #                                     duration=self.parameters.duration,
+        #                                     trial=0,)
+        # print(x)
+        # print(x.name)
+        # print("No stimulation 0 XX end")
+        self.stimuli.append(InternalStimulus(frame_duration=self.parameters.duration,
+                                             duration=self.parameters.duration,
+                                             trial=0,))
+        # print("No stimulation")
+        # print(self.stimuli)
+        # print("no st end")

@@ -21,14 +21,27 @@ Parameters
     mpi_comm : mpi4py.Comm
              The mpi communication object, None if MPI not available.
 """
-__version__ = "0.1.0"
+from importlib import import_module
+import logging
+
 import numpy.random
+
+__version__ = "0.1.0"
+
+logger = logging.getLogger(__package__)
+logger.setLevel(level=logging.INFO)
+
 rng = None
 pynn_rng = None
 mpi_comm = None
 MPI_ROOT = 0
 
-def setup_mpi(mozaik_seed=513,pynn_seed=1023):
+
+class FakeMPIComm:
+    rank = 0
+
+
+def setup_mpi(mozaik_seed=513, pynn_seed=1023):
     """
     Tests the presence of MPI and sets up mozaik wide random number generator.
     
@@ -49,16 +62,18 @@ def setup_mpi(mozaik_seed=513,pynn_seed=1023):
     global pynn_rng
     global mpi_comm
     from pyNN.random import NumpyRNG
+
     pynn_rng = NumpyRNG(seed=pynn_seed)
     rng = numpy.random.RandomState(mozaik_seed)
 
-    try:
-        from mpi4py import MPI
-    except ImportError:
-        mpi_comm = None
-    if MPI:
-        mpi_comm = MPI.COMM_WORLD
+    mpi_comm = FakeMPIComm()
 
+    #try:
+    #    from mpi4py import MPI
+    #except ImportError:
+    #    mpi_comm = None
+    #if MPI:
+    #    mpi_comm = MPI.COMM_WORLD
 
 
 def get_seeds(size=None):
@@ -78,16 +93,15 @@ def get_seeds(size=None):
     important that the same number of seeds are requested in each MPI process to ensure 
     reproducability of simulations!
     """
-    return rng.randint(2**32-1,size=size)
+    return rng.randint(2 ** 32 - 1, size=size)
+
 
 def getMozaikLogger():
     """
     To maintain consistent logging settings around mozaik use this method to obtain the logger isntance.
     """
-    import logging
-    logger = logging.getLogger("Mozaik")
-    logger.setLevel(logging.INFO)
     return logger
+
 
 def load_component(path):
     """
@@ -107,10 +121,12 @@ def load_component(path):
     ----
     This function is primarily used to automatically load components based on configuration files during model construction.
     """
-    logger = getMozaikLogger()
-    path_parts = path.split('.')
+    # print("load component path ", path)
+    path_parts = path.split(".")
     module_name = ".".join(path_parts[:-1])
     class_name = path_parts[-1]
-    _module = __import__(module_name, globals(), locals(), [class_name], -1)
-    logger.info("Loaded component %s from module %s" % (class_name, module_name))
+    _module = import_module(module_name)
+    # _module = __import__(module_name, globals(), locals(), [class_name], -1)
+    # logger.info("Loaded component %s from module %s" % (class_name, module_name))
     return getattr(_module, class_name)
+

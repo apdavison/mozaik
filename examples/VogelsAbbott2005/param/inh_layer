@@ -11,7 +11,7 @@
                 'cell': ref('sheets.exc_layer.params.cell'),
                 'artificial_stimulators' : ref('sheets.exc_layer.params.artificial_stimulators'),
                 'recording_interval' : ref('sheets.exc_layer.params.recording_interval'),
-                'recorders' : url("param/inh_rec"),    
+                'recorders' : url("examples/VogelsAbbott2005/param/inh_rec"),
     },
     
     'InhExcConnection': {

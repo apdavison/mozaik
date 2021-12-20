@@ -7,6 +7,7 @@ of spikes/currents etc into cells. In mozaik this happens at population level - 
 each direct stimulator specifies how the given population is stimulated. In general each population can have several
 stimultors.
 """
+import logging
 from mozaik.core import ParametrizedObject
 from parameters import ParameterSet
 import numpy
@@ -26,64 +27,65 @@ from mpl_toolkits.mplot3d import Axes3D
 from mozaik.controller import Global
 import pickle
 
-logger = mozaik.getMozaikLogger()
+logger = logging.getLogger(__name__)
+
 
 class DirectStimulator(ParametrizedObject):
-      """
-      The API for direct stimulation.
-      The DirectStimulator specifies how are cells in the assigned population directly stimulated. 
+    """
+    The API for direct stimulation.
+    The DirectStimulator specifies how are cells in the assigned population directly stimulated.
         
-      Parameters
-      ----------
-      parameters : ParameterSet
+    Parameters
+    ----------
+    parameters : ParameterSet
                    The dictionary of required parameters.
                     
-      sheet : Sheet
+    sheet : Sheet
               The sheet in which to stimulate neurons.
               
-      Notes
-      -----
+    Notes
+    -----
       
-      By defalut the direct stimulation should ensure that it is mpi-safe - this is especially crucial for 
-      stimulators that involve source of randomnes. However, the DirectSimulators also can inspect the mpi_safe
-      value of the population to which they are assigned, and if it is False they can switch to potentially 
-      more efficient implementation that will however not be reproducible across multi-process simulations.
+    By defalut the direct stimulation should ensure that it is mpi-safe - this is especially crucial for
+    stimulators that involve source of randomnes. However, the DirectSimulators also can inspect the mpi_safe
+    value of the population to which they are assigned, and if it is False they can switch to potentially
+    more efficient implementation that will however not be reproducible across multi-process simulations.
       
-      Important: the functiona inactivate should only temporarily inactivate the stimulator, a subsequent call to prepare_stimulation
-      should activate the stimulator back!
-      """
+    Important: the functiona inactivate should only temporarily inactivate the stimulator, a subsequent call to prepare_stimulation
+    should activate the stimulator back!
+    """
 
-      def __init__(self, sheet, parameters):
-          ParametrizedObject.__init__(self, parameters)
-          self.sheet = sheet
+    def __init__(self, sheet, parameters):
+        ParametrizedObject.__init__(self, parameters)
+        self.sheet = sheet
      
-      def prepare_stimulation(self,duration,offset):
-          """
-          Prepares the stimulation during the next period of model simulation lasting `duration` seconds.
+    def prepare_stimulation(self,duration,offset):
+        """
+        Prepares the stimulation during the next period of model simulation lasting `duration` seconds.
           
-          Parameters
-          ----------
-          duration : double (seconds)
+        Parameters
+        ----------
+        duration : double (seconds)
                      The period for which to prepare the stimulation
           
-          offset : double (seconds)
+        offset : double (seconds)
                    The current simulator time.
                      
-          """
-          raise NotImplemented 
+        """
+        raise NotImplemented
           
-      def inactivate(self,offset):
-          """
-          Ensures any influences of the stimulation are inactivated for subsequent simulation of the model.
+    def inactivate(self,offset):
+        """
+        Ensures any influences of the stimulation are inactivated for subsequent simulation of the model.
 
-          Parameters
-          ----------
-          offset : double (seconds)
+        Parameters
+        ----------
+        offset : double (seconds)
                    The current simulator time.
           
-          Note that a subsequent call to prepare_stimulation should 'activate' the stimulator again.
-          """
-          raise NotImplemented 
+        Note that a subsequent call to prepare_stimulation should 'activate' the stimulator again.
+        """
+        raise NotImplemented
 
 
 
@@ -119,69 +121,79 @@ class BackgroundActivityBombardment(DirectStimulator):
     
     Currently the mpi_safe version only works in nest!
     """
-    
-    
+
     required_parameters = ParameterSet({
             'exc_firing_rate': float,
             'exc_weight': float,
             'inh_firing_rate': float,
             'inh_weight': float,
     })
-        
-        
-        
+
     def __init__(self, sheet, parameters):
         DirectStimulator.__init__(self, sheet,parameters)
         
         exc_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.exc_weight,delay=self.sheet.model.parameters.min_delay)
         inh_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.inh_weight,delay=self.sheet.model.parameters.min_delay)
+
+        if hasattr(self.sheet.pop, "_mask_local"):
+            indices = numpy.nonzero(self.sheet.pop._mask_local)[0]
+        else:
+            indices = numpy.arange(self.sheet.pop.size)
         
         if not self.sheet.parameters.mpi_safe:
-            from pyNN.nest import native_cell_type        
-            if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
-                self.np_exc = self.sheet.sim.Population(1, native_cell_type("poisson_generator"),{'rate': 0})
-                self.sheet.sim.Projection(self.np_exc, self.sheet.pop,self.sheet.sim.AllToAllConnector(),synapse_type=exc_syn,receptor_type='excitatory')
+            pass
+            # from pyNN.nest import native_cell_type
+            #if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
+            #    self.np_exc = self.sheet.sim.Population(1, native_cell_type("poisson_generator"),{'rate': 0})
+            #    self.sheet.sim.Projection(self.np_exc, self.sheet.pop,self.sheet.sim.AllToAllConnector(),synapse_type=exc_syn,receptor_type='excitatory')
 
-            if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
-                self.np_inh = self.sheet.sim.Population(1, native_cell_type("poisson_generator"),{'rate': 0})
-                self.sheet.sim.Projection(self.np_inh, self.sheet.pop,self.sheet.sim.AllToAllConnector(),synapse_type=inh_syn,receptor_type='inhibitory')
+            #if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
+            #    self.np_inh = self.sheet.sim.Population(1, native_cell_type("poisson_generator"),{'rate': 0})
+            #    self.sheet.sim.Projection(self.np_inh, self.sheet.pop,self.sheet.sim.AllToAllConnector(),synapse_type=inh_syn,receptor_type='inhibitory')
         
         else:
             if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
                         self.ssae = self.sheet.sim.Population(self.sheet.pop.size,self.sheet.sim.SpikeSourceArray())
                         seeds=mozaik.get_seeds((self.sheet.pop.size,))
-                        self.stgene = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in numpy.nonzero(self.sheet.pop._mask_local)[0]]
-                        self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory')
+                        self.stgene = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in indices]
+                        print("BackgroundActivityBombardment ", self.ssae)
+                        print("BackgroundActivityBombardment ", self.sheet.pop)
+                        self.p = self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory')
 
             if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
                         self.ssai = self.sheet.sim.Population(self.sheet.pop.size,self.sheet.sim.SpikeSourceArray())
                         seeds=mozaik.get_seeds((self.sheet.pop.size,))
-                        self.stgeni = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in numpy.nonzero(self.sheet.pop._mask_local)[0]]
-                        self.sheet.sim.Projection(self.ssai, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=inh_syn,receptor_type='inhibitory')
+                        self.stgeni = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in indices]
+                        print("BackgroundActivityBombardment 2 ", self.ssae)
+                        print("BackgroundActivityBombardment 2 ", self.sheet.pop)
+                        self.p = self.sheet.sim.Projection(self.ssai, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=inh_syn,receptor_type='inhibitory')
 
-    def prepare_stimulation(self,duration,offset):
-        if not self.sheet.parameters.mpi_safe:
-           self.np_exc[0].set_parameters(rate=self.parameters.exc_firing_rate)
-           self.np_inh[0].set_parameters(rate=self.parameters.inh_firing_rate)
+    def prepare_stimulation(self, duration, offset):
+        if hasattr(self.sheet.pop, "_mask_local"):
+            indices = numpy.nonzero(self.sheet.pop._mask_local)[0]
         else:
-           if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
-                for j,i in enumerate(numpy.nonzero(self.sheet.pop._mask_local)[0]):
+            indices = numpy.arange(self.sheet.pop.size)
+
+        if not self.sheet.parameters.mpi_safe:
+            self.np_exc[0].set_parameters(rate=self.parameters.exc_firing_rate)
+            self.np_inh[0].set_parameters(rate=self.parameters.inh_firing_rate)
+        else:
+            if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
+                for j, i in enumerate(indices):
                     pp = self.stgene[j].poisson_generator(rate=self.parameters.exc_firing_rate,t_start=0,t_stop=duration).spike_times
                     a = offset + numpy.array(pp)
                     self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
                
-           if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
-                for j,i in enumerate(numpy.nonzero(self.sheet.pop._mask_local)[0]):
+            if (self.parameters.inh_firing_rate != 0 or self.parameters.inh_weight != 0):
+                for j, i in enumerate(indices):
                     pp = self.stgene[j].poisson_generator(rate=self.parameters.inh_firing_rate,t_start=0,t_stop=duration).spike_times
                     a = offset + numpy.array(pp)
                     self.ssai[i].set_parameters(spike_times=Sequence(a.astype(float)))
-        
 
-        
-    def inactivate(self,offset):        
+    def inactivate(self, offset):
         if not self.sheet.parameters.mpi_safe:
-           self.np_exc[0].set_parameters(rate=0)
-           self.np_inh[0].set_parameters(rate=0)
+            self.np_exc[0].set_parameters(rate=0)
+            self.np_inh[0].set_parameters(rate=0)
             
 
 class Kick(DirectStimulator):
@@ -236,31 +248,63 @@ class Kick(DirectStimulator):
         DirectStimulator.__init__(self, sheet,parameters)
         population_selector = load_component(self.parameters.population_selector.component)
         self.ids = population_selector(sheet,self.parameters.population_selector.params).generate_idd_list_of_neurons()
-        d = dict((j,i) for i,j in enumerate(self.sheet.pop.all_cells))
-        self.to_stimulate_indexes = [d[i] for i in self.ids]
-        
+        # print(self.ids[0].id)  # 1901
+        # d = dict((j, i) for i, j in enumerate(self.sheet.pop.all_cells))  # nest
+        d = dict((str(j), i) for i, j in enumerate(self.sheet.pop.all_cells))  # spinnaker
+        # d = dict((i, j) for i, j in enumerate(numpy.asarray(self.sheet.pop.all_cells)))  # spinnaker abbott
+        # d = dict((j, i) for i, j in enumerate(self.sheet.pop.all_cells))  # spinnaker abbott
+        # print("self.ids ", self.ids)
+        # print("d ", d)
+        # self.to_stimulate_indexes = [d[i.id] for i in self.ids]
+        self.to_stimulate_indexes = [d[str(i)] for i in self.ids]  # str because there is an object
+        # workaround
+        # self.to_stimulate_indexes = [k.item() for k in self.ids]  # spinnaker abbott
+
         exc_syn = self.sheet.sim.StaticSynapse(weight=self.parameters.exc_weight,delay=self.sheet.model.parameters.min_delay)
         if (self.parameters.exc_firing_rate != 0 or self.parameters.exc_weight != 0):
             self.ssae = self.sheet.sim.Population(self.sheet.pop.size,self.sheet.sim.SpikeSourceArray())
             seeds=mozaik.get_seeds((self.sheet.pop.size,))
             self.stgene = [StGen(rng=numpy.random.RandomState(seed=seeds[i])) for i in self.to_stimulate_indexes]
-            self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory') 
+            print("sheet Kick projection ", self.ssae)
+            print("sheet Kick projection ", self.sheet.pop)
+            self.p = self.sheet.sim.Projection(self.ssae, self.sheet.pop,self.sheet.sim.OneToOneConnector(),synapse_type=exc_syn,receptor_type='excitatory')
 
     def prepare_stimulation(self,duration,offset):
         if (self.parameters.exc_firing_rate != 0 and self.parameters.exc_weight != 0):
-           for j,i in enumerate(self.to_stimulate_indexes):
-               if self.parameters.drive_period < duration:
-                   z = numpy.arange(self.parameters.drive_period+0.001,duration-100,10)
-                   times = [0] + z.tolist() 
-                   rate = [self.parameters.exc_firing_rate] + ((1.0-numpy.linspace(0,1.0,len(z)))*self.parameters.exc_firing_rate).tolist()
-               else:
-                   times = [0]  
-                   rate = [self.parameters.exc_firing_rate] 
-               pp = self.stgene[j].inh_poisson_generator(numpy.array(rate),numpy.array(times),t_stop=duration).spike_times
-               a = offset + numpy.array(pp)
-               self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
+            for j,i in enumerate(self.to_stimulate_indexes):
+                if self.parameters.drive_period < duration:
+                    z = numpy.arange(self.parameters.drive_period+0.001,duration-100,10)
+                    times = [0] + z.tolist()
+                    rate = [self.parameters.exc_firing_rate] + ((1.0-numpy.linspace(0,1.0,len(z)))*self.parameters.exc_firing_rate).tolist()
+                else:
+                    times = [0]
+                    rate = [self.parameters.exc_firing_rate]
+                pp = self.stgene[j].inh_poisson_generator(numpy.array(rate),numpy.array(times),t_stop=duration).spike_times
+                a = offset + numpy.array(pp)
+                print("direct stimulator")
+                print(a)
+                # print(type(a))
+                # print(a[0])
+                # print(type(a[0]))
+                # print(a.astype(float))
+                # print(type(a.astype(float)))
+                # print(i)
+                # print(self.ssae[i])
+                # print(type(self.ssae[i]))
+                # print(offset)
+                # print(self.ssae[i].get_parameters())
+                # x = [numpy.array([k]) for k in a.astype(float)]
+                # print(x)
+                # self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
+                # self.ssae[i].set(spike_times=Sequence(a.astype(float)))
+                # self.ssae[i].set_parameters(spike_times=[numpy.array([k]) for k in a.astype(float)])
+                # self.ssae[i].set_parameters(spike_times=Sequence(a.astype(float)))
+                # self.ssae[i].set_parameters(spike_times=Sequence(x))
+                # self.ssae[i].set_parameters(spike_times=x)
+                # self.ssae[i].set(spike_times=Sequence(x))
+                self.ssae[i].set_parameters(spike_times=a.astype(float))
 
-    def inactivate(self,offset):        
+    def inactivate(self, offset):
         pass
 
 
@@ -291,8 +335,7 @@ class Depolarization(DirectStimulator):
     
     Currently the mpi_safe version only works in nest!
     """
-    
-    
+
     required_parameters = ParameterSet({
             'current': float,
             'population_selector' : ParameterSet({
@@ -309,6 +352,7 @@ class Depolarization(DirectStimulator):
         population_selector = load_component(self.parameters.population_selector.component)
         self.ids = population_selector(sheet,self.parameters.population_selector.params).generate_idd_list_of_neurons()
         self.scs = self.sheet.sim.StepCurrentSource(times=[0.0], amplitudes=[0.0])
+        print("inject current in direct simulator")
         for cell in self.sheet.pop.all_cells:
             cell.inject(self.scs)
 
@@ -375,7 +419,6 @@ class LocalStimulatorArray(DirectStimulator):
     For now this is not mpi optimized.
     """
     
-    
     required_parameters = ParameterSet({
             'size': float,
             'spacing' : float,
@@ -393,7 +436,6 @@ class LocalStimulatorArray(DirectStimulator):
         assert math.fmod(self.parameters.size,self.parameters.spacing) < 0.000000001 , "Error the size has to be multiple of spacing!"
         assert math.fmod(self.parameters.size / self.parameters.spacing /2,2) < 0.000000001 , "Error the size and spacing have to be such that they give odd number of elements!"
 
-        
         axis_coors = numpy.arange(0,self.parameters.size+self.parameters.spacing,self.parameters.spacing) - self.parameters.size/2.0 
 
         n = int(numpy.floor(len(axis_coors)/2.0))
@@ -413,9 +455,17 @@ class LocalStimulatorArray(DirectStimulator):
 
         # now let's calculate mixing weights, this will be a matrix nxm where n is 
         # the number of neurons in the population and m is the number of stimulators
-        x =  stimulator_coordinates[0].flatten()
-        y =  stimulator_coordinates[1].flatten()
-        xx,yy = self.sheet.vf_2_cs(self.sheet.pop.positions[0],self.sheet.pop.positions[1])
+        x = stimulator_coordinates[0].flatten()
+        y = stimulator_coordinates[1].flatten()
+        # xp = []
+        # yp = []
+        # for (i, neuron2) in enumerate(self.sheet.pop.all()):
+        #    xp.append(self.sheet.pop.positions[i][0])
+        #    yp.append(self.sheet.pop.positions[i][1])
+
+        # xx, yy = self.sheet.vf_2_cs(self.sheet.pop.positions[0], self.sheet.pop.positions[1])
+        xx, yy = self.sheet.vf_2_cs(self.sheet.pop.positions[:, 0], self.sheet.pop.positions[:, 1])
+        # xx, yy = self.sheet.vf_2_cs(xp, yp)
         zeros = numpy.zeros(len(x))
         f = open(Global.root_directory +'positions' + self.sheet.name.replace('/','_') + '.pickle','w')
         pickle.dump((xx,yy),f)
@@ -438,15 +488,21 @@ class LocalStimulatorArray(DirectStimulator):
         # find coordinates given spacing and shift by half the array size
         nearest_ix = numpy.rint(yy/self.parameters.spacing)+n
         nearest_iy = numpy.rint(xx/self.parameters.spacing)+n
-        nearest_iz = numpy.rint((numpy.array(self.sheet.pop.positions[2])-sheet.parameters.min_depth)/self.parameters.depth_sampling_step)
 
+        # zp = []
+        # for (i, neuron2) in enumerate(self.sheet.pop.all()):
+        #    zp.append(self.sheet.pop.positions[i][2])
+
+        # nearest_iz = numpy.rint((numpy.array(self.sheet.pop.positions[2])-sheet.parameters.min_depth)/self.parameters.depth_sampling_step)
+        nearest_iz = numpy.rint((numpy.array(
+            self.sheet.pop.positions[:, 2]) - sheet.parameters.min_depth) / self.parameters.depth_sampling_step)
+        # nearest_iz = numpy.rint((numpy.array(zp) - sheet.parameters.min_depth) / self.parameters.depth_sampling_step)
         nearest_ix[nearest_ix<0] = 0
         nearest_iy[nearest_iy<0] = 0
         nearest_ix[nearest_ix>2*n] = 2*n
         nearest_iy[nearest_iy>2*n] = 2*n
 
-
-        for i in xrange(0,self.sheet.pop.size):
+        for i in range(0,self.sheet.pop.size):
             temp,cutof = mixing_templates[int(nearest_iz[i])]
 
             ss = stimulator_signals[max(int(nearest_ix[i]-cutof),0):int(nearest_ix[i]+cutof+1),max(int(nearest_iy[i]-cutof),0):int(nearest_iy[i]+cutof+1),:]
@@ -454,17 +510,22 @@ class LocalStimulatorArray(DirectStimulator):
                temp = temp[max(int(cutof-nearest_ix[i]),0):max(int(2*n+1+cutof-nearest_ix[i]),0),max(int(cutof-nearest_iy[i]),0):max(int(2*n+1+cutof-nearest_iy[i]),0)]
                self.mixed_signals[i,:] = K*W*numpy.dot(temp.flatten(),numpy.reshape(ss,(len(temp.flatten()),-1)))
 
-
         lam=numpy.squeeze(numpy.max(self.mixed_signals,axis=1))
-        for i in xrange(0,self.sheet.pop.size):
-              self.sheet.add_neuron_annotation(i, 'Light activation magnitude(' +self.sheet.name + ',' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value)  + ',' +  str(self.parameters.stimulating_signal_parameters.sharpness) + ',' +  str(self.parameters.spacing) + ')', lam[i], protected=True)
+        for i in range(0,self.sheet.pop.size):
+            self.sheet.add_neuron_annotation(i, 'Light activation magnitude(' +self.sheet.name + ',' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value)  + ',' +  str(self.parameters.stimulating_signal_parameters.sharpness) + ',' +  str(self.parameters.spacing) + ')', lam[i], protected=True)
 
         #ax = pylab.subplot(154, projection='3d')
         ax = pylab.subplot(154)
         pylab.gca().set_aspect('equal')
         pylab.title('Activation magnitude (neurons)')
         #ax.scatter(self.sheet.pop.positions[0],self.sheet.pop.positions[1],self.sheet.pop.positions[2],s=10,c=lam,cmap='gray',vmin=0)
-        ax.scatter(self.sheet.pop.positions[0],self.sheet.pop.positions[1],s=10,c=lam,cmap='gray',vmin=0)
+        # for (i, neuron2) in enumerate(self.sheet.pop.all()):
+        #    xp.append(self.sheet.pop.positions[i][0])
+        #    yp.append(self.sheet.pop.positions[i][1])
+
+        # ax.scatter(self.sheet.pop.positions[0], self.sheet.pop.positions[1], s=10, c=lam, cmap='gray', vmin=0)
+        ax.scatter(self.sheet.pop.positions[:, 0], self.sheet.pop.positions[:, 1], s=10, c=lam, cmap='gray', vmin=0)
+        # ax.scatter(xp, yp, s=10, c=lam, cmap='gray', vmin=0)
         ax = pylab.gca()
         #ax.set_zlim(ax.get_zlim()[::-1])
         
@@ -473,99 +534,108 @@ class LocalStimulatorArray(DirectStimulator):
         self.stimulation_duration = numpy.shape(self.mixed_signals)[1] * self.parameters.current_update_interval
         
         if shared_scs != None:
-           self.scs = shared_scs
+            self.scs = shared_scs
         else:
-           self.scs = [self.sheet.sim.StepCurrentSource(times=[0.0], amplitudes=[0.0]) for cell in self.sheet.pop.all_cells] 
-           for cell,scs in zip(self.sheet.pop.all_cells,self.scs):
-               cell.inject(scs)
+            self.scs = [self.sheet.sim.StepCurrentSource(times=[0.0], amplitudes=[0.0]) for cell in self.sheet.pop.all_cells]
+            for cell,scs in zip(self.sheet.pop.all_cells,self.scs):
+                cell.inject(scs)
 
     def prepare_stimulation(self,duration,offset):
         assert self.stimulation_duration == duration, "stimulation_duration != duration :"  + str(self.stimulation_duration) + " " + str(duration)
         times = numpy.arange(0,self.stimulation_duration,self.parameters.current_update_interval) + offset
         times[0] = times[0] + 3*self.sheet.dt
-        for i in xrange(0,len(self.scs)):
+        for i in range(0,len(self.scs)):
             self.scs[i].set_parameters(times=Sequence(times), amplitudes=Sequence(self.mixed_signals[i,:].flatten()),copy=False)
 
     def inactivate(self,offset):
         for scs in self.scs:
             scs.set_parameters(times=[offset+3*self.sheet.dt], amplitudes=[0.0],copy=False)
 
+
 def ChRsystem(y,time,X,sampling_period):
-          PhoC1toO1 = 1.0993e-19 * 50
-          PhoC2toO2 = 7.1973e-20 * 50
-          PhoC1toC2 = 1.936e-21 * 50
-          PhoC2toC1 = 1.438e-20 * 50
+    PhoC1toO1 = 1.0993e-19 * 50
+    PhoC2toO2 = 7.1973e-20 * 50
+    PhoC1toC2 = 1.936e-21 * 50
+    PhoC2toC1 = 1.438e-20 * 50
 
-          O1toC1 = 0.125
-          O2toC2 = 0.015
-          O2toS  = 0.0001
-          C2toC1 = 1e-7
-          StoC1  = 3e-6
+    O1toC1 = 0.125
+    O2toC2 = 0.015
+    O2toS  = 0.0001
+    C2toC1 = 1e-7
+    StoC1  = 3e-6
 
-          a = int(numpy.floor(time/sampling_period))
-          b = time/sampling_period - a
+    a = int(numpy.floor(time/sampling_period))
+    b = time/sampling_period - a
 
-          if a < len(X)-1:
-            I = X[a]*(1-b) + b * X[a+1];
-          else:
-            I = 0
+    if a < len(X)-1:
+        I = X[a]*(1-b) + b * X[a+1];
+    else:
+        I = 0
 
-          O1,O2,C1,C2,S = y
+    O1,O2,C1,C2,S = y
 
-          _O1 = - O1toC1 * O1                    + PhoC1toO1 * I * C1
-          _O2 = - O2toC2 * O2                    + PhoC2toO2 * I * C2            - O2toS * O2
+    _O1 = - O1toC1 * O1                    + PhoC1toO1 * I * C1
+    _O2 = - O2toC2 * O2                    + PhoC2toO2 * I * C2            - O2toS * O2
 
-          _S  = - StoC1 * S + O2toS * O2
+    _S  = - StoC1 * S + O2toS * O2
 
-          _C1 = O1toC1 * O1    - PhoC1toO1 * I * C1       - PhoC1toC2 * I * C1    + C2toC1 * C2             + PhoC2toC1 * I * C2            + StoC1 * S
-          _C2 = O2toC2 * O2    - C2toC1 * C2              - PhoC2toC1 * I * C2    + PhoC1toC2 * I * C1      - PhoC2toO2 * I * C2
+    _C1 = O1toC1 * O1    - PhoC1toO1 * I * C1       - PhoC1toC2 * I * C1    + C2toC1 * C2             + PhoC2toC1 * I * C2            + StoC1 * S
+    _C2 = O2toC2 * O2    - C2toC1 * C2              - PhoC2toC1 * I * C2    + PhoC1toC2 * I * C1      - PhoC2toO2 * I * C2
 
-          return (_O1,_O2,_C1,_C2,_S)
+    return (_O1,_O2,_C1,_C2,_S)
 
 
 class LocalStimulatorArrayChR(LocalStimulatorArray):
-      """
-      Like *LocalStimulatorArray* but the signal calculated to impinge on a neuron is interpreted as light (photons/s/cm^2)
-      impinging on the neuron and the signal is transformed via a model of Channelrhodopsin (courtesy of Quentin Sabatier)
-      to give the final injected current. 
+    """
+    Like *LocalStimulatorArray* but the signal calculated to impinge on a neuron is interpreted as light (photons/s/cm^2)
+    impinging on the neuron and the signal is transformed via a model of Channelrhodopsin (courtesy of Quentin Sabatier)
+    to give the final injected current.
       
-      Note that we approximate the current by ignoring the voltage dependence of the channels, as it is very expensive 
-      to inject conductance in PyNN. The Channelrhodopsin has reverse potential of ~0, and we assume that our neurons 
-      sits on average at -60mV to calculate the current. 
-      """
-      def __init__(self, sheet, parameters,shared_scs=None):
-          LocalStimulatorArray.__init__(self, sheet,parameters,shared_scs)
-          times = numpy.arange(0,self.stimulation_duration,self.parameters.current_update_interval)
-          ax = pylab.subplot(155)
-          ax.set_title('Single neuron current injection profile')
+    Note that we approximate the current by ignoring the voltage dependence of the channels, as it is very expensive
+    to inject conductance in PyNN. The Channelrhodopsin has reverse potential of ~0, and we assume that our neurons
+    sits on average at -60mV to calculate the current.
+    """
+    def __init__(self, sheet, parameters,shared_scs=None):
+        LocalStimulatorArray.__init__(self, sheet,parameters,shared_scs)
+        times = numpy.arange(0,self.stimulation_duration,self.parameters.current_update_interval)
+        ax = pylab.subplot(155)
+        ax.set_title('Single neuron current injection profile')
           
-          ax.plot(times,self.mixed_signals[100,:],'k')
-          ax.set_ylabel('photons/cm2/s', color='k')
+        ax.plot(times,self.mixed_signals[100,:],'k')
+        ax.set_ylabel('photons/cm2/s', color='k')
 
-          for i in xrange(0,len(self.scs)):
-              res = odeint(ChRsystem,[0,0,0.8,0.2,0],times,args=(self.mixed_signals[i,:].flatten(),self.parameters.current_update_interval))
-              self.mixed_signals[i,:] =  60 * (17.2*res[:,0] + 2.9 * res[:,1])  / 2500 ; # the 60 corresponds to the 60mV difference between ChR reverse potential of 0mV and our expected mean Vm of about 60mV. This happens to end up being in nA which is what pyNN expect for current injection.
+        for i in range(0,len(self.scs)):
+            res = odeint(ChRsystem,[0,0,0.8,0.2,0],times,args=(self.mixed_signals[i,:].flatten(),self.parameters.current_update_interval))
+            self.mixed_signals[i,:] =  60 * (17.2*res[:,0] + 2.9 * res[:,1])  / 2500 ; # the 60 corresponds to the 60mV difference between ChR reverse potential of 0mV and our expected mean Vm of about 60mV. This happens to end up being in nA which is what pyNN expect for current injection.
           
-          for i in xrange(0,self.sheet.pop.size):
-                  self.sheet.add_neuron_annotation(i, 'Light activation magnitude ChR(' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + ')', numpy.max(self.mixed_signals[i,:]), protected=True)
+        for i in range(0,self.sheet.pop.size):
+            self.sheet.add_neuron_annotation(i, 'Light activation magnitude ChR(' +  str(self.scale) + ',' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + ')', numpy.max(self.mixed_signals[i,:]), protected=True)
 
-          ax2 = ax.twinx()
-          ax2.plot(times,self.mixed_signals[100,:],'g')
-          ax2.set_ylabel('nA', color='g')
+        ax2 = ax.twinx()
+        ax2.plot(times,self.mixed_signals[100,:],'g')
+        ax2.set_ylabel('nA', color='g')
 
-          f = open(Global.root_directory +'mixed_signals' + self.sheet.name.replace('/','_') + '_' +  str(self.scale) + '_' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + '.pickle','w')
-          pickle.dump(self.mixed_signals  ,f)
-          f.close()
+        f = open(Global.root_directory +'mixed_signals' + self.sheet.name.replace('/','_') + '_' +  str(self.scale) + '_' +  str(self.parameters.stimulating_signal_parameters.orientation.value) + '_' +  str(self.parameters.stimulating_signal_parameters.sharpness) + '_' +  str(self.parameters.spacing) + '.pickle','w')
+        pickle.dump(self.mixed_signals  ,f)
+        f.close()
 
-          pylab.savefig(Global.root_directory +'LocalStimulatorArrayTest_' + self.sheet.name.replace('/','_') + '.png')
+        pylab.savefig(Global.root_directory +'LocalStimulatorArrayTest_' + self.sheet.name.replace('/','_') + '.png')
 
 
-def test_stimulating_function(sheet,coor_x,coor_y,current_update_interval,parameters):
+def test_stimulating_function(sheet, coor_x, coor_y, current_update_interval, parameters):
     z = sheet.pop.all_cells.astype(int)
-    vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in xrange(0,len(z))])
+    vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in range(0, len(z))])
     mean_orientations = []
 
-    px,py = sheet.vf_2_cs(sheet.pop.positions[0],sheet.pop.positions[1])
+    # x = []
+    # y = []
+    # for (i, neuron2) in enumerate(sheet.pop.all()):
+    #    x.append(sheet.pop.positions[i][0])
+    #    y.append(sheet.pop.positions[i][1])
+
+    # px, py = sheet.vf_2_cs(sheet.pop.positions[0], sheet.pop.positions[1])
+    px, py = sheet.vf_2_cs(sheet.pop.positions[:, 0], sheet.pop.positions[:, 1])
+    # px, py = sheet.vf_2_cs(x, y)
 
     pylab.subplot(151)
     pylab.gca().set_aspect('equal')
@@ -582,8 +652,8 @@ def test_stimulating_function(sheet,coor_x,coor_y,current_update_interval,parame
     pylab.scatter(coor_x.flatten(),coor_y.flatten(),c=ors.flatten(),cmap='hsv')
     signals = numpy.zeros((numpy.shape(coor_x)[0],numpy.shape(coor_x)[1],int(parameters.duration/current_update_interval)))
         
-    for i in xrange(0,numpy.shape(coor_x)[0]):
-        for j in xrange(0,numpy.shape(coor_x)[0]):
+    for i in range(0,numpy.shape(coor_x)[0]):
+        for j in range(0,numpy.shape(coor_x)[0]):
             signals[i,j,int(numpy.floor(parameters.onset_time/current_update_interval)):int(numpy.floor(parameters.offset_time/current_update_interval))] = parameters.scale.value*numpy.exp(-numpy.power(circular_dist(parameters.orientation.value,ors[i][j],numpy.pi),2)/parameters.sharpness)
 
     pylab.subplot(153)
@@ -596,11 +666,18 @@ def test_stimulating_function(sheet,coor_x,coor_y,current_update_interval,parame
 
 def test_stimulating_function_Naka(sheet,coor_x,coor_y,current_update_interval,parameters):
     z = sheet.pop.all_cells.astype(int)
-    vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in xrange(0,len(z))])
+    vals = numpy.array([sheet.get_neuron_annotation(i,'LGNAfferentOrientation') for i in range(0,len(z))])
     mean_orientations = []
 
-    px,py = sheet.vf_2_cs(sheet.pop.positions[0],sheet.pop.positions[1])
+    # x = []
+    # y = []
+    # for (i, neuron2) in enumerate(sheet.pop.all()):
+    #    x.append(sheet.pop.positions[i][0])
+    #    y.append(sheet.pop.positions[i][1])
 
+    # px, py = sheet.vf_2_cs(sheet.pop.positions[0], sheet.pop.positions[1])
+    px, py = sheet.vf_2_cs(sheet.pop.positions[:, 0], sheet.pop.positions[:, 1])
+    # px, py = sheet.vf_2_cs(x, y)
     pylab.subplot(151)
     pylab.gca().set_aspect('equal')
     pylab.title('Orientatin preference (neurons)')
@@ -619,10 +696,8 @@ def test_stimulating_function_Naka(sheet,coor_x,coor_y,current_update_interval,p
     rate = parameters.nv_r_max * numpy.power(parameters.contrast.value,parameters.nv_exponent) / (numpy.power(parameters.contrast.value,parameters.nv_exponent) + parameters.nv_c50)
     scale = numpy.power(rate * parameters.cs_c50  / (parameters.cs_r_max - rate), 1/ parameters.cs_exponent)
 
-    for i in xrange(0,numpy.shape(coor_x)[0]):
-
-      
-        for j in xrange(0,numpy.shape(coor_x)[0]):
+    for i in range(0,numpy.shape(coor_x)[0]):
+        for j in range(0,numpy.shape(coor_x)[0]):
             signals[i,j,int(numpy.floor(parameters.onset_time/current_update_interval)):int(numpy.floor(parameters.offset_time/current_update_interval))] = scale*numpy.exp(-numpy.power(circular_dist(parameters.orientation.value,ors[i][j],numpy.pi),2)/parameters.sharpness)
 
     pylab.subplot(153)
